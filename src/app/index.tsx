@@ -8,14 +8,14 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
-  })
-  if(loading) {
+    }, 4000);
+  });
+  if (loading) {
     return <PreloaderProvider />;
   }
 
   return (
-    <div className='flex justify-center gap-4'>
+    <div className="flex justify-center">
       <SelectRole />
     </div>
   );

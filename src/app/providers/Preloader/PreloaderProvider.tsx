@@ -10,12 +10,11 @@ export function PreloaderProvider() {
   const circlePathRef = useRef(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
-
   useEffect(() => {
     const images = ['/img/logo/logo.png', '/img/logo/dice.png'];
     let loadedCount = 0;
 
-    images.forEach(src => {
+    images.forEach((src) => {
       const img = new Image();
       img.src = src;
       img.onload = () => {

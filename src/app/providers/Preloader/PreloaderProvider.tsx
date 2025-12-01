@@ -45,7 +45,7 @@ export function PreloaderProvider() {
             offsetX: -200,
             offsetY: 0,
           },
-          duration: 4,
+          duration: 3,
           ease: 'none',
           repeat: -1,
         },

@@ -11,9 +11,6 @@ D&D Game Master Assistant — это современное веб-прилож�
 - [React](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [TailwindCSS](https://tailwindcss.com/)
-- [Vite](https://vitejs.dev/)
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
 - [React Testing Library](https://testing-library.com/)
 
 

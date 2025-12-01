@@ -1,5 +1,3 @@
 export function DashboardPlayer() {
-    return (
-        <div>DashboardPlayer</div>
-    )
+  return <div>DashboardPlayer</div>;
 }

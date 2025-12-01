@@ -1,5 +1,1 @@
-
-
-export function ProtectedRole() {
-
-}
+export function ProtectedRole() {}

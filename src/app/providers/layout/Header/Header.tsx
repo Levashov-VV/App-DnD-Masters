@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export function Header() {
   return (
-    <header className="fixed top-0 left-0 w-full z-50 text-white text-2xl px-12 py-4 gap-[4vw] backdrop-blur-sm flex items-center">
+    <header className="fixed top-0 left-0 w-full z-50 text-amber-100 text-[1vw] px-12 py-4 gap-[4vw] flex items-center">
       <div className="flex-shrink-0">
         <Link to={'/'}>
           <img className="w-[8vw] h-[8vw] object-contain" src="/img/logo/logo.png" alt="Logo" />
@@ -66,6 +66,7 @@ export function Header() {
               Таблицы
             </Link>
           </li>
+
         </ul>
       </nav>
     </header>

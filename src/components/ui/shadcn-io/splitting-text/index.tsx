@@ -96,7 +96,10 @@ export const SplittingText: React.FC<SplittingTextProps> = ({
   };
 
   const localRef = React.useRef<HTMLDivElement>(null);
-  React.useImperativeHandle(ref as unknown as React.MutableRefObject<HTMLDivElement>, () => localRef.current as HTMLDivElement);
+  React.useImperativeHandle(
+    ref as unknown as React.MutableRefObject<HTMLDivElement>,
+    () => localRef.current as HTMLDivElement
+  );
 
   const inViewResult = useInView(localRef, {
     once: inViewOnce,

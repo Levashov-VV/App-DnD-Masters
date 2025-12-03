@@ -97,32 +97,16 @@ export function DescriptionApp() {
           scale: 0.7,
           duration: 4,
         });
-      const bounceTL = gsap.timeline({
-        scrollTrigger: {
-          trigger: container,
-          containerAnimation: mainTimeline,
-          start: 'top top',
-          end: '+=50%', 
-          scrub: 2,
-        },
+
+      gsap.to(redBlock, {
+        y: '-20px',
+        rotation: 1,
+        duration: 0.5,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+        repeatDelay: 0.5,
       });
-
-
-      bounceTL
-        .to(redBlock, {
-          y: '-20px',
-          scale: 1.05,
-          rotation: 2,
-          duration: 1.5,
-          ease: 'elastic.out(1, 0.5)', 
-        })
-        .to(redBlock, {
-          y: 0,
-          scale: 1,
-          rotation: 0,
-          duration: 1.5,
-          ease: 'bounce.out(1.5, 0.3)',
-        });
     });
 
     return () => ctx.revert();

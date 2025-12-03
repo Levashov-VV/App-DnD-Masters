@@ -4,20 +4,18 @@ import { useLayoutEffect, useRef } from 'react';
 import dice20 from '../../../../../../public/img/masters/home/dice1d20.svg';
 import dice10 from '../../../../../../public/img/masters/home/dice1d10.svg';
 
+
 export function DescriptionApp() {
   gsap.registerPlugin(ScrollTrigger);
   const containerRef = useRef<HTMLDivElement>(null);
   const diceRef = useRef<HTMLImageElement>(null);
   const diceRef20 = useRef<HTMLImageElement>(null);
-  const redBlockRef = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const container = containerRef.current;
       const dice10 = diceRef.current;
       const dice20 = diceRef20.current;
-      const redBlock = redBlockRef.current;
-      if (!redBlock) return;
 
       if (!container || !dice10 || !dice20) return;
 
@@ -97,16 +95,6 @@ export function DescriptionApp() {
           scale: 0.7,
           duration: 4,
         });
-
-      gsap.to(redBlock, {
-        y: '-20px',
-        rotation: 1,
-        duration: 0.5,
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-        repeatDelay: 0.5,
-      });
     });
 
     return () => ctx.revert();
@@ -130,30 +118,24 @@ export function DescriptionApp() {
           src={dice20}
           alt="dice20"
         />
+
         <div className="w-screen h-screen flex flex-col items-center justify-center text-white px-8 ml-[20vw] relative z-20">
           <div>
             <h3 className="text-2xl md:text-[5vw] relative z-20 leading-tight">
-              <span
-                ref={redBlockRef}
-                className="bg-red-600 text-black px-3 py-1 inline-block rounded-sm"
-              >
-                С нашим
-              </span>{' '}
-              D&D-приложением вы можете
+              С нашим приложением вы можете
             </h3>
           </div>
         </div>
-        <div className="w-screen h-screen flex items-center text-white px-8 relative z-20">
-          <h3 className="text-2xl md:text-[5vw] relative z-20">
-            погрузиться в мир <span className="text-red-600"> D&D</span>,
+        <div className="w-screen h-screen flex items-center text-white relative z-20">
+          <h3 className="text-2xl md:text-[5vw] relative z-20 right-[8.5vw]">
+            погрузиться в мир D&D улучшить игру
           </h3>
         </div>
-
-        <div className="w-screen h-screen flex items-center justify-center text-white px-8">
-          <h3 className="text-2xl md:text-[5vw]">улучшить игру интерактивными механиками</h3>
+        <div className="w-screen h-screen flex items-center text-white relative right-[19vw]">
+          <h3 className="text-2xl md:text-[5vw]">интерактивными механиками и сделать</h3>
         </div>
-        <div className="w-screen h-screen flex items-center text-white px-0">
-          <h3 className="text-2xl md:text-[5vw]">и сделать свою партию незабываемой</h3>
+        <div className="w-screen h-screen flex items-center text-white relative right-[23vw]">
+          <h3 className="text-2xl md:text-[5vw]">свою партию красочной и незабываемой</h3>
         </div>
       </div>
     </section>

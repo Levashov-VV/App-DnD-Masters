@@ -320,7 +320,7 @@ export function DescriptionApp() {
               start: '60% top',
               end: '+=50%',
               scrub: 3,
-            }
+            },
           });
 
           swordTL
@@ -331,16 +331,18 @@ export function DescriptionApp() {
               y: '0vh',
               duration: 2,
               ease: 'power2.out',
-              scrub: 3
+              scrub: 3,
             })
             .to(sword, {
-              y: '100vh',
+              y: '120vh',
+              x: '-2.5vw',
               duration: 2,
               ease: 'power2.in',
               scrub: 3,
-            }).to(sword, {
-              rotateZ: 180,
             })
+            .to(sword, {
+              rotateZ: 180,
+            });
         }
       }
       // Шестеренки
@@ -615,14 +617,14 @@ export function DescriptionApp() {
           alt="shield"
         />
 
-        <div className="w-screen h-screen flex flex-col items-center justify-center text-white px-8 ml-[20%] relative z-20">
+        <div className="w-screen h-screen flex flex-col items-center justify-center  px-8 ml-[20%] relative z-20">
           <div>
             <h3 className="text-2xl md:text-[5vw] relative  right-[10%] z-20 leading-tight">
               С нашим приложением вы можете
             </h3>
           </div>
         </div>
-        <div className="w-screen h-screen flex items-center text-white relative z-20">
+        <div className="w-screen h-screen flex items-center relative z-20">
           <h3 className="text-2xl md:text-[5vw] relative z-20 right-[15%]">
             <span
               ref={textRef}
@@ -642,7 +644,7 @@ export function DescriptionApp() {
             </span>
           </h3>
         </div>
-        <div className="w-screen h-screen flex items-center text-white relative right-[5.5%]">
+        <div className="w-screen h-screen flex items-center  relative right-[5.5%]">
           <img
             ref={dice6Ref}
             className="absolute z-10 pointer-events-none w-[6vw] h-[6vw] object-contain"
@@ -713,7 +715,7 @@ export function DescriptionApp() {
             </span>
           </h3>
         </div>
-        <div className="w-screen h-screen flex items-center text-white relative right-[6%]">
+        <div className="w-screen h-screen flex items-center relative right-[6%]">
           <img
             className="absolute z-10 w-[35vw] h-[35vw] object-contain left-[27vw] bottom-[40vh]"
             src={images.book}
@@ -739,7 +741,7 @@ export function DescriptionApp() {
             </span>{' '}
             <span ref={unforgettableTextRef}>незабываемой</span>
             <img
-              className="absolute z-10 pointer-events-none w-[35vw] h-[35vw] object-contain left-[90vw] bottom-[20vh]"
+              className="absolute z-50 pointer-events-none w-[35vw] h-[35vw] object-contain left-[90vw] bottom-[20vh]"
               ref={swordRef}
               src={images.sword}
               alt="sword"

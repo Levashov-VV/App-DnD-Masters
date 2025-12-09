@@ -7,7 +7,7 @@ export function StartBlock() {
   return (
     <section>
       <div
-        className="relative z-20 flex flex-col items-center justify-center  h-screen text-white text-center"
+        className="relative z-20 flex flex-col items-center justify-center  h-screen text-center"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           width: '100vw',

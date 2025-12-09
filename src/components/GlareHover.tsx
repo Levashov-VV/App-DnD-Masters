@@ -32,7 +32,7 @@ const GlareHover: React.FC<GlareHoverProps> = ({
   transitionDuration = 650,
   playOnce = false,
   className = '',
-  style = {}
+  style = {},
 }) => {
   const hex = glareColor.replace('#', '');
   let rgba = glareColor;
@@ -57,7 +57,7 @@ const GlareHover: React.FC<GlareHoverProps> = ({
     '--gh-duration': `${transitionDuration}ms`,
     '--gh-size': `${glareSize}%`,
     '--gh-rgba': rgba,
-    '--gh-border': borderColor
+    '--gh-border': borderColor,
   };
 
   return (

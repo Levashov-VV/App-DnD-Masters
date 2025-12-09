@@ -20,14 +20,6 @@ export function Header() {
           </li>
           <li className="px-2 py-2 shrink-0">
             <Link
-              to={'/persons'}
-              className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
-            >
-              Создание персонажей
-            </Link>
-          </li>
-          <li className="px-2 py-2 shrink-0">
-            <Link
               to={'/BattleField'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
@@ -40,6 +32,14 @@ export function Header() {
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
               Броски кубиков
+            </Link>
+          </li>
+          <li className="px-2 py-2 shrink-0">
+            <Link
+              to={'/persons'}
+              className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
+            >
+              Создание персонажей
             </Link>
           </li>
           <li className="px-2 py-2shrink-0">

@@ -2,6 +2,7 @@ import { StartBlock } from './StartBlock/StartBlock';
 import { DescriptionApp } from './DescriptionApp/DescriptionApp';
 import BattleField from './Battlefield/Battlefield';
 import { DiceTray } from './DiceTray/DiceTray';
+import { CreatePerson } from './CreatePerson/CreatePerson';
 
 export function DashboardMaster() {
   return (
@@ -10,6 +11,7 @@ export function DashboardMaster() {
       <DescriptionApp />
       <BattleField />
       <DiceTray />
+      <CreatePerson />
     </main>
   );
 }

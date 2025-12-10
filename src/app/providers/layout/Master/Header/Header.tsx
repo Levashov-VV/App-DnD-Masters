@@ -47,15 +47,7 @@ export function Header() {
               to={'/tables'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
-              Таблица
-            </Link>
-          </li>
-          <li className="px-2 py-2 shrink-0">
-            <Link
-              to={'/master/tables'}
-              className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
-            >
-              Таблица
+              Генерация голоса
             </Link>
           </li>
         </ul>

@@ -144,7 +144,7 @@ export default function Battlefield() {
   }, [containerRef]);
 
   return (
-    <section className="h-[120vh] z-0 w-screen gap-[10vw] bg-neutral-900 text-2xl text-amber-100">
+    <section className="h-[120vh] z-0 w-screen bg-neutral-900 text-2xl text-amber-100">
       <article className="flex flex-col items-center gap-[15vh]">
         <div ref={titleRef} className="text-center text-6xl">
           Создавайте динамичные сражения в D&D с полностью настраиваемой боевой картой
@@ -212,6 +212,7 @@ export default function Battlefield() {
           </div>
         </div>
       </article>
+      <div className="w-[80vw] rounded-xl bg-amber-100 h-0.5 opacity-50 relative top-[10vh] left-[10vw]"></div>
     </section>
   );
 }

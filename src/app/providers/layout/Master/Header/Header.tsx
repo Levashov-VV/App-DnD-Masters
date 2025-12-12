@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export function Header() {
   return (
-    <header className="fixed top-0 left-0 z-50 text-amber-100 text-[1vw] py-4 gap-[4vw] flex items-center w-full">
+    <header className="fixed top-0 left-0 z-50 text-amber-100 bg-neutral-900/90 text-[1vw] py-4 gap-[4vw] flex items-center w-full">
       <div className="shrink-0">
         <Link to={'/'}>
           <img className="w-[8vw] h-[8vw] object-contain" src="/img/logo/logo.png" alt="Logo" />
@@ -44,7 +44,7 @@ export function Header() {
           </li>
           <li className="px-2 py-2shrink-0">
             <Link
-              to={'/tables'}
+              to={'/CloneVoice'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
               Генерация голоса

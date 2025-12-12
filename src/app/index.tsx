@@ -10,9 +10,8 @@ function App() {
       setLoading(false);
     }, 1500);
   });
-  if (loading) {
-    return <PreloaderProvider />;
-  }
+  if (loading) return <PreloaderProvider />;
+
 
   return (
     <div className="flex justify-center">

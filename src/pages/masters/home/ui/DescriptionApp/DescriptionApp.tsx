@@ -1,16 +1,16 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef } from 'react';
-import dice20 from '../../../../../../public/img/masters/home/dice1d20.svg';
-import dice10 from '../../../../../../public/img/masters/home/dice1d10.svg';
-import dice6 from '../../../../../../public/img/masters/home/dice1d6.png';
-import shield from '../../../../../../public/img/masters/home/Shield.png';
-import gear from '../../../../../../public/img/masters/home/gear.svg';
-import bag from '../../../../../../public/img/masters/home/bag.png';
-import book from '../../../../../../public/img/masters/home/book.png';
-import potionMed from '../../../../../../public/img/masters/home/potionMed.png';
-import potionToxic from '../../../../../../public/img/masters/home/potionToxic.png';
-import sword from '../../../../../../public/img/masters/home/sword.png';
+import dice20 from '../../../../../../public/img/masters/home/DescriptionApp/dice1d20.svg';
+import dice10 from '../../../../../../public/img/masters/home/DescriptionApp/dice1d10.svg';
+import dice6 from '../../../../../../public/img/masters/home/DescriptionApp/dice1d6.png';
+import shield from '../../../../../../public/img/masters/home/DescriptionApp/Shield.png';
+import gear from '../../../../../../public/img/masters/home/DescriptionApp/gear.svg';
+import bag from '../../../../../../public/img/masters/home/DescriptionApp/bag.png';
+import book from '../../../../../../public/img/masters/home/DescriptionApp/book.png';
+import potionMed from '../../../../../../public/img/masters/home/DescriptionApp/potionMed.png';
+import potionToxic from '../../../../../../public/img/masters/home/DescriptionApp/potionToxic.png';
+import sword from '../../../../../../public/img/masters/home/DescriptionApp/sword.png';
 
 const images = {
   dice20,
@@ -655,7 +655,7 @@ export function DescriptionApp() {
             ref={gearUpRef}
             className="absolute z-10 pointer-events-none w-[10vw] h-[10vw] object-contain"
             style={{
-              left: '10vw', // ← максимально близко!
+              left: '10vw',
               bottom: '17.2vh',
               transformOrigin: '50% 50%',
             }}

@@ -7,6 +7,7 @@ import { Persons } from '../../../pages/masters/Persons/ui/Persons';
 import { BattleField } from '../../../pages/masters/Battlefield/ui/Battlefield';
 import { DiceTray } from '../../../pages/masters/DiceTray/ui/DiceTray';
 import { DashboardPlayer } from '../../../pages/players/home/ui/Dashboard';
+import { CloneVoice } from '@/pages/masters/home/ui/CloneVoice/CloneVoice';
 
 export function Routing() {
   return (
@@ -17,7 +18,8 @@ export function Routing() {
         <Route path="master" element={<DashboardMaster />} />
         <Route path="persons" element={<Persons />} />
         <Route path="battlefield" element={<BattleField />} />
-        <Route path="dicetray" element={<DiceTray />} />
+        <Route path="diceTray" element={<DiceTray />} />
+        <Route path="cloneVoice" element={<CloneVoice />} />
       </Route>
       <Route element={<LayoutMaster />}>
         <Route path="player" element={<DashboardPlayer />} />

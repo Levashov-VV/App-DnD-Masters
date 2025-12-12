@@ -192,7 +192,7 @@ export function DiceTray() {
           </div>
         </div>
       </article>
-        <div className="w-[80vw] rounded-xl bg-amber-100 h-0.5 opacity-50 relative top-[10vh]" />
+      <div className="w-[80vw] rounded-xl bg-amber-100 h-0.5 opacity-50 relative top-[10vh]" />
     </section>
   );
 }

@@ -12,7 +12,6 @@ function App() {
   });
   if (loading) return <PreloaderProvider />;
 
-
   return (
     <div className="flex justify-center">
       <SelectRole />

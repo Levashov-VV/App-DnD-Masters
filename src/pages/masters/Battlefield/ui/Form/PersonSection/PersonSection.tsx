@@ -151,6 +151,7 @@ export function PersonSection() {
               </div>
             )}
           </ul>
+          <div></div>
         </div>
         {/* Враги */}
         <div>
@@ -160,7 +161,7 @@ export function PersonSection() {
           <div className="flex flex-row justify-between text-[1.5vh] font-bold text-red-300 bg-neutral-800/80 py-2 px-3 ">
             <div className="relative left-[0.3vw]">Лого</div>
             <div className="relative right-[5vw]">Имя игрока</div>
-            <div className="relative right-[6vw]">Раса</div>
+            <div className="relative right-[6vw]">Вид</div>
             <div className="relative right-[6.5vw]">Размер</div>
             <div className="relative right-[10vw]">Инициатива</div>
           </div>

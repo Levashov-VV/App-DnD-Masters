@@ -2,21 +2,24 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import type { BattleFormData } from '../types';
 import { useState } from 'react';
-import { maps } from '../types'; 
+import { maps } from '../types';
 
 export function SubmitSection() {
   const {
     handleSubmit,
-		getValues,
+    getValues,
     formState: { isValid },
   } = useFormContext<BattleFormData>();
 
   const mapId = useWatch({ name: 'mapId' }) || 1;
   const gridSize = useWatch({ name: 'gridSize' }) || 15;
-  const mapName = maps.find(map => map.id === mapId)?.title || 'Не выбрана';
-	const mapImage = maps.find(map => map.id === mapId)?.img || '';
-	const customMapImage = useWatch({ name: 'customMapImage' }) as string | null;
-  
+  const mapName = maps.find((map) => map.id === mapId)?.title || 'Не выбрана';
+  const mapImage = maps.find((map) => map.id === mapId)?.img || '';
+  const customMapImage = useWatch({ name: 'customMapImage' }) as string | null;
+  const { gridWidth, gridHeight } = useWatch<BattleFormData>();
+
+  const sizeW = gridWidth || gridSize;
+  const sizeH = gridHeight || gridSize;
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -24,7 +27,7 @@ export function SubmitSection() {
     setIsCreating(true);
     try {
       const formData = getValues();
-      console.log('Создание битвы:', formData);
+      console.log('navigate to battlefield with', formData);
       navigate('/battlefield', { state: { battleData: formData } });
     } catch (error) {
       console.error('Ошибка создания битвы:', error);
@@ -74,8 +77,10 @@ export function SubmitSection() {
               'Создать битву'
             )}
           </span>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/20 to-orange-500/20 
-                          opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div
+            className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/20 to-orange-500/20 
+                          opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          />
         </button>
       </div>
       <details className="w-full max-w-4xl p-4 bg-neutral-900/50 backdrop-blur-sm rounded-2xl border-neutral-700/50">
@@ -86,27 +91,29 @@ export function SubmitSection() {
           <div>Игроки: {getValues('users')?.length || 0}</div>
           <div>Враги: {getValues('enemies')?.length || 0}</div>
           <div>Карта: {customMapImage ? 'Своя карта' : mapName}</div>
-          <div>Размер: {gridSize}x{gridSize}</div>
-					{customMapImage && (                           
-          <div className="">
-            <p className="text-neutral-400 ">Превью своей карты:</p>
-            <img
-              src={customMapImage}
-              alt="Своя карта"
-              className="w-[20vw] object-cover rounded-xl border-neutral-700"
-            />
+          <div>
+            Размер: {sizeW}x{sizeH}
           </div>
-        )}
-				{!customMapImage && (
-					<div>
-						<p className="text-neutral-400 ">Превью карты:</p>
-						<img
-							src={mapImage}
-							alt="Карта"
-							className="w-[20vw] object-cover rounded-xl border-neutral-700"
-						/>
-					</div>
-				)}
+          {customMapImage && (
+            <div className="">
+              <p className="text-neutral-400 ">Превью своей карты:</p>
+              <img
+                src={customMapImage}
+                alt="Своя карта"
+                className="w-[20vw] object-cover rounded-xl border-neutral-700"
+              />
+            </div>
+          )}
+          {!customMapImage && (
+            <div>
+              <p className="text-neutral-400 ">Превью карты:</p>
+              <img
+                src={mapImage}
+                alt="Карта"
+                className="w-[20vw] object-cover rounded-xl border-neutral-700"
+              />
+            </div>
+          )}
         </div>
       </details>
     </section>

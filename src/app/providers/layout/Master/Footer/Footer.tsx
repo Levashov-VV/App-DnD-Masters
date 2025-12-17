@@ -4,7 +4,6 @@ import LogoText from '../../../../../../public/img/logo/logo-text.png';
 export function Footer() {
   return (
     <footer className="flex items-center px-[4vw] h-[15vh] w-[100vw] bg-neutral-900 text-amber-100 text-[1.8vh]">
-      {/* Левая часть: логотип + текст */}
       <div className="flex items-center relative  bottom-[5vh] left-[10vw] gap-[20vw]">
         <div className="flex flex-row items-center">
           <img className="h-[15vh] object-contain" src={LogoText} alt="Logo" />

@@ -33,6 +33,8 @@ export interface BattleFormData {
   enemies: Enemies[];
   mapId: number;
   gridSize: number;
+  gridWidth?: number;
+  gridHeight?: number;
   customMapImage?: string;
 }
 

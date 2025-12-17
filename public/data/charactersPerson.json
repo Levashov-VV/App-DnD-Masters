@@ -70,6 +70,49 @@
     "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Orc.png"
   },
   {
+    "id": 11,
+    "side": "allies",
+    "name": "Aasimar",
+    "img": "../img/masters/Battlefield/Figures/Allies/Aasimar.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Aasimar.png"
+  },
+  {
+    "id": 12,
+    "side": "allies",
+    "name": "Centaur",
+    "img": "../img/masters/Battlefield/Figures/Allies/Centaur.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Centaur.png"
+  },
+  {
+    "id": 13,
+    "side": "allies",
+    "name": "Halfling",
+    "img": "../img/masters/Battlefield/Figures/Allies/Halfling.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Halfling.png"
+  },
+  {
+    "id": 14,
+    "side": "allies",
+    "name": "Leonin",
+    "img": "../img/masters/Battlefield/Figures/Allies/Leonin.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Leonin.png"
+  },
+  {
+    "id": 15,
+    "side": "allies",
+    "name": "Tabaxi",
+    "img": "../img/masters/Battlefield/Figures/Allies/Tabaxi.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Tabaxi.png"
+  },
+  {
+    "id": 16,
+    "side": "allies",
+    "name": "Genasi",
+    "img": "../img/masters/Battlefield/Figures/Allies/Genasi.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Genasi.png"
+
+  },
+  {
     "id": 101,
     "side": "enemies",
     "name": "Goblin",

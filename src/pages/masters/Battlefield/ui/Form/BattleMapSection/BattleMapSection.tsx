@@ -1,6 +1,7 @@
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState } from 'react';
 import type { BattleFormData } from '../types';
+
 const maps = [
   { title: 'Подземелье', id: 1, img: '/img/masters/Battlefield/Map/Dungeon.jpg' },
   { title: 'Городская площадь', id: 2, img: '/img/masters/Battlefield/Map/CitySquare.jpg' },
@@ -12,8 +13,12 @@ const maps = [
 export function BattleMapSection() {
   const { control, setValue } = useFormContext<BattleFormData>();
   const mapId = useWatch({ control, name: 'mapId' }) || 1;
-  const gridSize = useWatch({ control, name: 'gridSize' }) || 15;
+  const gridSize = useWatch({ control, name: 'gridSize' }) || 30;
   const customImage = useWatch({ control, name: 'customMapImage' }) || null;
+  const width = useWatch({ control, name: 'gridWidth' }) || 30;
+  const height = useWatch({ control, name: 'gridHeight' }) || 30;
+  const [isCustomSizeOpen, setIsCustomSizeOpen] = useState(false);
+  const [sizeMode, setSizeMode] = useState<'preset' | 'custom'>('preset');
 
   const selectedMap = maps.find((map) => map.id === mapId) || maps[0];
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,13 +30,29 @@ export function BattleMapSection() {
       setValue('customMapImage', '');
     }
   };
+
   const clearCustomMap = () => {
     setValue('customMapImage', '');
-    fileInputRef.current?.value && (fileInputRef.current.value = ''); // Очищаем input file
   };
 
   const handleGridSizeChange = (size: number) => {
+    setSizeMode('preset');
+    setIsCustomSizeOpen(false);
     setValue('gridSize', size);
+    setValue('gridWidth', size);
+    setValue('gridHeight', size);
+  };
+
+  const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value) || 0;
+    setSizeMode('custom');
+    setValue('gridWidth', value);
+  };
+
+  const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value) || 0;
+    setSizeMode('custom');
+    setValue('gridHeight', value);
   };
 
   const handleDrop = useCallback(
@@ -48,6 +69,7 @@ export function BattleMapSection() {
     },
     [setValue]
   );
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -66,6 +88,8 @@ export function BattleMapSection() {
     },
     [setValue]
   );
+
+  const sizes = [30, 40, 45, 50, 55, 60, 70] as const;
 
   return (
     <section className="flex flex-col items-center w-full text-[2.5vh]">
@@ -107,7 +131,7 @@ export function BattleMapSection() {
                 type="button"
                 onClick={clearCustomMap}
                 className="absolute top-2 right-2 w-[5vh] h-[5vh] bg-red-500/90 hover:bg-red-600 rounded-2xl 
-                 flex items-center justify-center text-white font-bold text-[4vh]"
+                flex items-center justify-center text-white font-bold text-[4vh]"
                 title="Удалить свою карту"
               >
                 ×
@@ -200,14 +224,12 @@ export function BattleMapSection() {
             🏁 Размер боевого поля
           </label>
           <div className="grid grid-cols-2 gap-[3vh] w-full justify-items-center">
-            {[30, 40, 45, 50, 55, 60, 70].map((size) => (
+            {sizes.map((size) => (
               <button
                 key={size}
                 type="button"
-                className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300
-                flex items-center justify-center w-[5vw]
-                ${
-                  gridSize === size
+                className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 flex items-center justify-center w-[5vw] ${
+                  sizeMode === 'preset' && gridSize === size
                     ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/50 scale-105 ring-4 ring-purple-500/40'
                     : 'bg-neutral-800/80 hover:bg-purple-600/80 border-2 border-transparent hover:border-purple-400/60 hover:shadow-purple-500/40 hover:scale-105 text-neutral-200'
                 }`}
@@ -217,10 +239,55 @@ export function BattleMapSection() {
               </button>
             ))}
           </div>
-          <p className="text-center text-[2.5vh] text-neutral-400 font-medium">
+
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                setIsCustomSizeOpen((prev) => !prev);
+                setSizeMode('custom');
+              }}
+              className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 ${
+                isCustomSizeOpen
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/50 scale-105 ring-4 ring-purple-500/40'
+                  : 'bg-neutral-800/80 hover:bg-purple-600/80 border-2 border-transparent hover:border-purple-400/60 hover:shadow-purple-500/40 hover:scale-105 text-neutral-200'
+              }`}
+            >
+              {isCustomSizeOpen ? 'Скрыть произвольный размер' : 'Произвольный размер'}
+            </button>
+          </div>
+          {isCustomSizeOpen && (
+            <div className="flex items-center justify-center gap-4">
+              <div className="flex flex-col items-center">
+                <span className="text-[1.5vh] text-neutral-300">Ширина</span>
+                <input
+                  type="text"
+                  min={1}
+                  className="w-[4vw] h-[2.5vh] bg-neutral-800 border-neutral-600 rounded-xl text-center text-[2vh] text-neutral-100 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40"
+                  value={width}
+                  onChange={handleWidthChange}
+                />
+              </div>
+
+              <span className="text-[3vh] font-bold text-neutral-400">×</span>
+
+              <div className="flex flex-col items-center">
+                <span className="text-[1.5vh] text-neutral-300">Высота</span>
+                <input
+                  type="text"
+                  min={1}
+                  className="w-[4vw] h-[2.5vh] bg-neutral-800 border-neutral-600 rounded-xl text-center text-[2vh] text-neutral-100 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40"
+                  value={height}
+                  onChange={handleHeightChange}
+                />
+              </div>
+            </div>
+          )}
+
+          <p className="text-center text-[2.5vh] text-neutral-400 font-medium mt-[2vh]">
             Текущее поле:{' '}
             <span className="text-[2.5vh] font-bold text-purple-400">
-              {gridSize}×{gridSize}
+              {width || gridSize}×{height || gridSize}
             </span>
           </p>
         </div>

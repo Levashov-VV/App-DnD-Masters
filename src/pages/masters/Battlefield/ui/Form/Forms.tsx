@@ -4,7 +4,15 @@ import { NavigationHeader } from './Navigation/NavigationHeader';
 import { PersonSection } from './PersonSection/PersonSection';
 import { BattleMapSection } from './BattleMapSection/BattleMapSection';
 import { SubmitSection } from './SubmitSection/SubmitSection';
+import { WindowsTeamLS } from './PersonSection/WindowTeamLS';
+import { useSavedTeams } from '../../../../../shared/hooks/auth/useSavedTeams';
+import { useCurrentBattle } from '../../../../../shared/hooks/auth/useCurrentBattle';
 import type { BattleFormData } from './types';
+
+function CurrentBattleProvider() {
+  useCurrentBattle();
+  return null;
+}
 
 export function Forms() {
   const methods = useForm<BattleFormData>({
@@ -12,19 +20,30 @@ export function Forms() {
       users: [],
       enemies: [],
       mapId: 1,
-      gridSize: 15,
+      gridSize: 30,
+      gridWidth: 30,
+      gridHeight: 30,
       customMapImage: '',
     },
   });
 
   const [stepForm, setStepForm] = useState(0);
+  const { saveCurrentTeam, loadTeam, deleteTeam, teams } = useSavedTeams();
 
   const onSubmit = (data: BattleFormData) => {
-    console.log('Битва создана:', data);
+    console.log('Form data:', data);
   };
 
   return (
     <FormProvider {...methods}>
+      <CurrentBattleProvider />
+      <WindowsTeamLS
+        teams={teams}
+        onLoadTeam={loadTeam}
+        onSaveCurrent={saveCurrentTeam}
+        onDeleteTeam={deleteTeam}
+      />
+
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col justify-start items-center relative top-[5vh] w-[80vw] h-[80vh] bg-neutral-700 p-8 rounded-3xl shadow-2xl"

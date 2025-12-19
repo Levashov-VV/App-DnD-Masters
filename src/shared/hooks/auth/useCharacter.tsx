@@ -16,7 +16,8 @@ export function useCharacter() {
   useEffect(() => {
     fetch('../../../../public/data/charactersPerson.json')
       .then((res) => res.json())
-      .then((json: Character[]) => setData(json))
+      .then((json: Character[]) => {
+        setData(json)})
       .finally(() => setLoading(false));
   }, []);
 

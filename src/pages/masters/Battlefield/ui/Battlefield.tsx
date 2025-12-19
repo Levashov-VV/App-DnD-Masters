@@ -8,7 +8,7 @@ import type { BattleFormData } from './Form/types';
 export function BattleField() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  const battleData = location.state?.battleData as BattleFormData | undefined; // ✅ Данные из SubmitSection
+  const battleData = location.state?.battleData as BattleFormData | undefined;
 
   useEffect(() => {
     const id = setTimeout(() => setLoading(false), 3000);
@@ -20,7 +20,7 @@ export function BattleField() {
   if (battleData) {
     return (
       <div className="flex justify-center items-center w-[100vw] h-[100vh] bg-neutral-900 overflow-x-hidden">
-        <Battle />
+        <Battle battleData={battleData} />
       </div>
     );
   }

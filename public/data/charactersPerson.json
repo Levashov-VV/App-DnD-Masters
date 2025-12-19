@@ -202,5 +202,12 @@
     "name": "Spider",
     "img": "../img/masters/Battlefield/Figures/Enemies/Spider.png",
     "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Spider.png"
+  },
+  {
+    "id": 114,
+    "side": "enemies",
+    "name": "Beholder",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Beholder.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Beholder.png"
   }
 ]

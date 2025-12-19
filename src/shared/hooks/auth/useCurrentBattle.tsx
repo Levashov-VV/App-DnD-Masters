@@ -15,7 +15,6 @@ export function useCurrentBattle() {
       setValue('users', data.users);
       setValue('enemies', data.enemies);
       setValue('mapId', data.mapId);
-      setValue('gridSize', data.gridSize);
       setValue('customMapImage', data.customMapImage || '');
     }
   }, [setValue]);

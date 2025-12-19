@@ -20,7 +20,6 @@ export function Forms() {
       users: [],
       enemies: [],
       mapId: 1,
-      gridSize: 30,
       gridWidth: 30,
       gridHeight: 30,
       customMapImage: '',
@@ -30,9 +29,7 @@ export function Forms() {
   const [stepForm, setStepForm] = useState(0);
   const { saveCurrentTeam, loadTeam, deleteTeam, teams } = useSavedTeams();
 
-  const onSubmit = (data: BattleFormData) => {
-    console.log('Form data:', data);
-  };
+
 
   return (
     <FormProvider {...methods}>
@@ -45,7 +42,6 @@ export function Forms() {
       />
 
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col justify-start items-center relative top-[5vh] w-[80vw] h-[80vh] bg-neutral-700 p-8 rounded-3xl shadow-2xl"
       >
         <NavigationHeader stepForm={stepForm} setStepForm={setStepForm} />

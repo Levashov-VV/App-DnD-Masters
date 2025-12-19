@@ -13,10 +13,11 @@ const maps = [
 export function BattleMapSection() {
   const { control, setValue } = useFormContext<BattleFormData>();
   const mapId = useWatch({ control, name: 'mapId' }) || 1;
-  const gridSize = useWatch({ control, name: 'gridSize' }) || 30;
   const customImage = useWatch({ control, name: 'customMapImage' }) || null;
-  const width = useWatch({ control, name: 'gridWidth' }) || 30;
-  const height = useWatch({ control, name: 'gridHeight' }) || 30;
+  const gridWidth = useWatch({ control, name: 'gridWidth' }) || 30;
+  const gridHeight = useWatch({ control, name: 'gridHeight' }) || 30;
+  const width = gridWidth; 
+  const height = gridHeight;
   const [isCustomSizeOpen, setIsCustomSizeOpen] = useState(false);
   const [sizeMode, setSizeMode] = useState<'preset' | 'custom'>('preset');
 
@@ -38,7 +39,6 @@ export function BattleMapSection() {
   const handleGridSizeChange = (size: number) => {
     setSizeMode('preset');
     setIsCustomSizeOpen(false);
-    setValue('gridSize', size);
     setValue('gridWidth', size);
     setValue('gridHeight', size);
   };
@@ -89,7 +89,7 @@ export function BattleMapSection() {
     [setValue]
   );
 
-  const sizes = [30, 40, 45, 50, 55, 60, 70] as const;
+  const sizes = [10, 15, 20, 25, 30, 35, 40] as const;
 
   return (
     <section className="flex flex-col items-center w-full text-[2.5vh]">
@@ -223,13 +223,14 @@ export function BattleMapSection() {
           <label className="block text-[2.5vh] font-bold text-center text-neutral-200">
             🏁 Размер боевого поля
           </label>
+
           <div className="grid grid-cols-2 gap-[3vh] w-full justify-items-center">
             {sizes.map((size) => (
               <button
                 key={size}
                 type="button"
                 className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 flex items-center justify-center w-[5vw] ${
-                  sizeMode === 'preset' && gridSize === size
+                  sizeMode === 'preset' && gridWidth === size && gridHeight === size
                     ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/50 scale-105 ring-4 ring-purple-500/40'
                     : 'bg-neutral-800/80 hover:bg-purple-600/80 border-2 border-transparent hover:border-purple-400/60 hover:shadow-purple-500/40 hover:scale-105 text-neutral-200'
                 }`}
@@ -256,15 +257,17 @@ export function BattleMapSection() {
               {isCustomSizeOpen ? 'Скрыть произвольный размер' : 'Произвольный размер'}
             </button>
           </div>
+
           {isCustomSizeOpen && (
             <div className="flex items-center justify-center gap-4">
               <div className="flex flex-col items-center">
                 <span className="text-[1.5vh] text-neutral-300">Ширина</span>
                 <input
-                  type="text"
+                  type="number"
                   min={1}
+                  max={100}
                   className="w-[4vw] h-[2.5vh] bg-neutral-800 border-neutral-600 rounded-xl text-center text-[2vh] text-neutral-100 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40"
-                  value={width}
+                  value={width || ''}
                   onChange={handleWidthChange}
                 />
               </div>
@@ -274,10 +277,11 @@ export function BattleMapSection() {
               <div className="flex flex-col items-center">
                 <span className="text-[1.5vh] text-neutral-300">Высота</span>
                 <input
-                  type="text"
+                  type="number"
                   min={1}
+                  max={100}
                   className="w-[4vw] h-[2.5vh] bg-neutral-800 border-neutral-600 rounded-xl text-center text-[2vh] text-neutral-100 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/40"
-                  value={height}
+                  value={height || ''}
                   onChange={handleHeightChange}
                 />
               </div>
@@ -287,7 +291,7 @@ export function BattleMapSection() {
           <p className="text-center text-[2.5vh] text-neutral-400 font-medium mt-[2vh]">
             Текущее поле:{' '}
             <span className="text-[2.5vh] font-bold text-purple-400">
-              {width || gridSize}×{height || gridSize}
+              {gridWidth || 30}{'x'}{gridHeight || 30}
             </span>
           </p>
         </div>

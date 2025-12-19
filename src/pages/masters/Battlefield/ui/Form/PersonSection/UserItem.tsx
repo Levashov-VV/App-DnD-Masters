@@ -2,7 +2,8 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import Person from '../../../../../../../public/img/masters/Battlefield/Figures/Logo-Profile.png';
 import { useCharacter } from '@/shared/hooks/auth/useCharacter';
 import type { Path } from 'react-hook-form';
-import type { User, CreatureSide, BattleFormData } from '../types';
+import { useEffect } from 'react';
+import type { User, Enemies, CreatureSide, BattleFormData } from '../types';
 
 interface UserItemProps {
   index: number;
@@ -52,6 +53,7 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
         Выберите врага
       </option>
       <option value="Bandit">Бандит</option>
+      <option value="Beholder">Бехолдер</option>
       <option value="Goblin">Гоблин</option>
       <option value="Zombie">Зомби</option>
       <option value="Dragon">Дракон</option>
@@ -67,27 +69,41 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
     </select>
   );
 };
-
 export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
-  const { control, register } = useFormContext<BattleFormData>();
+  const { control, register, setValue, getValues } = useFormContext<BattleFormData>();
   const { data: characters } = useCharacter();
-
-  const users = useWatch({
+  
+  const item = useWatch({
     control,
     name: `${arrayName}.${index}` as Path<BattleFormData>,
-  }) as User | undefined;
-
-  if (!users) return null;
-
+  }) as User | Enemies | undefined;
   const side: CreatureSide = arrayName === 'users' ? 'allies' : 'enemies';
-  const hasClass = !!users.className;
-  const character = hasClass
-    ? characters.find((c) => c.side === side && c.name === users.className)
+  const itemWithClass = item as User;
+  const raceKey = itemWithClass.className;
+  const hasRace = !!raceKey;
+  const character = hasRace
+    ? characters?.find((c) => c.side === side && c.name === raceKey)
     : undefined;
-  const currentImg = hasClass ? character?.logo || users.logo || Person : Person;
+
+  useEffect(() => {
+    if (!character || !item) return;
+
+    const baseField = `${arrayName}.${index}` as const;
+    const currentData = getValues(baseField as Path<BattleFormData>) as User | Enemies;
+
+    if (character.img && currentData.img !== character.img) {
+      setValue(`${arrayName}.${index}.img` as Path<BattleFormData>, character.img);
+    }
+
+    if (character.logo && currentData.logo !== character.logo) {
+      setValue(`${arrayName}.${index}.logo` as Path<BattleFormData>, character.logo);
+    }
+  }, [character, item, arrayName, index, getValues, setValue, control]); 
+
+  if (!item) return null;
 
   const handleRemove = () => {
-    if (confirm(`Удалить ${users?.name || 'персонажа'}?`)) {
+    if (confirm(`Удалить ${item.name || 'персонажа'}?`)) {
       window.dispatchEvent(
         new CustomEvent('removeCharacter', {
           detail: { arrayName, index },
@@ -96,10 +112,13 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
     }
   };
 
+  const logoForForm = character?.logo || item.logo || Person;
+
   return (
     <li className="flex items-center gap-2">
-      <img className="w-10 h-10 object-contain" src={currentImg} alt={users.name} />
+      <img className="w-10 h-10 object-contain" src={logoForForm} alt={item.name} />
       <input {...register(`${arrayName}.${index}.name` as Path<BattleFormData>)} />
+      
       {arrayName === 'users' ? (
         <UserSelect index={index} arrayName={arrayName} />
       ) : (
@@ -115,17 +134,19 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
         <option value="huge">Большой</option>
         <option value="large">Огромный</option>
       </select>
+
       {arrayName === 'users' && (
         <input
           className="w-[2vw]"
           {...register(`${arrayName}.${index}.hp` as Path<BattleFormData>)}
         />
       )}
+
       <input
         className="w-[2vw]"
         {...register(`${arrayName}.${index}.initiative` as Path<BattleFormData>)}
       />
-      <div className="flex flex-col"></div>
+
       <button type="button" onClick={handleRemove}>
         X
       </button>

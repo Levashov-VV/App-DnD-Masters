@@ -4,27 +4,28 @@ export type Character = {
   id: number;
   side: CreatureSide;
   name: string;
-  img: string;
-  logo: string;
+  img?: string;
+  logo?: string;
 };
 
 export type User = {
   id: number;
   name: string;
-  className: string;
-  img: string;
-  logo: string;
-  initiative: number;
-  hp: number;
+  className?: string;
+  img?: string;
+  logo?: string;
+  initiative?: number;
+  hp?: number;
   size: string;
 };
 
 export type Enemies = {
   id: number;
   name: string;
-  img: string;
-  logo: string;
-  initiative: number;
+  img?: string;
+  logo?: string;
+  initiative?: number;
+  isDead?: boolean;
   size: string;
 };
 
@@ -32,9 +33,10 @@ export interface BattleFormData {
   users: User[];
   enemies: Enemies[];
   mapId: number;
-  gridSize: number;
   gridWidth?: number;
   gridHeight?: number;
+  gridSizeX?: number;
+  gridSizeY?: number;
   customMapImage?: string;
 }
 
@@ -53,3 +55,8 @@ interface MapType {
 }
 
 export type { MapType };
+
+export type HoveredToken = {
+  type: 'user' | 'enemy';
+  id: string | number | null;
+} | null;

@@ -71,7 +71,6 @@ export function useSavedTeams() {
           users: team.users,
           enemies: [],
           mapId: 1,
-          gridSize: 15,
           customMapImage: '',
         };
 

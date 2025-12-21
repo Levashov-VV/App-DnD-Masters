@@ -23,10 +23,15 @@ const UserSelect = ({ index, arrayName }: UserItemProps) => {
       </option>
       <option value="Aasimar">Аасимар</option>
       <option value="Goliaf">Голиаф</option>
+<<<<<<< HEAD
       <option value="Grung">Грунг</option>
       <option value="Dwarf">Дварф</option>
       <option value="DragonBorn">Драконорождённый</option>
       <option value="Leonin">Леонин</option>
+=======
+      <option value="Dwarf">Дварф</option>
+      <option value="DragonBorn">Драконорождённый</option>
+>>>>>>> b57bdd70dfb92572c4815c4f3f024d1267669d1e
       <option value="Genasi">Дженази</option>
       <option value="Kalashtar">Калаштар</option>
       <option value="Centaur">Кентавр</option>

@@ -113,6 +113,7 @@
 
   },
   {
+<<<<<<< HEAD
     "id": 17,
     "side": "allies",
     "name": "Grung",
@@ -120,6 +121,8 @@
     "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Grung.png"
   },
   {
+=======
+>>>>>>> b57bdd70dfb92572c4815c4f3f024d1267669d1e
     "id": 101,
     "side": "enemies",
     "name": "Goblin",

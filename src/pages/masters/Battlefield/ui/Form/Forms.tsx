@@ -29,8 +29,6 @@ export function Forms() {
   const [stepForm, setStepForm] = useState(0);
   const { saveCurrentTeam, loadTeam, deleteTeam, teams } = useSavedTeams();
 
-
-
   return (
     <FormProvider {...methods}>
       <CurrentBattleProvider />
@@ -41,9 +39,7 @@ export function Forms() {
         onDeleteTeam={deleteTeam}
       />
 
-      <form
-        className="flex flex-col justify-start items-center relative top-[5vh] w-[80vw] h-[80vh] bg-neutral-700 p-8 rounded-3xl shadow-2xl"
-      >
+      <form className="flex flex-col justify-start items-center relative top-[5vh] w-[80vw] h-[85vh] bg-neutral-700 p-8 rounded-3xl shadow-2xl">
         <NavigationHeader stepForm={stepForm} setStepForm={setStepForm} />
 
         <div className="flex-1 w-full relative top-[8vh]">

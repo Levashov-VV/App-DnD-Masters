@@ -49,17 +49,15 @@ export function PersonList({
       </h3>
       {sortedInitiative.map((creature: Creature, sortedIndex) => {
         const entityId = 'id' in creature ? creature.id : sortedIndex;
-        const originalIndex = data.findIndex((item: Creature) => 
-          'id' in item && item.id === entityId
+        const originalIndex = data.findIndex(
+          (item: Creature) => 'id' in item && item.id === entityId
         );
-        
-        const hpValue = side === 'users' && 'hp' in creature 
-          ? (creature as User).hp 
-          : undefined;
+
+        const hpValue = side === 'users' && 'hp' in creature ? (creature as User).hp : undefined;
         const isEnemy = side === 'enemies';
         const src = getImageSrc(creature);
-        const isDead = 'isDead' in creature ? creature.isDead ?? false : false;
-        
+        const isDead = 'isDead' in creature ? (creature.isDead ?? false) : false;
+
         const isHoveredRow =
           hoveredToken &&
           hoveredToken.type === (side === 'users' ? 'user' : 'enemy') &&
@@ -72,7 +70,9 @@ export function PersonList({
               'flex items-center gap-[2vw] rounded-xl bg-neutral-800/80',
               isDead ? 'opacity-50 line-through' : '',
               isHoveredRow ? 'ring-2 ring-amber-400/90 bg-neutral-700' : '',
-            ].filter(Boolean).join(' ')}
+            ]
+              .filter(Boolean)
+              .join(' ')}
           >
             <img
               src={src}

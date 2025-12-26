@@ -20,8 +20,7 @@ interface BattleBoardProps {
   gridHeight: number;
   mapImage: string;
   onTokenMove?: (id: string, cellX: number, cellY: number) => void;
-onHoverToken?: (hover: HoveredToken) => void;
-
+  onHoverToken?: (hover: HoveredToken) => void;
 }
 
 const SIZE_MAP: Record<TokenType['size'], number> = {
@@ -68,11 +67,7 @@ export function BattleBoard({
                 id,
                 type: 'user' as const,
                 data: user,
-<<<<<<< HEAD
                 cellX: Math.max(0, i * 1),
-=======
-                cellX: Math.max(0, i * 2),
->>>>>>> b57bdd70dfb92572c4815c4f3f024d1267669d1e
                 cellY: Math.floor(i / 3),
                 size: getTokenSize(user.size),
               }

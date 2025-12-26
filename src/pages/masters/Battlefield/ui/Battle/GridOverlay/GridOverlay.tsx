@@ -3,7 +3,6 @@ interface GridOverlayProps {
   gridHeight: number;
 }
 
-
 export function GridOverlay({ gridWidth, gridHeight }: GridOverlayProps) {
   return (
     <div className="absolute inset-0 pointer-events-none z-20">

@@ -22,7 +22,7 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #000000, #333333 50%);
+  background: #171717
 }
 
 

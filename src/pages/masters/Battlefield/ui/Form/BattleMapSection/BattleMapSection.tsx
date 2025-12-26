@@ -16,7 +16,7 @@ export function BattleMapSection() {
   const customImage = useWatch({ control, name: 'customMapImage' }) || null;
   const gridWidth = useWatch({ control, name: 'gridWidth' }) || 30;
   const gridHeight = useWatch({ control, name: 'gridHeight' }) || 30;
-  const width = gridWidth; 
+  const width = gridWidth;
   const height = gridHeight;
   const [isCustomSizeOpen, setIsCustomSizeOpen] = useState(false);
   const [sizeMode, setSizeMode] = useState<'preset' | 'custom'>('preset');
@@ -291,7 +291,9 @@ export function BattleMapSection() {
           <p className="text-center text-[2.5vh] text-neutral-400 font-medium mt-[2vh]">
             Текущее поле:{' '}
             <span className="text-[2.5vh] font-bold text-purple-400">
-              {gridWidth || 30}{'x'}{gridHeight || 30}
+              {gridWidth || 30}
+              {'x'}
+              {gridHeight || 30}
             </span>
           </p>
         </div>

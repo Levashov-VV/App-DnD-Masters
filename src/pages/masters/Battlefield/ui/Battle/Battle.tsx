@@ -13,7 +13,7 @@ export function Battle({ battleData }: BattleProps) {
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [battleState, setBattleState] = useState(battleData);
-const [hoveredToken, setHoveredToken] = useState<HoveredToken>(null);
+  const [hoveredToken, setHoveredToken] = useState<HoveredToken>(null);
 
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
@@ -39,13 +39,11 @@ const [hoveredToken, setHoveredToken] = useState<HoveredToken>(null);
     }));
   };
   const handleHpChange = (entityId: number, hp: number) => {
-  setBattleState(prev => ({
-    ...prev,
-    users: prev.users.map(user => 
-      user.id === entityId ? { ...user, hp } : user
-    )
-  }));
-};
+    setBattleState((prev) => ({
+      ...prev,
+      users: prev.users.map((user) => (user.id === entityId ? { ...user, hp } : user)),
+    }));
+  };
 
   if (loading) return <BattlePreload />;
 

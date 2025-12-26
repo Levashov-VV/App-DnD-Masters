@@ -33,7 +33,7 @@ export default function Token({ token, gridWidth, gridHeight, onHoverToken }: To
   const width = (size / gridWidth) * 100;
   const height = (size / gridHeight) * 100;
 
-  const enemy = token.type === 'enemy' ? token.data as Enemies : undefined;
+  const enemy = token.type === 'enemy' ? (token.data as Enemies) : undefined;
   const isDead = enemy?.isDead;
 
   const normalizeImagePath = (path: string | undefined): string => {
@@ -56,9 +56,9 @@ export default function Token({ token, gridWidth, gridHeight, onHoverToken }: To
     const timeout = setTimeout(() => {
       onHoverToken?.({
         type: token.type,
-        id: entityId
+        id: entityId,
       });
-    }, 0); 
+    }, 0);
     setHoverTimeout(timeout);
   }, [token.type, entityId, onHoverToken, hoverTimeout]);
 
@@ -78,11 +78,12 @@ export default function Token({ token, gridWidth, gridHeight, onHoverToken }: To
 
   if (isDead) return null;
 
-  const imageSrc = mode === 'figure' 
-    ? figureSrc || logoSrc || DefaultLogo
-    : mode === 'logo' 
-      ? logoSrc || DefaultLogo 
-      : DefaultLogo;
+  const imageSrc =
+    mode === 'figure'
+      ? figureSrc || logoSrc || DefaultLogo
+      : mode === 'logo'
+        ? logoSrc || DefaultLogo
+        : DefaultLogo;
 
   return (
     <div

@@ -17,7 +17,8 @@ export function useCharacter() {
     fetch('../../../../public/data/charactersPerson.json')
       .then((res) => res.json())
       .then((json: Character[]) => {
-        setData(json)})
+        setData(json);
+      })
       .finally(() => setLoading(false));
   }, []);
 

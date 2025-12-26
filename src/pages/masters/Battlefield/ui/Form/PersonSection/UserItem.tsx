@@ -23,15 +23,12 @@ const UserSelect = ({ index, arrayName }: UserItemProps) => {
       </option>
       <option value="Aasimar">Аасимар</option>
       <option value="Goliaf">Голиаф</option>
-<<<<<<< HEAD
       <option value="Grung">Грунг</option>
       <option value="Dwarf">Дварф</option>
       <option value="DragonBorn">Драконорождённый</option>
       <option value="Leonin">Леонин</option>
-=======
       <option value="Dwarf">Дварф</option>
       <option value="DragonBorn">Драконорождённый</option>
->>>>>>> b57bdd70dfb92572c4815c4f3f024d1267669d1e
       <option value="Genasi">Дженази</option>
       <option value="Kalashtar">Калаштар</option>
       <option value="Centaur">Кентавр</option>
@@ -79,7 +76,7 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
 export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
   const { control, register, setValue, getValues } = useFormContext<BattleFormData>();
   const { data: characters } = useCharacter();
-  
+
   const item = useWatch({
     control,
     name: `${arrayName}.${index}` as Path<BattleFormData>,
@@ -105,7 +102,7 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
     if (character.logo && currentData.logo !== character.logo) {
       setValue(`${arrayName}.${index}.logo` as Path<BattleFormData>, character.logo);
     }
-  }, [character, item, arrayName, index, getValues, setValue, control]); 
+  }, [character, item, arrayName, index, getValues, setValue, control]);
 
   if (!item) return null;
 
@@ -125,7 +122,7 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
     <li className="flex items-center gap-2">
       <img className="w-10 h-10 object-contain" src={logoForForm} alt={item.name} />
       <input {...register(`${arrayName}.${index}.name` as Path<BattleFormData>)} />
-      
+
       {arrayName === 'users' ? (
         <UserSelect index={index} arrayName={arrayName} />
       ) : (

@@ -1,13 +1,19 @@
-import { VerticalDiceTray } from './VerticalDiceTray';
-import type { RollMode, DiceCounts } from '../../types/rollTypes';
+import type { RollMode, DiceCounts, DiceType, DiceSetColor } from '../../types/rollTypes';
+import { VerticalDiceTray } from '../../DicesSection/MulipleDicesSection/VerticalDiceTray';
 
 interface DicesSectionProps {
   rollMode: RollMode;
   diceCounts: DiceCounts;
   setDiceCounts: (c: DiceCounts) => void;
+  onSingleThrow?: (type: DiceType, colorSet: DiceSetColor) => void; // 🔥 Новый проп
 }
 
-export function DicesSection({ rollMode, diceCounts, setDiceCounts }: DicesSectionProps) {
+export function DicesSection({
+  rollMode,
+  diceCounts,
+  setDiceCounts,
+  onSingleThrow,
+}: DicesSectionProps) {
   const throwDice = () => {
     console.log('diceCounts', diceCounts);
     setDiceCounts({});
@@ -21,6 +27,7 @@ export function DicesSection({ rollMode, diceCounts, setDiceCounts }: DicesSecti
         rollMode={rollMode}
         diceCounts={diceCounts}
         onDiceCountsChange={setDiceCounts}
+        onSingleThrow={onSingleThrow}
       />
 
       {rollMode === 'sum' && (

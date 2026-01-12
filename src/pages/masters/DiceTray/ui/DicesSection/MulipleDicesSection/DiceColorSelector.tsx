@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { DiceSetColor } from './DiceMeshes';
+import type { DiceSetColor } from '../../types/rollTypes';
 
 const COLORS: { id: DiceSetColor; label: string; className: string }[] = [
   { id: 'blue', label: 'Blue', className: 'bg-blue-500' },

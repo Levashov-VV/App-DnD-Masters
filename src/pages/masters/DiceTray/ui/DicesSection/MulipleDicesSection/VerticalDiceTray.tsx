@@ -3,8 +3,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Dice } from './DiceLoader';
 import { DiceColorSelector } from './DiceColorSelector';
 import { useState, useCallback } from 'react';
-import type { DiceType, DiceSetColor } from './DiceMeshes';
-import type { RollMode, DiceCounts } from '../../types/rollTypes';
+import type { RollMode, DiceCounts, DiceType, DiceSetColor } from '../../types/rollTypes';
 import * as THREE from 'three';
 
 const diceOrder: { type: DiceType; label: string }[] = [
@@ -21,6 +20,7 @@ interface VerticalDiceTrayProps {
   rollMode: RollMode;
   diceCounts: DiceCounts;
   onDiceCountsChange: (counts: DiceCounts) => void;
+  onSingleThrow?: (type: DiceType, colorSet: DiceSetColor) => void;
 }
 
 interface SingleDiceSectionProps {
@@ -30,6 +30,7 @@ interface SingleDiceSectionProps {
   count: number;
   onCountChange: (type: DiceType, newCount: number) => void;
   rollMode: RollMode;
+  onSingleThrow?: (type: DiceType, colorSet: DiceSetColor) => void;
 }
 
 function SingleDiceSection({
@@ -39,14 +40,15 @@ function SingleDiceSection({
   count,
   onCountChange,
   rollMode,
+  onSingleThrow,
 }: SingleDiceSectionProps) {
   const isSingle = rollMode === 'single';
 
   const increment = () => onCountChange(type, count + 1);
   const decrement = () => onCountChange(type, Math.max(0, count - 1));
   const handleSingleThrow = () => {
-    onCountChange(type, 1);
-    console.log(`Throwing ${count} ${label} dice...`);
+    onSingleThrow?.(type, colorSet);
+    onCountChange(type, 0);
   };
 
   return (
@@ -95,7 +97,7 @@ function SingleDiceSection({
             autoRotate={true}
             autoRotateSpeed={1.2}
           />
-          <Dice type={type} colorSet={colorSet} position={[0, 0, 0]} scale={2.2} />
+          <Dice type={type} colorSet={colorSet} position={[0, 0, 0]} scale={2.2} autoRotate />
         </Canvas>
       </div>
     </div>
@@ -106,7 +108,9 @@ export function VerticalDiceTray({
   rollMode,
   diceCounts,
   onDiceCountsChange,
+  onSingleThrow,
 }: VerticalDiceTrayProps) {
+  console.log('🎯 VerticalDiceTray получил:', { onSingleThrow: !!onSingleThrow });
   const [colorSet, setColorSet] = useState<DiceSetColor>('blue');
 
   const handleCountChange = useCallback(
@@ -132,6 +136,7 @@ export function VerticalDiceTray({
             count={diceCounts[d.type] || 0}
             onCountChange={handleCountChange}
             rollMode={rollMode}
+            onSingleThrow={onSingleThrow}
           />
         ))}
       </div>

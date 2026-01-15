@@ -1,17 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
 import { DndContext, MouseSensor, TouchSensor, useSensors, useSensor } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
-import type { User, Enemies, BattleFormData, HoveredToken } from '../../Form/types';
+import type { User, Enemies, BattleFormData, HoveredToken, Environment } from '../../Form/types';
 import { GridOverlay } from '../GridOverlay/GridOverlay';
 import Token from './Token';
 
 type TokenType = {
   id: string;
-  type: 'user' | 'enemy';
-  data: User | Enemies;
+  type: 'user' | 'enemy' | 'environment';
+  data: User | Enemies | Environment;
   cellX: number;
   cellY: number;
-  size: 'small' | 'medium' | 'large' | 'huge';
+  sizeCells: number;
+  rotation?: number;
 };
 
 interface BattleBoardProps {
@@ -23,16 +24,17 @@ interface BattleBoardProps {
   onHoverToken?: (hover: HoveredToken) => void;
 }
 
-const SIZE_MAP: Record<TokenType['size'], number> = {
+const SIZE_MAP_CREATURE: Record<'small' | 'medium' | 'large' | 'huge', number> = {
   small: 1,
   medium: 1,
   large: 2,
   huge: 3,
 };
 
-const getTokenSize = (sizeInput: string | undefined): TokenType['size'] => {
-  const validSizes: TokenType['size'][] = ['small', 'medium', 'large', 'huge'];
-  return (validSizes.find((s) => s === sizeInput) || 'medium') as TokenType['size'];
+const getCreatureSizeCells = (sizeInput: string | undefined) => {
+  const valid = ['small', 'medium', 'large', 'huge'] as const;
+  const key = valid.find((s) => s === sizeInput) ?? 'medium';
+  return SIZE_MAP_CREATURE[key];
 };
 
 export function BattleBoard({
@@ -44,11 +46,7 @@ export function BattleBoard({
   onHoverToken,
 }: BattleBoardProps) {
   const [tokens, setTokens] = useState<TokenType[]>([]);
-  const mouseSensor = useSensor(MouseSensor, {
-    activationConstraint: {
-      distance: 4,
-    },
-  });
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 4 } });
   const touchSensor = useSensor(TouchSensor);
   const sensors = useSensors(mouseSensor, touchSensor);
 
@@ -60,16 +58,18 @@ export function BattleBoard({
         const id = `user-${user.id ?? i}`;
         const existing = prev.find((t) => t.id === id);
 
+        const sizeCells = getCreatureSizeCells(user.size);
+
         next.push(
           existing
-            ? { ...existing, data: user, size: getTokenSize(user.size) }
+            ? { ...existing, data: user, sizeCells }
             : {
                 id,
-                type: 'user' as const,
+                type: 'user',
                 data: user,
                 cellX: Math.max(0, i * 1),
                 cellY: Math.floor(i / 3),
-                size: getTokenSize(user.size),
+                sizeCells,
               }
         );
       });
@@ -78,16 +78,44 @@ export function BattleBoard({
         const id = `enemy-${enemy.id ?? i}`;
         const existing = prev.find((t) => t.id === id);
 
+        const sizeCells = getCreatureSizeCells(enemy.size);
+
         next.push(
           existing
-            ? { ...existing, data: enemy, size: getTokenSize(enemy.size) }
+            ? { ...existing, data: enemy, sizeCells }
             : {
                 id,
-                type: 'enemy' as const,
+                type: 'enemy',
                 data: enemy,
-                cellX: Math.max(0, gridWidth - (SIZE_MAP[getTokenSize(enemy.size)] || 2) - i * 2),
+                cellX: Math.max(0, gridWidth - sizeCells - i * 2),
                 cellY: Math.floor(i / 3),
-                size: getTokenSize(enemy.size),
+                sizeCells,
+              }
+        );
+      });
+
+      battleData.environment.forEach((env, i) => {
+        const id = `env-${env.id}`;
+        const existing = prev.find((t) => t.id === id);
+
+        next.push(
+          existing
+            ? {
+                ...existing,
+                data: env,
+                cellX: env.cellX,
+                cellY: env.cellY,
+                sizeCells: env.sizeCells,
+                rotation: env.rotation,
+              }
+            : {
+                id,
+                type: 'environment',
+                data: env,
+                cellX: env.cellX ?? i,
+                cellY: env.cellY ?? 0,
+                sizeCells: env.sizeCells,
+                rotation: env.rotation ?? 0,
               }
         );
       });
@@ -102,23 +130,13 @@ export function BattleBoard({
         const token = prev.find((t) => t.id === id);
         if (!token) return prev;
 
-        const size = SIZE_MAP[token.size];
+        const size = token.sizeCells;
         const clampedX = Math.max(0, Math.min(gridWidth - size, newX));
         const clampedY = Math.max(0, Math.min(gridHeight - size, newY));
 
-        const collides = prev.some(
-          (other) =>
-            other.id !== id &&
-            Math.max(clampedX, other.cellX) <
-              Math.min(clampedX + size, other.cellX + SIZE_MAP[other.size]) &&
-            Math.max(clampedY, other.cellY) <
-              Math.min(clampedY + size, other.cellY + SIZE_MAP[other.size])
-        );
-
-        const newToken: TokenType = collides
-          ? token
-          : { ...token, cellX: clampedX, cellY: clampedY };
+        const newToken: TokenType = { ...token, cellX: clampedX, cellY: clampedY };
         onTokenMove?.(id, newToken.cellX, newToken.cellY);
+
         return prev.map((t) => (t.id === id ? newToken : t));
       });
     },
@@ -133,12 +151,12 @@ export function BattleBoard({
       const token = tokens.find((t) => t.id === tokenId);
       if (!token) return;
 
-      const size = SIZE_MAP[token.size];
+      const size = token.sizeCells;
 
-      const container = document.querySelector('.battleboard-container') as HTMLElement;
+      const container = document.querySelector('.battleboard-container') as HTMLElement | null;
       if (!container) return;
-      const rect = container.getBoundingClientRect();
 
+      const rect = container.getBoundingClientRect();
       const cellWidth = rect.width / gridWidth;
       const cellHeight = rect.height / gridHeight;
 

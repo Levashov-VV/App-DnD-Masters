@@ -28,10 +28,10 @@ export function BattleFieldPreload() {
       <div ref={loaderElementRef}>
         <div>
           <img className="w-[50vw] object-cover" src={WhiteBlot} alt="white blot" />
-        </div>
-        <div className="relative bottom-[60vh] text-[5vh] text-center text-neutral-900">
-          Добро пожаловать
-          <br /> на поле для боя
+          <div className="relative bottom-[60vh] text-[5vh] text-center text-neutral-900">
+            Добро пожаловать
+            <br /> на поле для боя
+          </div>
         </div>
       </div>
     </section>

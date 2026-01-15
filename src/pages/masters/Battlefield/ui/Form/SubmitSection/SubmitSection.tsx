@@ -27,7 +27,6 @@ export function SubmitSection() {
     setIsCreating(true);
     try {
       const formData = getValues();
-      console.log('navigate to battlefield with', formData);
       navigate('/battlefield', { state: { battleData: formData } });
     } catch (error) {
       console.error('Ошибка создания битвы:', error);
@@ -37,19 +36,19 @@ export function SubmitSection() {
   };
 
   return (
-    <section className="flex flex-col items-center gap-[3vh]">
-      <div className="text-center max-w-2xl">
-        <h2 className="text-3xl md:text-[5vh] font-bold text-neutral-100 bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+    <section className="flex flex-col items-center gap-[5vh]">
+      <div className="text-center max-w-[50vw]">
+        <h2 className="text-[5vh] font-bold text-neutral-100 bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
           Всё настроено!
         </h2>
-        <p className="text-xl md:text-2xl text-neutral-300 leading-relaxed">
+        <p className="text-[3vh] md:text-[3vh] text-neutral-300 leading-relaxed">
           Нажмите кнопку, чтобы создать битву и перейти на поле боя
         </p>
       </div>
 
       <div className="flex flex-col items-center gap-4">
         {!isValid && (
-          <div className="flex gap-2 text-sm text-amber-400 bg-amber-500/10 px-4 py-2 rounded-xl border-amber-500/30">
+          <div className="flex gap-[2vh] text- text-amber-400 bg-amber-500/10 rounded-xl border-amber-500/30">
             <span>⚠️</span>
             <span>Проверьте все поля перед созданием битвы</span>
           </div>
@@ -58,19 +57,19 @@ export function SubmitSection() {
         <button
           onClick={handleSubmit(onSubmit)}
           disabled={!isValid || isCreating}
-          className="group relative w-[20vw] min-w-[200px] h-[5vh] min-h-[48px] rounded-2xl text-lg font-semibold 
-                     bg-gradient-to-r from-amber-500 to-amber-600 
-                     text-neutral-900 hover:from-amber-600 hover:to-amber-700 
-                     shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40
-                     transform transition-all duration-300 scale-105 hover:scale-110
-                     focus:outline-none focus:ring-4 focus:ring-amber-500/50 focus:scale-105
-                     disabled:opacity-50 disabled:cursor-not-allowed disabled:from-amber-400 disabled:to-amber-500 disabled:scale-100
-                     active:translate-y-0.5"
+          className="group relative w-[20vw] min-w-[10vw] h-[5vh] min-h-[5vh] rounded-2xl text-[2vh] font-semibold 
+                      bg-gradient-to-r from-amber-500 to-amber-600 
+                    text-neutral-900 hover:from-amber-600 hover:to-amber-700 
+                      shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40
+                      transform transition-all duration-300 scale-105 hover:scale-110
+                      focus:outline-none focus:ring-4 focus:ring-amber-500/50 focus:scale-105
+                      disabled:opacity-50 disabled:cursor-not-allowed disabled:from-amber-400 disabled:to-amber-500 disabled:scale-100
+                      active:translate-y-0.5"
         >
-          <span className="relative z-10 flex items-center justify-center gap-2 h-full px-6">
+          <span className="relative z-10 flex items-center justify-center gap-[2vh] h-full">
             {isCreating ? (
               <>
-                <div className="w-5 h-5 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin" />
+                <div className="w-[2vh] h-[2vh] border-2 border-neutral-900 border-t-transparent rounded-full animate-spin" />
                 Создание...
               </>
             ) : (
@@ -83,11 +82,11 @@ export function SubmitSection() {
           />
         </button>
       </div>
-      <details className="w-full max-w-4xl p-4 bg-neutral-900/50 backdrop-blur-sm rounded-2xl border-neutral-700/50">
-        <summary className="cursor-pointer text-neutral-400 hover:text-neutral-200 font-medium mb-3">
+      <details className="w-full max-w-[50vw] bg-neutral-900/50 backdrop-blur-sm rounded-2xl border-neutral-700/50">
+        <summary className="cursor-pointer text-neutral-400 hover:text-neutral-200 font-medium">
           👁️ Предпросмотр битвы
         </summary>
-        <div className="text-sm text-neutral-400 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="text-sm text-neutral-400 grid grid-cols-2 md:grid-cols-4 gap-[1vh]">
           <div>Игроки: {getValues('users')?.length || 0}</div>
           <div>Враги: {getValues('enemies')?.length || 0}</div>
           <div>Карта: {customMapImage ? 'Своя карта' : mapName}</div>

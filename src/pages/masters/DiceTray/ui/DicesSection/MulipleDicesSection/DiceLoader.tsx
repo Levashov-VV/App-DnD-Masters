@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { diceSets } from './DiceMeshes';
 import type { DiceType, DiceSetColor } from '../../types/rollTypes';
-import type React from 'react';
 
 interface DiceProps {
   position: [number, number, number];
@@ -12,10 +11,10 @@ interface DiceProps {
   type: DiceType;
   colorSet: DiceSetColor;
   autoRotate?: boolean;
-  meshRef?: React.MutableRefObject<THREE.Mesh | null>;
+  meshRef?: { current: THREE.Mesh | null };
 }
 
-export const Dice = ({ scale = 1.2, type, colorSet, autoRotate = true, meshRef }: DiceProps) => {
+export const Dice = ({ scale = 1, type, colorSet, autoRotate = true, meshRef }: DiceProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const diceMeshRef = useRef<THREE.Mesh | null>(null);
   const { scene } = useGLTF('/models/dice.glb');

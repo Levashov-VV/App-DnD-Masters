@@ -15,7 +15,7 @@ export function WindowsTeamLS({
   onDeleteTeam,
 }: WindowsTeamLSProps) {
   return (
-    <div className="fixed top-4 right-4 h-[20vh] w-[25vw] bg-neutral-900/95 backdrop-blur-xl  rounded-2xl border-2 border-neutral-600 shadow-2xl z-100">
+    <div className="fixed top-[1vh] right-[1vw] h-[20vh] w-[25vw] bg-neutral-900/95 backdrop-blur-xl  rounded-2xl border-2 border-neutral-600 shadow-2xl z-100">
       <h3 className=" text-[2vh] font-bold text-amber-400 border-b border-amber-500/30">
         Команды героев ({teams.length})
       </h3>

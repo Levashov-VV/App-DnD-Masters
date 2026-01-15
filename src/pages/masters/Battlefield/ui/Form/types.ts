@@ -16,7 +16,7 @@ export type User = {
   logo?: string;
   initiative?: number;
   hp?: number;
-  size: string;
+  size: string; // оставляем как было
 };
 
 export type Enemies = {
@@ -29,16 +29,57 @@ export type Enemies = {
   size: string;
 };
 
+// Инстанс окружения НА ПОЛЕ
+export type Environment = {
+  id: number; // уникальный id инстанса
+  presetId: number; // 201..206
+  img?: string;
+
+  sizeCells: number; // 1 клетка = 5 футов
+  cellX: number;
+  cellY: number;
+  rotation:
+    | 0
+    | 15
+    | 30
+    | 45
+    | 60
+    | 75
+    | 90
+    | 105
+    | 120
+    | 135
+    | 150
+    | 165
+    | 180
+    | 195
+    | 210
+    | 225
+    | 240
+    | 255
+    | 270
+    | 285
+    | 300
+    | 315
+    | 330
+    | 345
+    | 360;
+};
+
 export interface BattleFormData {
   users: User[];
   enemies: Enemies[];
+  environment: Environment[];
   mapId: number;
   gridWidth?: number;
   gridHeight?: number;
-  gridSizeX?: number;
-  gridSizeY?: number;
   customMapImage?: string;
 }
+
+export type HoveredToken = {
+  type: 'user' | 'enemy' | 'environment';
+  id: string | number | null;
+} | null;
 
 export const maps = [
   { title: 'Подземелье', id: 1, img: '/img/masters/Battlefield/Map/Dungeon.jpg' },
@@ -48,15 +89,8 @@ export const maps = [
   { title: 'Таверна', id: 5, img: '/img/masters/Battlefield/Map/Tavern.jpg' },
 ] as const;
 
-interface MapType {
+export type MapType = {
   title: string;
   id: number;
   img: string;
-}
-
-export type { MapType };
-
-export type HoveredToken = {
-  type: 'user' | 'enemy';
-  id: string | number | null;
-} | null;
+};

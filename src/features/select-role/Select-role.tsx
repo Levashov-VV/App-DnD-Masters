@@ -25,7 +25,7 @@ export function SelectRole() {
             delay={100}
             animateBy="words"
             direction="top"
-            className="text-2xl mb-8 title"
+            className="text-2xl title"
           />
         </LazyMotion>
       </div>
@@ -40,7 +40,7 @@ export function SelectRole() {
             delay={100}
             animateBy="words"
             direction="top"
-            className="text-2xl mb-8 title second"
+            className="text-2xl title second"
           />
         </LazyMotion>
       </div>

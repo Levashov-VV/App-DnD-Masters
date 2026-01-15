@@ -70,7 +70,7 @@ export function PersonSection() {
       </div>
 
       {/* Управление */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-[2vw]">
         {/* Игроки */}
         <div className="relative left-[1vw] bg-gradient-to-br from-blue-700/70 to-blue-600/70 rounded-2xl border-2 border-blue-500/50">
           <h3 className="flex items-center justify-center text-[2vh] font-bold text-blue-200">
@@ -89,7 +89,7 @@ export function PersonSection() {
               <button
                 onClick={() => removeCharacter(characterFields.length - 1)}
                 type="button"
-                className="w-full py-3 px-4 bg-red-600/70 text-white font-bold rounded-xl hover:bg-red-600 transition-all"
+                className="w-full bg-red-600/70 text-white font-bold rounded-xl hover:bg-red-600 transition-all"
               >
                 - Удалить последнего
               </button>
@@ -127,7 +127,7 @@ export function PersonSection() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-6 h-64">
+      <div className="grid grid-cols-2 gap-[2vw]">
         {/* Игроки */}
         <div>
           <h4 className="text-center text-[2vh] font-bold text-blue-300 bg-neutral-800/80 rounded-t-lg">
@@ -155,10 +155,10 @@ export function PersonSection() {
         </div>
         {/* Враги */}
         <div>
-          <h4 className="text-lg font-bold text-red-300 bg-neutral-800/80 py-2 px-3 rounded-t-lg text-center">
+          <h4 className="text-[2vh] font-bold text-red-300 bg-neutral-800/80 py-2 px-3 rounded-t-lg text-center">
             Враги ({enemyFields.length})
           </h4>
-          <div className="flex flex-row justify-between text-[1.5vh] font-bold text-red-300 bg-neutral-800/80 py-2 px-3 ">
+          <div className="flex flex-row justify-between text-[1.5vh] font-bold text-red-300 bg-neutral-800/80">
             <div className="relative left-[0.3vw]">Лого</div>
             <div className="relative right-[5vw]">Имя игрока</div>
             <div className="relative right-[6vw]">Вид</div>

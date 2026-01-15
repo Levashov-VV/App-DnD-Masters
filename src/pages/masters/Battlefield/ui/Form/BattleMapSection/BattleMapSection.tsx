@@ -14,8 +14,8 @@ export function BattleMapSection() {
   const { control, setValue } = useFormContext<BattleFormData>();
   const mapId = useWatch({ control, name: 'mapId' }) || 1;
   const customImage = useWatch({ control, name: 'customMapImage' }) || null;
-  const gridWidth = useWatch({ control, name: 'gridWidth' }) || 30;
-  const gridHeight = useWatch({ control, name: 'gridHeight' }) || 30;
+  const gridWidth = useWatch({ control, name: 'gridWidth' }) || 10;
+  const gridHeight = useWatch({ control, name: 'gridHeight' }) || 10;
   const width = gridWidth;
   const height = gridHeight;
   const [isCustomSizeOpen, setIsCustomSizeOpen] = useState(false);
@@ -259,7 +259,7 @@ export function BattleMapSection() {
           </div>
 
           {isCustomSizeOpen && (
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-[1vw]">
               <div className="flex flex-col items-center">
                 <span className="text-[1.5vh] text-neutral-300">Ширина</span>
                 <input
@@ -291,9 +291,9 @@ export function BattleMapSection() {
           <p className="text-center text-[2.5vh] text-neutral-400 font-medium mt-[2vh]">
             Текущее поле:{' '}
             <span className="text-[2.5vh] font-bold text-purple-400">
-              {gridWidth || 30}
+              {gridWidth || 10}
               {'x'}
-              {gridHeight || 30}
+              {gridHeight || 10}
             </span>
           </p>
         </div>

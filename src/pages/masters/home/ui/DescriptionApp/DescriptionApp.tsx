@@ -335,7 +335,7 @@ export function DescriptionApp() {
             })
             .to(sword, {
               y: '120vh',
-              x: '-2.5vw',
+              x: '-3.7vw',
               duration: 2,
               ease: 'power2.in',
               scrub: 3,
@@ -590,8 +590,8 @@ export function DescriptionApp() {
     return () => ctx.revert();
   }, []);
 
-  const doLetters = 'и сделать'.split('');
-  const gameLetters = 'свою партию'.split('');
+  const doLetters = 'сделать свою'.split('');
+  const gameLetters = 'партию'.split('');
 
   return (
     <section className="">
@@ -617,29 +617,32 @@ export function DescriptionApp() {
           alt="shield"
         />
 
-        <div className="w-screen h-screen flex flex-col items-center justify-center  px-8 ml-[20%] relative z-20">
+        <div className="w-screen h-screen flex flex-col items-center justify-center ml-[20%] relative z-20">
           <div>
-            <h3 className="text-2xl md:text-[5vw] relative  right-[10%] z-20 leading-tight">
+            <h3 className="text-[4.5vw] relative right-[10%] z-20 leading-tight">
               С нашим приложением вы можете
             </h3>
           </div>
         </div>
         <div className="w-screen h-screen flex items-center relative z-20">
-          <h3 className="text-2xl md:text-[5vw] relative z-20 right-[15%]">
+          <h3 className="text-[4.5vw] relative z-20 right-[20%]">
             <span
               ref={textRef}
-              className="inline-block origin-center"
+              className="inline-block bg-gradient-to-r from-emerald-400 via-amber-400 to-emerald-500 bg-clip-text text-transparent font-black text-[4.5vw] drop-shadow-[0_0_20px_rgba(34,197,94,0.8)] animate-pulse"
               style={{
                 transformStyle: 'preserve-3d',
                 transformOrigin: 'center center',
               }}
             >
-              погрузиться
+              погрузить
             </span>{' '}
-            <span ref={dndRef} className="inline-block" style={{ position: 'relative' }}>
-              в мир D&D
+            <span ref={dndRef} className="inline-block text-{4.5vw}" style={{ position: 'relative' }}>
+              игроков в мир D&D
             </span>{' '}
-            <span ref={upgradeTextRef} className="inline-block">
+            <span
+              ref={upgradeTextRef}
+              className="inline-block origin-center font-bold text-amber-400 text-[4.8vw] drop-shadow-lg"
+            >
               улучшить игру
             </span>
           </h3>
@@ -666,7 +669,7 @@ export function DescriptionApp() {
             ref={gearDownRef}
             className="absolute z-20 pointer-events-none w-[10vw] h-[10vw] object-contain"
             style={{
-              left: '16.5vw', // 15.8 - 9 = 6.8vw → зубья ПЕРЕПЛЕТАЮТСЯ!
+              left: '16.5vw',
               bottom: '4vh',
               transformOrigin: '50% 50%',
             }}
@@ -691,7 +694,7 @@ export function DescriptionApp() {
             src={images.potionToxic}
             alt="potion"
           />
-          <h3 className="text-2xl md:text-[5vw]">
+          <h3 className="text-[4.5vw]">
             <span
               ref={interactiveTextRef}
               className="inline-block origin-center"
@@ -703,25 +706,26 @@ export function DescriptionApp() {
             >
               интерактивными
             </span>{' '}
-            <span ref={mechanicsTextRef} className="inline-block transform-origin-left">
+            <span ref={mechanicsTextRef} className="relative left-[0.2vw] inline-block transform-origin-left ">
               механиками
             </span>{' '}
-            <span ref={doTextRef}>
+            <span className='relative left-[0.2vw]'>и</span>{' '}
+            <span ref={doTextRef} className="inline-block bg-gradient-to-r from-red-400 via-orange-500 to-red-600 bg-clip-text text-transparent font-black text-[4.5vw] drop-shadow-[0_0_12px_rgba(239,68,68,0.7)] tracking-wide">
               {doLetters.map((ch, i) => (
-                <span key={i} className="do-letter">
+                <span key={i} className="do-letter" >
                   {ch}
                 </span>
               ))}
             </span>
           </h3>
         </div>
-        <div className="w-screen h-screen flex items-center relative right-[6%]">
+        <div className="w-screen h-screen flex items-center relative right-[5.7%]">
           <img
             className="absolute z-10 w-[35vw] h-[35vw] object-contain left-[27vw] bottom-[40vh]"
             src={images.book}
             alt="book"
           />
-          <h3 className="text-2xl md:text-[5vw] z-20">
+          <h3 className="text-[4.5vw] z-20">
             <span ref={gameTextRef}>
               {gameLetters.map((ch, i) => (
                 <span key={i} className="game-letter">
@@ -731,7 +735,7 @@ export function DescriptionApp() {
             </span>{' '}
             <span
               ref={colorTextRef}
-              className="inline-block origin-center z-20"
+              className="inline-block origin-center z-20 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent font-black text-[4.5vw] drop-shadow-lg tracking-wide"
               style={{
                 transformStyle: 'preserve-3d',
                 perspective: '1000px',
@@ -739,7 +743,7 @@ export function DescriptionApp() {
             >
               красочной и
             </span>{' '}
-            <span ref={unforgettableTextRef}>незабываемой</span>
+            <span ref={unforgettableTextRef}>легендарной</span>
             <img
               className="absolute z-50 pointer-events-none w-[35vw] h-[35vw] object-contain left-[90vw] bottom-[20vh]"
               ref={swordRef}

@@ -6,6 +6,8 @@ export type Character = {
   name: string;
   img?: string;
   logo?: string;
+  hp?: number | string;
+  maxHp?: number;
 };
 
 export type User = {
@@ -16,7 +18,10 @@ export type User = {
   logo?: string;
   initiative?: number;
   hp?: number;
-  size: string; // оставляем как было
+  maxHp?: number;
+  size: string;
+  cellX?: number;
+  cellY?: number;
 };
 
 export type Enemies = {
@@ -27,43 +32,22 @@ export type Enemies = {
   initiative?: number;
   isDead?: boolean;
   size: string;
+  cellX?: number;
+  cellY?: number;
 };
 
-// Инстанс окружения НА ПОЛЕ
 export type Environment = {
-  id: number; // уникальный id инстанса
-  presetId: number; // 201..206
+  id: number;
+  presetId: number;
+  label?: string;
   img?: string;
-
-  sizeCells: number; // 1 клетка = 5 футов
+  shape: 'cone' | 'line' | 'sphere' | 'hemisphere' | 'cube' ;
+  color: string;
+  sizeCells: number;
+  sizeY?: number;
   cellX: number;
   cellY: number;
-  rotation:
-    | 0
-    | 15
-    | 30
-    | 45
-    | 60
-    | 75
-    | 90
-    | 105
-    | 120
-    | 135
-    | 150
-    | 165
-    | 180
-    | 195
-    | 210
-    | 225
-    | 240
-    | 255
-    | 270
-    | 285
-    | 300
-    | 315
-    | 330
-    | 345
-    | 360;
+  rotation: number;
 };
 
 export interface BattleFormData {

@@ -38,15 +38,15 @@ export function SubmitSection() {
   return (
     <section className="flex flex-col items-center gap-[5vh]">
       <div className="text-center max-w-[50vw]">
-        <h2 className="text-[5vh] font-bold text-neutral-100 bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+        <h2 className="text-[5vh] font-bold text-neutral-100 bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text">
           Всё настроено!
         </h2>
-        <p className="text-[3vh] md:text-[3vh] text-neutral-300 leading-relaxed">
+        <p className="text-[3vh] text-neutral-300 leading-relaxed">
           Нажмите кнопку, чтобы создать битву и перейти на поле боя
         </p>
       </div>
 
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-[2vh]">
         {!isValid && (
           <div className="flex gap-[2vh] text- text-amber-400 bg-amber-500/10 rounded-xl border-amber-500/30">
             <span>⚠️</span>
@@ -57,7 +57,7 @@ export function SubmitSection() {
         <button
           onClick={handleSubmit(onSubmit)}
           disabled={!isValid || isCreating}
-          className="group relative w-[20vw] min-w-[10vw] h-[5vh] min-h-[5vh] rounded-2xl text-[2vh] font-semibold 
+          className="group relative w-[20vw] min-w-[10vw] h-[5vh] rounded-2xl text-[2vh] font-semibold 
                       bg-gradient-to-r from-amber-500 to-amber-600 
                     text-neutral-900 hover:from-amber-600 hover:to-amber-700 
                       shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40
@@ -82,11 +82,11 @@ export function SubmitSection() {
           />
         </button>
       </div>
-      <details className="w-full max-w-[50vw] bg-neutral-900/50 backdrop-blur-sm rounded-2xl border-neutral-700/50">
-        <summary className="cursor-pointer text-neutral-400 hover:text-neutral-200 font-medium">
+      <details className="w-[50vw] h-[3vh] bg-neutral-900/50 backdrop-blur-sm rounded-2xl border-neutral-700/50">
+        <summary className="cursor-pointer text-[2vh] text-neutral-400 hover:text-neutral-200 font-medium">
           👁️ Предпросмотр битвы
         </summary>
-        <div className="text-sm text-neutral-400 grid grid-cols-2 md:grid-cols-4 gap-[1vh]">
+        <div className="text-[2vh] text-neutral-400 grid grid-cols-2 md:grid-cols-4 gap-[1vh]">
           <div>Игроки: {getValues('users')?.length || 0}</div>
           <div>Враги: {getValues('enemies')?.length || 0}</div>
           <div>Карта: {customMapImage ? 'Своя карта' : mapName}</div>
@@ -94,7 +94,7 @@ export function SubmitSection() {
             Размер: {sizeW}x{sizeH}
           </div>
           {customMapImage && (
-            <div className="">
+            <div className="w-[20vw]">
               <p className="text-neutral-400 ">Превью своей карты:</p>
               <img
                 src={customMapImage}
@@ -104,7 +104,7 @@ export function SubmitSection() {
             </div>
           )}
           {!customMapImage && (
-            <div>
+            <div className="w-[20vw]">
               <p className="text-neutral-400 ">Превью карты:</p>
               <img
                 src={mapImage}

@@ -48,14 +48,14 @@ export function WindowsTeamLS({
                   className="flex justify-center bg-neutral-800/50 rounded-lg group hover:bg-neutral-800/70"
                 >
                   <button className="w-[25vw]" onClick={() => onLoadTeam(team.id)}>
-                    <div className="font-bold text-white truncate">{team.name}</div>
-                    <div className="text-[1.5vh] opacity-80 text-neutral-200">
+                    <div className="font-bold text-[2vh]  text-white truncate">{team.name}</div>
+                    <div className="text-[1.6vh] opacity-80 text-neutral-200">
                       {usersCount} {usersCount === 1 ? 'герой' : 'героев'}
                     </div>
                   </button>
                   <button
                     onClick={() => onDeleteTeam?.(team.id)}
-                    className="relative text-red-500 w-[2.5vh] text-[3vh] group-hover:opacity-100 transition-all duration-300"
+                    className="relative right-[0.5vw] text-red-500 w-[2.5vh] text-[3vh] group-hover:opacity-100 transition-all duration-300"
                   >
                     ×
                   </button>
@@ -70,7 +70,7 @@ export function WindowsTeamLS({
               if (!name) return;
               onSaveCurrent(name.trim());
             }}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl shadow-lg hover:shadow-green-500/40 transition-all duration-300"
+            className="w-full text-[2vh] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl shadow-lg hover:shadow-green-500/40 transition-all duration-300"
           >
             ➕ Сохранить новую команду
           </button>

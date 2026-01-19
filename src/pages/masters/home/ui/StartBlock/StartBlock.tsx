@@ -15,18 +15,18 @@ export function StartBlock() {
           backgroundSize: 'cover',
         }}
       >
-        <div className="relative left-[2vw] flex flex-col">
-          <SplittingText
-            className="lg:text-3xl font-bold mb-4 drop-shadow-lg"
-            text="Добро пожаловать в"
-          />
+        <div className="relative left-[2vw] flex flex-col gap-[3vh]">
+            <SplittingText
+              className="text-[5vh] font-bold drop-shadow-lg"
+              text="Добро пожаловать !"
+            />
           <LazyMotion features={domAnimation} strict>
             <BlurText
               text="Ассистент Мастера Подземелий"
               delay={500}
               animateBy="words"
               direction="top"
-              className="lg:text-7xl font-bold drop-shadow-2xl mb-4"
+              className="text-[7vh] font-bold drop-shadow-2xl"
             />
           </LazyMotion>
         </div>

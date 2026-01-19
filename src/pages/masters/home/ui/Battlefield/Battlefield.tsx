@@ -15,10 +15,10 @@ export default function Battlefield() {
   const textLeftRef = useRef<HTMLDivElement>(null);
 
   const texts = [
-    'Вы можете интерактивно контролировать весь путь от создания боя до введения персонажей и их характеристик здоровья',
-    'Блок боевого поля позволяет мастерам настраивать арену шаг за шагом: размещать препятствия, зоны эффектов, ловушки и динамические события с таймерами.',
-    'Затем добавляйте существ — задавайте позиции, инициативу, текущие HP, состояния (укрытие, баффы) и зоны контроля прямо на сетке.',
-    'Интерфейс поддерживает режимы для мастера (полный обзор) и игроков (ограниченная видимость), с drag-and-drop для перемещений и мгновенным обновлением очередей хода.',
+    'Вы можете интерактивно контролировать весь путь от создания боя до внедрения персонажей на поле, а также управление показателями характеристик здоровья и инициативы.',
+    'Блок боевого поля позволяет мастерам настраивать арену шаг за шагом: создавайте персонажей и окружение',
+    'Затем добавляйте существ — задавайте позиции, инициативу, текущие HP и окружение прямо на сетке.',
+    'Интерфейс показывает поле боя игрокам со всеми визуальными эффектами и позволяет динамически контролировать последовательность ходов с таймером.',
   ];
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function Battlefield() {
         ScrollTrigger.create({
           trigger: container,
           start: 'top 105%',
-          end: 'bottom 25%',
+          end: 'bottom 65%',
           scrub: 3,
           animation: gsap.to(leftMapElement, {
             xPercent: 0,
@@ -83,7 +83,7 @@ export default function Battlefield() {
         ScrollTrigger.create({
           trigger: container,
           start: 'top 105%',
-          end: 'bottom 25%',
+          end: 'bottom 65%',
           scrub: 3,
           animation: gsap.to(rightMapElement, {
             xPercent: 0,
@@ -99,7 +99,7 @@ export default function Battlefield() {
         gsap.set(textLeftElement, { autoAlpha: 0, y: 10, scale: 0.9 });
         ScrollTrigger.create({
           trigger: container,
-          start: 'top 75%',
+          start: 'top 105%',
           onEnter: () =>
             gsap.to(textLeftElement, { autoAlpha: 1, y: 0, scale: 1, ease: 'back.out(1.7)' }),
         });
@@ -125,7 +125,7 @@ export default function Battlefield() {
           scale: 1,
           ease: 'back.out(1.7)',
         })
-          .to({}, { duration: 5 })
+          .to({}, { duration: 7 })
           .to(
             ref,
             {
@@ -144,16 +144,16 @@ export default function Battlefield() {
   }, [containerRef]);
 
   return (
-    <section className="h-[120vh] z-0 w-screen bg-neutral-900 text-2xl text-amber-100">
+    <section className="h-[120vh] z-0 w-screen bg-neutral-900 text-amber-100">
       <article className="flex flex-col items-center gap-[15vh]">
-        <div ref={titleRef} className="text-center text-6xl">
+        <div ref={titleRef} className="text-center text-[7vh]">
           Создавайте динамичные сражения в D&D с полностью настраиваемой боевой картой
         </div>
         <div className="flex flex-row gap-[10vw]">
           <div className="flex flex-col items-center gap-[10vh] ">
             <div className="flex flex-col items-center gap-[3vh]">
-              <div className="max-w-2xl text-left">
-                <p ref={textLeftRef} className="leading-relaxed">
+              <div className="w-[40vw] text-left">
+                <p ref={textLeftRef} className="text-[1.6vw]">
                   Выберите одну из 5 готовых арен (лес, подземелье, городская площадь, таверна,
                   болото) или загрузите собственное изображение — сетка автоматически наложится с
                   клетками по 5 футов по стандартам 5e.
@@ -170,7 +170,7 @@ export default function Battlefield() {
             </div>
           </div>
           <div className="w-[40vw] flex flex-col items-center">
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center">
               <img
                 ref={rightMapRef}
                 className="w-[40vw] z-0"
@@ -178,32 +178,32 @@ export default function Battlefield() {
                 alt="CitySquare"
               />
             </div>
-            <div className="w-[30vw] h-[20vh] relative">
+            <div className="w-[40vw] h-[25vh] relative">
               <div
                 ref={containerRef}
-                className="absolute inset-0 w-full h-10vh flex items-start justify-center text-[clamp(1rem,2vw,1.5rem)] leading-relaxed px-4"
+                className="absolute inset-0 w-full h-20vh flex items-start justify-center text-[1.6vw] leading-relaxed"
               >
                 <div
                   ref={textRef1}
-                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-center lg:text-left max-w-2xl mx-auto"
+                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-left"
                 >
                   {texts[0]}
                 </div>
                 <div
                   ref={textRef2}
-                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-center lg:text-left max-w-2xl mx-auto"
+                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-left"
                 >
                   {texts[1]}
                 </div>
                 <div
                   ref={textRef3}
-                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-center lg:text-left max-w-2xl mx-auto"
+                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-left"
                 >
                   {texts[2]}
                 </div>
                 <div
                   ref={textRef4}
-                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-center lg:text-left max-w-2xl mx-auto"
+                  className="absolute inset-0 w-full flex items-center justify-center opacity-0 text-left"
                 >
                   {texts[3]}
                 </div>

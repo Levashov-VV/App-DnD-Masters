@@ -12,6 +12,7 @@ type TokenType = {
   cellX: number;
   cellY: number;
   sizeCells: number;
+  sizeY?: number;
   rotation?: number;
 };
 
@@ -106,6 +107,7 @@ export function BattleBoard({
                 cellX: env.cellX,
                 cellY: env.cellY,
                 sizeCells: env.sizeCells,
+                sizeY: env.sizeY,
                 rotation: env.rotation,
               }
             : {
@@ -115,6 +117,7 @@ export function BattleBoard({
                 cellX: env.cellX ?? i,
                 cellY: env.cellY ?? 0,
                 sizeCells: env.sizeCells,
+                sizeY: env.sizeY,
                 rotation: env.rotation ?? 0,
               }
         );
@@ -192,7 +195,6 @@ export function BattleBoard({
             onHoverToken={onHoverToken}
           />
         ))}
-        <GridOverlay gridWidth={gridWidth} gridHeight={gridHeight} />
       </div>
     </DndContext>
   );

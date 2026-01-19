@@ -303,17 +303,21 @@ export function DiceTray() {
 
       {/* Множественный результат */}
       {rollMode === 'sum' && resultsSorted.length > 0 && (
-        <div className="absolute top-[73vh] left-[5vw] w-[22vw] max-h-[25vh] overflow-auto bg-black/90 text-white rounded-xl z-[100] shadow-2xl pointer-events-auto">
-          <div className="flex flex-row justify-between h-full items-center text-[2vh] font-bold text-amber-400">
+        <div className="absolute top-[73vh] left-[5vw] w-[25vw] max-h-[25vh] overflow-auto bg-black/90 text-white rounded-xl z-[100] shadow-2xl pointer-events-auto">
+          <div className="flex flex-row justify-between h-full items-center text-[2.5vh] font-bold text-amber-400">
             <div>Сумма: {totalSum}</div>
-            <div>
+            <div className='relative right-[0.3vw]'>
               Характеристика:{' '}
               <input
-                className="display-block w-[2vw]"
-                value={Number(isCharacteristic)}
-                onChange={(e) => setIsCharacteristic(e.target.value)}
-                min={-10}
-                type="number"
+                className="display-block w-[1.5vw] h-[3vh]"
+                value={isCharacteristic} 
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, ''); 
+                  setIsCharacteristic(value);
+                }}
+                type="text"
+                inputMode="numeric"
+                placeholder="0"
               />
             </div>
           </div>

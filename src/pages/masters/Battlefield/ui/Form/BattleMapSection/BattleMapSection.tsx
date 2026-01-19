@@ -92,13 +92,13 @@ export function BattleMapSection() {
   const sizes = [10, 15, 20, 25, 30, 35, 40] as const;
 
   return (
-    <section className="flex flex-col items-center w-full text-[2.5vh]">
-      <h1 className="text-[4.5vh] font-bold text-center bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent drop-shadow-2xl">
+    <section className="flex flex-col items-center w-full text-[2.5vh] gap-[2vh]">
+      <h1 className="text-[6vh] font-bold text-center bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent drop-shadow-2xl">
         Выберите карту поля боя
       </h1>
       <div className="flex flex-row gap-[3vw]">
         <div className="flex flex-col items-center gap-[2vh] flex-1">
-          <label className="w-[23vw] text-center font-bold text-[2vh] text-neutral-200">
+          <label className="w-[20vw] text-center font-bold text-[3vh] text-neutral-200">
             Карты из библиотеки
           </label>
 
@@ -106,7 +106,7 @@ export function BattleMapSection() {
             className="w-full rounded-2xl bg-neutral-700 bg-gradient-to-br from-neutral-800/90 to-neutral-900/90 
                 border-2 border-neutral-600/50 hover:border-purple-500/80 focus:border-purple-500/90 
                 focus:outline-none focus:ring-4 focus:ring-purple-500/30 transition-all duration-300 
-                text-lg font-semibold shadow-2xl backdrop-blur-md hover:shadow-purple-500/20"
+                text-[2vh] font-semibold shadow-2xl backdrop-blur-md hover:shadow-purple-500/20"
             value={selectedMap.title}
             onChange={handleMapChange}
           >
@@ -117,7 +117,7 @@ export function BattleMapSection() {
             ))}
           </select>
           <div
-            className="w-full h-[50vh] relative rounded-3xl overflow-hidden 
+            className="w-[25vw] h-[45vh] relative rounded-3xl overflow-hidden 
                           shadow-2xl border-4 border-neutral-700/60 hover:border-purple-500/80 
                           transition-all duration-500 group cursor-pointer bg-neutral-900/50"
           >
@@ -131,7 +131,7 @@ export function BattleMapSection() {
                 type="button"
                 onClick={clearCustomMap}
                 className="absolute top-2 right-2 w-[5vh] h-[5vh] bg-red-500/90 hover:bg-red-600 rounded-2xl 
-                flex items-center justify-center text-white font-bold text-[4vh]"
+                flex items-center justify-center text-white font-bold text-[2vh]"
                 title="Удалить свою карту"
               >
                 ×
@@ -154,19 +154,19 @@ export function BattleMapSection() {
           </div>
         </div>
         <div
-          className="flex flex-col items-center gap-[5vh] flex-1
+          className="flex flex-col h-[56vh] items-center gap-[5vh] flex-1
                         bg-neutral-900/60 backdrop-blur-xl rounded-3xl shadow-2xl 
                         border-2 border-neutral-700/60 hover:border-amber-400/70 
                         transition-all duration-400 hover:shadow-amber-500/30"
         >
-          <div className="w-[25vw] text-center">
+          <div className="w-[25vw] h-[5vh] text-center">
             <h2
               className="text-[3.5vh] font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 
                           bg-clip-text text-transparent drop-shadow-lg"
             >
               🖼️ Загрузить свою карту
             </h2>
-            <p className="text-neutral-400 text-base font-medium">JPG, PNG, WebP • max 10MB</p>
+            <p className="text-neutral-400 text-[1.4vh] font-medium">JPG, PNG, WebP • max 10MB</p>
           </div>
 
           <div
@@ -181,7 +181,7 @@ export function BattleMapSection() {
           >
             <div
               className="w-[8vh] h-[4vw] g-gradient-to-br from-amber-400/40 to-orange-400/40 
-                          rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 
+                          rounded-3xl flex items-center justify-center group-hover:scale-110 
                           transition-all duration-400 shadow-2xl border-2 border-amber-400/50"
             >
               <svg
@@ -204,7 +204,7 @@ export function BattleMapSection() {
             >
               Нажмите или перетащите
             </p>
-            <p className="text-neutral-400 text-lg font-medium">изображение на поле</p>
+            <p className="text-neutral-400 text-[1.4vh] font-medium">изображение на поле</p>
             <div
               className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-orange-400/20 
                             opacity-0 group-hover:opacity-100 transition-opacity duration-500 
@@ -219,7 +219,7 @@ export function BattleMapSection() {
             onChange={handleFileChange}
           />
         </div>
-        <div className="w-full flex flex-col gap-[5vh]">
+        <div className="w-[20vw] flex flex-col gap-[5vh]">
           <label className="block text-[2.5vh] font-bold text-center text-neutral-200">
             🏁 Размер боевого поля
           </label>
@@ -229,7 +229,7 @@ export function BattleMapSection() {
               <button
                 key={size}
                 type="button"
-                className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 flex items-center justify-center w-[5vw] ${
+                className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 flex items-center justify-center w-[5vw] h-[2.5vh] ${
                   sizeMode === 'preset' && gridWidth === size && gridHeight === size
                     ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/50 scale-105 ring-4 ring-purple-500/40'
                     : 'bg-neutral-800/80 hover:bg-purple-600/80 border-2 border-transparent hover:border-purple-400/60 hover:shadow-purple-500/40 hover:scale-105 text-neutral-200'
@@ -248,7 +248,7 @@ export function BattleMapSection() {
                 setIsCustomSizeOpen((prev) => !prev);
                 setSizeMode('custom');
               }}
-              className={`rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 ${
+              className={`w-[15vw] rounded-2xl font-bold text-[2vh] shadow-xl transition-all duration-300 ${
                 isCustomSizeOpen
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/50 scale-105 ring-4 ring-purple-500/40'
                   : 'bg-neutral-800/80 hover:bg-purple-600/80 border-2 border-transparent hover:border-purple-400/60 hover:shadow-purple-500/40 hover:scale-105 text-neutral-200'
@@ -272,7 +272,7 @@ export function BattleMapSection() {
                 />
               </div>
 
-              <span className="text-[3vh] font-bold text-neutral-400">×</span>
+              <span className="relative top-[1vh] text-[3vh] font-bold text-neutral-400">×</span>
 
               <div className="flex flex-col items-center">
                 <span className="text-[1.5vh] text-neutral-300">Высота</span>

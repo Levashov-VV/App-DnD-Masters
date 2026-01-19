@@ -26,7 +26,7 @@ export function DiceTray() {
         { y: 0, opacity: 0 },
         {
           opacity: 1,
-          y: '-5vh',
+          y: '0vh',
           duration: 1,
           scrollTrigger: {
             trigger: title,
@@ -134,10 +134,10 @@ export function DiceTray() {
   }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center w-screen h-[200vh] bg-neutral-900 text-amber-100 text-4xl">
+    <section className="flex flex-col items-center justify-center w-screen h-[200vh] bg-neutral-900 text-amber-100 text-[3.2vh]">
       <article className="flex flex-col gap-[5vh]">
-        <div ref={titleRef} className="flex justify-center text-6xl">
-          Интерактивный 3D Dice Tray для D&D
+        <div ref={titleRef} className="flex justify-center text-[7vh]">
+          Интерактивный 3D Dice Tray
         </div>
         <div className="flex justify-center">
           <div className="flex flex-col justify-between w-[18vw]">
@@ -163,7 +163,7 @@ export function DiceTray() {
             </div>
           </div>
         </div>
-        <div ref={subTitleRef} className="flex justify-center text-6xl">
+        <div ref={subTitleRef} className="flex justify-center text-[7vh]">
           Два подраздела бросков
         </div>
         <div className="flex flex-row justify-around">
@@ -171,23 +171,20 @@ export function DiceTray() {
             ref={oneDiceRollRef}
             className="flex flex-col items-center w-[40vw] gap-[6vh] rounded-2xl border-2 border-amber-100 bg-neutral-700"
           >
-            <div>Единичные броски</div>
+            <div>Единичный бросок</div>
             <div className="text-center">
-              Вы выбираете тип кубика (d4, d6, d8, d10, d12, d20), вводите модификатор, который
-              суммируется с вашим броском, и получаете наглядную 3D‑анимацию с корректным
-              результатом
+              Вы выбираете тип и вид кубика (d4-d20), совершаете один бросок и получаете наглядную 3D‑анимацию с корректным
+              результатом и историей каждого броска
             </div>
           </div>
           <div
             ref={multipleDiceRollRef}
             className="flex flex-col items-center w-[40vw] gap-[6vh] rounded-2xl border-2 border-amber-100 bg-neutral-700"
           >
-            <div>Броски атаки</div>
-            <div className="text-center">
-              Вы производите бросок атаки(d20), в зависимости от результата броска урон может
-              меняться. Вы выбираете типы кубиков (d4, d6, d8, d10, d12, d20), которые хотите
-              использовать и их количество (максимум 4), вводите модификаторы и получаете наглядную
-              3D‐анимацию с корректным результатом
+            <div>Множественный бросок</div>
+            <div className="text-center"> Вы выбираете типы и вид кубиков (d4 - d20), которые хотите
+              использовать и их количество (максимум 3), вводите модификатор и получаете наглядную
+              3D‐анимацию с корректным результатом.
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BattlePreload } from '../../../../../app/providers/BattlefieldPreload/BattlePreload';
 import { PersonList } from './PersonList/PersonList';
 import { Environment, type EnvironmentPreset } from './Environment/Environment';
+import { InitiativeTimer } from './Timer/Timer';
 import { BattleBoard } from './BattleBoard/BattleBoard';
 import type { BattleFormData, HoveredToken } from '../Form/types';
 import { maps } from '../Form/types';
@@ -23,48 +24,15 @@ export function Battle({ battleData }: BattleProps) {
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [battleState, setBattleState] = useState<BattleFormData>(() =>
-    normalizeBattleData(battleData)
-  );
+  const [battleState, setBattleState] = useState<BattleFormData>(() => normalizeBattleData(battleData));
   const [hoveredToken, setHoveredToken] = useState<HoveredToken>(null);
 
   const environmentPresets: readonly EnvironmentPreset[] = [
-    {
-      id: 201,
-      label: 'Огненный шар',
-      img: '/img/masters/Battlefield/Environment/FireBall.png',
-      defaultFeet: 20,
-    },
-    {
-      id: 202,
-      label: 'Конус холода',
-      img: '/img/masters/Battlefield/Environment/Ice cone.png',
-      defaultFeet: 30,
-    },
-    {
-      id: 203,
-      label: 'Молния',
-      img: '/img/masters/Battlefield/Environment/Lightning.png',
-      defaultFeet: 30,
-    },
-    {
-      id: 204,
-      label: 'Тьма',
-      img: '/img/masters/Battlefield/Environment/Darkness.png',
-      defaultFeet: 30,
-    },
-    {
-      id: 205,
-      label: 'Защитный барьер',
-      img: '/img/masters/Battlefield/Environment/Protective Barrier.png',
-      defaultFeet: 30,
-    },
-    {
-      id: 206,
-      label: 'Сфера',
-      img: '/img/masters/Battlefield/Environment/Sphere.png',
-      defaultFeet: 20,
-    },
+    { id: 201, label: 'Сфера', shape: 'sphere', defaultFeet: 4, color: '#ff4500' },
+    { id: 202, label: 'Конус', shape: 'cone', defaultFeet: 6, color: '#FFFAFA' },
+    { id: 203, label: 'Линия', shape: 'line', defaultFeet: 1, color: '#00bfff' },
+    { id: 204, label: 'Куб', shape: 'cube', defaultFeet: 4, color: '#8B4513' },
+    { id: 205, label: 'Полусфера', shape: 'hemisphere', defaultFeet: 6, color: '#00ff88' },
   ] as const;
 
   useEffect(() => {
@@ -79,20 +47,31 @@ export function Battle({ battleData }: BattleProps) {
   }, []);
 
   useEffect(() => {
-    setBattleState(normalizeBattleData(battleData));
-  }, [battleData]);
+    const normalized = normalizeBattleData(battleData);
 
-  const handleToggleDead = (index: number, isDead: boolean) => {
-    setBattleState((prev) => ({
-      ...prev,
-      enemies: prev.enemies.map((enemy, i) => (i === index ? { ...enemy, isDead } : enemy)),
+    const fixedUsers = normalized.users.map((user) => ({
+      ...user,
+      maxHp: user.maxHp ?? user.hp ?? 100,
     }));
-  };
+
+    setBattleState({
+      ...normalized,
+      users: fixedUsers,
+    });
+  }, [battleData]);
 
   const handleHpChange = (entityId: number, hp: number) => {
     setBattleState((prev) => ({
       ...prev,
       users: prev.users.map((user) => (user.id === entityId ? { ...user, hp } : user)),
+      enemies: prev.enemies.map((enemy) => (enemy.id === entityId ? ({ ...enemy, hp } as any) : enemy)),
+    }));
+  };
+
+  const handleToggleDead = (index: number, isDead: boolean) => {
+    setBattleState((prev) => ({
+      ...prev,
+      enemies: prev.enemies.map((enemy, i) => (i === index ? { ...enemy, isDead } : enemy)),
     }));
   };
 
@@ -108,8 +87,11 @@ export function Battle({ battleData }: BattleProps) {
           {
             id: nextId,
             presetId: firstPreset.id,
-            img: firstPreset.img,
-            sizeCells: feetToCells(firstPreset.defaultFeet),
+            shape: firstPreset.shape,
+            label: firstPreset.label,
+            color: firstPreset.color,
+            sizeCells: firstPreset.defaultFeet,
+            sizeY: firstPreset.defaultFeet,
             cellX: 0,
             cellY: 0,
             rotation: 0,
@@ -137,60 +119,49 @@ export function Battle({ battleData }: BattleProps) {
           ? {
               ...item,
               presetId: preset.id,
-              img: preset.img,
-              sizeCells: feetToCells(preset.defaultFeet),
+              shape: preset.shape,
+              label: preset.label,
+              color: preset.color,
+              sizeCells: preset.defaultFeet,
+              sizeY: preset.defaultFeet,
             }
           : item
       ),
     }));
   };
 
-  const handleChangeEnvironmentSizeFeet = (index: number, feet: number) => {
+  const handleChangeEnvironmentSizeFeet = (index: number, widthFeet: number, heightFeet: number) => {
     setBattleState((prev) => ({
       ...prev,
       environment: prev.environment.map((item, i) =>
-        i === index ? { ...item, sizeCells: feetToCells(feet) } : item
+        i === index
+          ? {
+              ...item,
+              sizeCells: feetToCells(widthFeet),
+              sizeY: feetToCells(heightFeet),
+            }
+          : item
       ),
     }));
   };
 
-  const handleRotateEnvironment = (id: number) => {
+  const handleChangeEnvironmentColor = (index: number, color: string) => {
     setBattleState((prev) => ({
       ...prev,
-      environment: prev.environment.map((e) =>
-        e.id === id
-          ? {
-              ...e,
-              rotation: ((e.rotation ?? 0) + 15) as
-                | 0
-                | 15
-                | 30
-                | 45
-                | 60
-                | 75
-                | 90
-                | 105
-                | 120
-                | 135
-                | 150
-                | 165
-                | 180
-                | 195
-                | 210
-                | 225
-                | 240
-                | 255
-                | 270
-                | 285
-                | 300
-                | 315
-                | 330
-                | 345
-                | 360,
-            }
-          : e
-      ),
+      environment: prev.environment.map((item, i) => (i === index ? { ...item, color } : item)),
     }));
+  };
+
+  const handleRotateEnvironment = (index: number, rotation: number) => {
+    setBattleState((prev) => ({
+      ...prev,
+      environment: prev.environment.map((item, i) => (i === index ? { ...item, rotation } : item)),
+    }));
+  };
+
+  const handleNextTurn = () => {
+    // Тут мастер может писать лог, подсветку токена, звук и т.д.
+    console.log('Next turn (manual)');
   };
 
   if (loading) return <BattlePreload />;
@@ -204,8 +175,9 @@ export function Battle({ battleData }: BattleProps) {
 
   return (
     <div className="w-full h-[85vh] relative left-[1vw] top-[1vh] z-100 flex flex-row items-center gap-[1vw] text-white">
-      <div className="flex flex-col justify-between w-[20vw] h-[70vh] max-h-[70vh]">
-        <div className="w-[20vw] max-h-[40vh]">
+      {/* ЛЕВО: герои + окружение */}
+      <div className="flex flex-col justify-between w-[20vw] h-[90vh] gap-[1vh]">
+        <div className="relative top-[9vh] w-[20vw] h-[65vh] overflow-x-auto">
           <PersonList
             side="users"
             users={battleState.users}
@@ -215,7 +187,7 @@ export function Battle({ battleData }: BattleProps) {
           />
         </div>
 
-        <div className="w-[20vw] max-h-[10vh]">
+        <div className="w-[20vw] h-[15vh] overflow-x-auto">
           <Environment
             environment={battleState.environment}
             presets={environmentPresets}
@@ -223,11 +195,13 @@ export function Battle({ battleData }: BattleProps) {
             onRemove={handleRemoveEnvironment}
             onChangePreset={handleChangeEnvironmentPreset}
             onChangeSizeFeet={handleChangeEnvironmentSizeFeet}
+            onChangeColor={handleChangeEnvironmentColor}
             onRotate={handleRotateEnvironment}
           />
         </div>
       </div>
 
+      {/* ЦЕНТР: поле */}
       <div className="relative w-[55vw] h-[85vh] top-[5vh]">
         <BattleBoard
           battleData={battleState}
@@ -241,16 +215,15 @@ export function Battle({ battleData }: BattleProps) {
 
             setBattleState((prev) => ({
               ...prev,
-              environment: prev.environment.map((e) =>
-                e.id === envId ? { ...e, cellX, cellY } : e
-              ),
+              environment: prev.environment.map((e) => (e.id === envId ? { ...e, cellX, cellY } : e)),
             }));
           }}
         />
       </div>
 
-      <div className="w-[20vw] h-[80vh] flex flex-col justify-center">
-        <div className="w-[20vw] h-[70vh]">
+      {/* ПРАВО: враги + таймер */}
+      <div className="relative top-[5vh] w-[20vw] h-[90vh] flex flex-col justify-center gap-[1vh]">
+        <div className="w-[20vw] h-[65vh] overflow-x-auto">
           <PersonList
             side="enemies"
             users={battleState.users}
@@ -258,6 +231,15 @@ export function Battle({ battleData }: BattleProps) {
             onToggleDead={handleToggleDead}
             hoveredToken={hoveredToken}
             onUpdateHp={handleHpChange}
+          />
+        </div>
+
+        <div className="w-full h-[18vh] flex-shrink-0">
+          <InitiativeTimer
+            users={battleState.users}
+            enemies={battleState.enemies}
+            hoveredToken={hoveredToken}
+            onNextTurn={handleNextTurn}
           />
         </div>
       </div>

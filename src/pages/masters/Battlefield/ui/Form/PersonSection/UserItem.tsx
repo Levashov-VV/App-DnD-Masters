@@ -14,7 +14,7 @@ const UserSelect = ({ index, arrayName }: UserItemProps) => {
   const { register } = useFormContext<BattleFormData>();
   return (
     <select
-      className="bg-neutral-700"
+      className="w-[8.5vw] text-[1.6vh] bg-neutral-700"
       {...register(classField as Path<BattleFormData>)}
       defaultValue=""
     >
@@ -49,7 +49,7 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
   const { register } = useFormContext<BattleFormData>();
   return (
     <select
-      className="bg-neutral-700"
+      className="w-[8.5vw] text-[1.6vh] bg-neutral-700"
       {...register(classField as Path<BattleFormData>)}
       defaultValue=""
     >
@@ -76,18 +76,17 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
 export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
   const { control, register, setValue, getValues } = useFormContext<BattleFormData>();
   const { data: characters } = useCharacter();
-
   const item = useWatch({
     control,
     name: `${arrayName}.${index}` as Path<BattleFormData>,
   }) as User | Enemies | undefined;
+
+  // Все вычисления после хуков
   const side: CreatureSide = arrayName === 'users' ? 'allies' : 'enemies';
   const itemWithClass = item as User;
   const raceKey = itemWithClass.className;
   const hasRace = !!raceKey;
-  const character = hasRace
-    ? characters?.find((c) => c.side === side && c.name === raceKey)
-    : undefined;
+  const character = hasRace ? characters?.find((c) => c.side === side && c.name === raceKey) : undefined;
 
   useEffect(() => {
     if (!character || !item) return;
@@ -102,6 +101,7 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
     if (character.logo && currentData.logo !== character.logo) {
       setValue(`${arrayName}.${index}.logo` as Path<BattleFormData>, character.logo);
     }
+    
   }, [character, item, arrayName, index, getValues, setValue, control]);
 
   if (!item) return null;
@@ -119,9 +119,9 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
   const logoForForm = character?.logo || item.logo || Person;
 
   return (
-    <li className="flex items-center gap-2">
-      <img className="w-10 h-10 object-contain" src={logoForForm} alt={item.name} />
-      <input {...register(`${arrayName}.${index}.name` as Path<BattleFormData>)} />
+    <li className="flex items-center gap-[1vw]">
+      <img className="w-[2.5vw] h-[2.5vw] object-contain" src={logoForForm} alt={item.name} />
+      <input className="w-[7.5vw] text-[1.6vh]" {...register(`${arrayName}.${index}.name` as Path<BattleFormData>)} />
 
       {arrayName === 'users' ? (
         <UserSelect index={index} arrayName={arrayName} />
@@ -130,24 +130,24 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
       )}
 
       <select
-        className="bg-neutral-700"
+        className="w-[4.5vw] text-[1.6vh] bg-neutral-700"
         {...register(`${arrayName}.${index}.size` as Path<BattleFormData>)}
       >
         <option value="small">Маленький</option>
         <option value="medium">Средний</option>
-        <option value="huge">Большой</option>
-        <option value="large">Огромный</option>
+        <option value="large">Большой</option>
+        <option value="huge">Огромный</option>
       </select>
 
       {arrayName === 'users' && (
         <input
-          className="w-[2vw]"
+          className="w-[3vw] text-[1.6vh]"
           {...register(`${arrayName}.${index}.hp` as Path<BattleFormData>)}
         />
       )}
 
       <input
-        className="w-[2vw]"
+        className="w-[4vw] text-[1.6vh]"
         {...register(`${arrayName}.${index}.initiative` as Path<BattleFormData>)}
       />
 

@@ -1,9 +1,9 @@
 import { LayoutMaster } from '../layout/LayoutMaster';
 import { Routes, Route } from 'react-router-dom';
-import App from '../../../app/index'; // предполагаю путь к App
-import { SelectRole } from '../../../features/select-role/Select-role'; // добавьте импорт
+import App from '../../../app/index';
+import { SelectRole } from '../../../features/select-role/Select-role';
 import { DashboardMaster } from '../../../pages/masters/home/ui/Dashboard';
-import { Persons } from '../../../pages/masters/Persons/ui/Persons';
+import { SoundPad } from '../../../pages/masters/SoundPad/ui/SoundPad';
 import { BattleField } from '../../../pages/masters/Battlefield/ui/Battlefield';
 import { DiceTray } from '../../../pages/masters/DiceTray/ui/DiceTray';
 import { DashboardPlayer } from '../../../pages/players/home/ui/Dashboard';
@@ -16,7 +16,7 @@ export function Routing() {
       <Route path="select-role" element={<SelectRole />} />
       <Route element={<LayoutMaster />}>
         <Route path="master" element={<DashboardMaster />} />
-        <Route path="persons" element={<Persons />} />
+        <Route path="soundPad" element={<SoundPad />} />
         <Route path="battlefield" element={<BattleField />} />
         <Route path="diceTray" element={<DiceTray />} />
         <Route path="cloneVoice" element={<CloneVoice />} />

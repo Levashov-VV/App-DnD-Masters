@@ -12,7 +12,7 @@ export function Header() {
         <ul className="flex flex-row w-full gap-[4vw] md:gap-6 justify-center flex-wrap items-center">
           <li className=" shrink-0">
             <Link
-              to={'/master'}
+              to={'/Master'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
               Главная
@@ -28,7 +28,7 @@ export function Header() {
           </li>
           <li className="shrink-0">
             <Link
-              to={'/diceTray'}
+              to={'/DiceTray'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
               Броски кубиков
@@ -36,10 +36,10 @@ export function Header() {
           </li>
           <li className="shrink-0">
             <Link
-              to={'/persons'}
+              to={'/SoundPad'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
-              Создание персонажей
+              Саундпады
             </Link>
           </li>
           <li className="shrink-0">

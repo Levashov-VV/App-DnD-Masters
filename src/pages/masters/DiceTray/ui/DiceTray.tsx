@@ -3,7 +3,18 @@ import { DicesSection } from './DicesSection/MulipleDicesSection/DicesSection';
 import { SelectShot } from './SelectShot/SelectShot';
 import { PhysicsWorld } from './PhysicalWorld/PhysicalWorld';
 import { RollingDice } from './RollingDice/RollingDice';
+import { History } from './History/History';
+
 import type { RollMode, DiceCounts, DiceType, DiceSetColor } from './types/rollTypes';
+import {
+  ROLL_HISTORY_KEY,
+  type StorageSchema,
+  type RollHistoryItem,
+  validateRollHistory,
+} from './types/rollTypes';
+
+import { createTypedStorage } from '../../../../shared/hooks/auth/typedStorage';
+
 import './style.css';
 
 type RollItem = {
@@ -32,6 +43,9 @@ type OverlayState = {
 
 const CHUNK_SIZE = 3;
 const OVERLAY_MS = 2400;
+
+// storage лучше создавать 1 раз (не внутри компонента)
+const storage = createTypedStorage<StorageSchema>();
 
 function chunk<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
@@ -94,7 +108,7 @@ export function DiceTray() {
   } | null>(null);
   const [rollResult, setRollResult] = useState<number | null>(null);
 
-  //оверлей в центре
+  // Оверлей
   const [overlay, setOverlay] = useState<OverlayState | null>(null);
   const [overlayKey, setOverlayKey] = useState(0);
   const overlayTimeoutRef = useRef<number | null>(null);
@@ -151,10 +165,26 @@ export function DiceTray() {
   const handleRollResult = useCallback(
     (value: number) => {
       setRollResult(value);
+
       if (rollMode === 'single' && currentRoll?.type === 'd20') {
         if (value === 20) showOverlay({ kind: 'hit', text: 'Критическая удача' });
         else if (value === 1) showOverlay({ kind: 'miss', text: 'Критическая неудача' });
         else showOverlay({ kind: 'value', text: String(value) });
+      }
+
+      if (rollMode === 'single' && currentRoll) {
+        const prev =
+          storage.get(ROLL_HISTORY_KEY, { defaultValue: [], validate: validateRollHistory }) ?? [];
+
+        const nextItem: RollHistoryItem = {
+          id: `roll-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          type: currentRoll.type,
+          value,
+          timestamp: new Date().toISOString(),
+        };
+
+        const next = [nextItem, ...prev].slice(0, 10);
+        storage.set(ROLL_HISTORY_KEY, next, { validate: validateRollHistory });
       }
 
       setCurrentRoll(null);
@@ -215,7 +245,7 @@ export function DiceTray() {
   }, [results]);
 
   return (
-    <div className="flex flex-row justify-center items-center w-[100vw] h-[100vh] relative">
+    <div className="flex flex-row justify-center items-center w-[100vw] h-[100vh]">
       <PhysicsWorld traySize={{ width: 7, depth: 10 }} wallHeight={20.6} wallThickness={0.5}>
         {rollMode === 'single' && currentRoll && (
           <RollingDice
@@ -244,7 +274,7 @@ export function DiceTray() {
         <SelectShot rollMode={rollMode} onChangeRollMode={setRollMode} />
       </div>
 
-      {/* Временный оверлей*/}
+      {/* Временный оверлей */}
       {rollMode === 'single' && overlay && (
         <div
           key={overlayKey}
@@ -289,13 +319,28 @@ export function DiceTray() {
         />
       </div>
 
+      {/* История бросков */}
+      {rollMode === 'single' && (
+        <div className="absolute bottom-[-2vh] left-[5vw] w-[20vw] h-[30vh] flex flex-col-reverse items-center justify-start z-100">
+          <History />
+        </div>
+      )}
+
       {/* Одиночный результат */}
       {rollMode === 'single' && rollResult !== null && (
-        <div className="absolute top-[6vh] right-[3vw] w-[10vw] h-[5vh] flex flex-col items-center justify-center bg-black/90 text-white rounded-xl z-100 shadow-2xl pointer-events-auto">
-          <div className="text-[2vh] font-bold text-amber-400">
+        <div className="absolute bottom-[2vh] right-[2.2vw] w-[22vw] h-[10vh] flex flex-col items-center justify-center bg-gradient-to-b from-black/95 to-black/50 backdrop-blur-sm text-white rounded-2xl z-[100] shadow-2xl shadow-amber-500/30 pointer-events-auto animate-fade-in-scale">
+          <div
+            className={`text-[4.5vh] font-black transition-all duration-500 ${
+              rollResult === 20
+                ? 'text-emerald-400 drop-shadow-lg [text-shadow:0_0_1rem_currentColor]'
+                : rollResult === 1
+                  ? 'text-red-400 drop-shadow-lg [text-shadow:0_0_1rem_currentColor]'
+                  : 'text-amber-400'
+            }`}
+          >
             {rollResult === 0 ? '—' : rollResult}
           </div>
-          <div className="text-[1.4vh] text-slate-300">
+          <div className="text-[1.8vh] font-medium text-slate-300 mt-1 tracking-wide">
             {rollResult === 0 ? 'Нет калибровки' : 'Выпало!'}
           </div>
         </div>
@@ -306,13 +351,13 @@ export function DiceTray() {
         <div className="absolute top-[73vh] left-[5vw] w-[25vw] max-h-[25vh] overflow-auto bg-black/90 text-white rounded-xl z-[100] shadow-2xl pointer-events-auto">
           <div className="flex flex-row justify-between h-full items-center text-[2.5vh] font-bold text-amber-400">
             <div>Сумма: {totalSum}</div>
-            <div className='relative right-[0.3vw]'>
+            <div className="relative right-[0.3vw]">
               Характеристика:{' '}
               <input
                 className="display-block w-[1.5vw] h-[3vh]"
-                value={isCharacteristic} 
+                value={isCharacteristic}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, ''); 
+                  const value = e.target.value.replace(/\D/g, '');
                   setIsCharacteristic(value);
                 }}
                 type="text"

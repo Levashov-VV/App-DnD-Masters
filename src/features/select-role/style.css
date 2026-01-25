@@ -1,0 +1,76 @@
+.selectRoleBlock {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 49vw;
+  height: 100vh;
+}
+
+.selectRole {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+
+
+.selectRole::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.9);
+  border-radius: 50%; 
+  transition: all 1s ease-in-out;
+  transform: scale(0); 
+}
+
+.selectRole:hover {
+  opacity: 1;
+}
+
+.selectRoleBlock:hover .selectRole::before {
+  transform: scale(1); 
+}
+
+
+.title {
+  position: absolute;
+  top: 50%; 
+  left: 27%;
+  transform: translate(50%, -10%);
+  font-size: 4vh;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  z-index: 20;
+  transition: all 0.8s ease-in-out;
+  font-weight: bold;
+}
+
+.selectRoleBlock:hover .title {
+  color: white;
+  top: 70%;
+  font-size: 5vh;
+  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+}
+
+.second {
+  left: 16vw;
+}
+.border {
+  border: 1px solid rgb(255, 255, 255);
+  width: 1px;
+  height: 100vh;
+}

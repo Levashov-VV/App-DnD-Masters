@@ -1,0 +1,124 @@
+.critOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 120;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+
+  opacity: 0;
+  animation: critOverlayFade 2400ms ease-in-out forwards;
+}
+
+/* туман */
+.critOverlay__fog {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(90vw, 1100px);
+  height: min(55vh, 520px);
+  transform: translate(-50%, -50%);
+  filter: blur(70px);
+  opacity: 0.95;
+}
+
+/* ТЕКСТ */
+.critOverlay__label--value {
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 900;
+  font-size: clamp(64px, 14vh, 160px);
+  line-height: 1;
+
+  /* “золотой” цвет */
+  color: rgba(255, 215, 110, 0.98);
+  text-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.55),
+    0 10px 28px rgba(0, 0, 0, 0.55),
+    0 0 28px rgba(245, 158, 11, 0.45);
+}
+
+.critOverlay__label--crit {
+  font-size: clamp(34px, 6.5vh, 84px);
+  line-height: 1.05;
+
+  /* чтобы читалось на любом фоне */
+  text-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.55),
+    0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+/* УДАЧА: зелёный */
+.critOverlay--hit .critOverlay__fog {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(34, 197, 94, 0.8) 0%,
+    rgba(34, 197, 94, 0.35) 35%,
+    rgba(34, 197, 94, 0.1) 60%,
+    rgba(0, 0, 0, 0) 75%
+  );
+}
+
+.critOverlay--hit .critOverlay__label {
+  border-color: rgba(134, 239, 172, 0.55);
+  box-shadow:
+    0 0 45px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(34, 197, 94, 0.35);
+}
+
+/* НЕУДАЧА: красный */
+.critOverlay--miss .critOverlay__fog {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(239, 68, 68, 0.8) 0%,
+    rgba(239, 68, 68, 0.35) 35%,
+    rgba(239, 68, 68, 0.1) 60%,
+    rgba(0, 0, 0, 0) 75%
+  );
+}
+
+.critOverlay--miss .critOverlay__label {
+  border-color: rgba(255, 160, 160, 0.55);
+  box-shadow:
+    0 0 45px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(239, 68, 68, 0.35);
+}
+
+/* ОБЫЧНОЕ ЗНАЧЕНИЕ: жёлтый */
+.critOverlay--value .critOverlay__fog {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 158, 11, 0.75) 0%,
+    rgba(245, 158, 11, 0.3) 35%,
+    rgba(245, 158, 11, 0.08) 60%,
+    rgba(0, 0, 0, 0) 75%
+  );
+}
+.critOverlay--value .critOverlay__label {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+@keyframes critOverlayFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}

@@ -1,0 +1,201 @@
+import { useEffect, useState, useCallback } from 'react';
+import { DndContext, MouseSensor, TouchSensor, useSensors, useSensor } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import type { User, Enemies, BattleFormData, HoveredToken, Environment } from '../../Form/types';
+import { GridOverlay } from '../GridOverlay/GridOverlay';
+import Token from './Token';
+
+type TokenType = {
+  id: string;
+  type: 'user' | 'enemy' | 'environment';
+  data: User | Enemies | Environment;
+  cellX: number;
+  cellY: number;
+  sizeCells: number;
+  sizeY?: number;
+  rotation?: number;
+};
+
+interface BattleBoardProps {
+  battleData: BattleFormData;
+  gridWidth: number;
+  gridHeight: number;
+  mapImage: string;
+  onTokenMove?: (id: string, cellX: number, cellY: number) => void;
+  onHoverToken?: (hover: HoveredToken) => void;
+}
+
+const SIZE_MAP_CREATURE: Record<'small' | 'medium' | 'large' | 'huge', number> = {
+  small: 1,
+  medium: 1,
+  large: 2,
+  huge: 3,
+};
+
+const getCreatureSizeCells = (sizeInput: string | undefined) => {
+  const valid = ['small', 'medium', 'large', 'huge'] as const;
+  const key = valid.find((s) => s === sizeInput) ?? 'medium';
+  return SIZE_MAP_CREATURE[key];
+};
+
+export function BattleBoard({
+  battleData,
+  gridWidth,
+  gridHeight,
+  mapImage,
+  onTokenMove,
+  onHoverToken,
+}: BattleBoardProps) {
+  const [tokens, setTokens] = useState<TokenType[]>([]);
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 4 } });
+  const touchSensor = useSensor(TouchSensor);
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  useEffect(() => {
+    setTokens((prev) => {
+      const next: TokenType[] = [];
+
+      battleData.users.forEach((user, i) => {
+        const id = `user-${user.id ?? i}`;
+        const existing = prev.find((t) => t.id === id);
+
+        const sizeCells = getCreatureSizeCells(user.size);
+
+        next.push(
+          existing
+            ? { ...existing, data: user, sizeCells }
+            : {
+                id,
+                type: 'user',
+                data: user,
+                cellX: Math.max(0, i * 1),
+                cellY: Math.floor(i / 3),
+                sizeCells,
+              }
+        );
+      });
+
+      battleData.enemies.forEach((enemy, i) => {
+        const id = `enemy-${enemy.id ?? i}`;
+        const existing = prev.find((t) => t.id === id);
+
+        const sizeCells = getCreatureSizeCells(enemy.size);
+
+        next.push(
+          existing
+            ? { ...existing, data: enemy, sizeCells }
+            : {
+                id,
+                type: 'enemy',
+                data: enemy,
+                cellX: Math.max(0, gridWidth - sizeCells - i * 2),
+                cellY: Math.floor(i / 3),
+                sizeCells,
+              }
+        );
+      });
+
+      battleData.environment.forEach((env, i) => {
+        const id = `env-${env.id}`;
+        const existing = prev.find((t) => t.id === id);
+
+        next.push(
+          existing
+            ? {
+                ...existing,
+                data: env,
+                cellX: env.cellX,
+                cellY: env.cellY,
+                sizeCells: env.sizeCells,
+                sizeY: env.sizeY,
+                rotation: env.rotation,
+              }
+            : {
+                id,
+                type: 'environment',
+                data: env,
+                cellX: env.cellX ?? i,
+                cellY: env.cellY ?? 0,
+                sizeCells: env.sizeCells,
+                sizeY: env.sizeY,
+                rotation: env.rotation ?? 0,
+              }
+        );
+      });
+
+      return next;
+    });
+  }, [battleData, gridWidth, gridHeight]);
+
+  const handleMove = useCallback(
+    (id: string, newX: number, newY: number) => {
+      setTokens((prev) => {
+        const token = prev.find((t) => t.id === id);
+        if (!token) return prev;
+
+        const size = token.sizeCells;
+        const clampedX = Math.max(0, Math.min(gridWidth - size, newX));
+        const clampedY = Math.max(0, Math.min(gridHeight - size, newY));
+
+        const newToken: TokenType = { ...token, cellX: clampedX, cellY: clampedY };
+        onTokenMove?.(id, newToken.cellX, newToken.cellY);
+
+        return prev.map((t) => (t.id === id ? newToken : t));
+      });
+    },
+    [gridWidth, gridHeight, onTokenMove]
+  );
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, delta } = event;
+      const tokenId = active.id as string;
+
+      const token = tokens.find((t) => t.id === tokenId);
+      if (!token) return;
+
+      const size = token.sizeCells;
+
+      const container = document.querySelector('.battleboard-container') as HTMLElement | null;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const cellWidth = rect.width / gridWidth;
+      const cellHeight = rect.height / gridHeight;
+
+      const deltaCellsX = Math.round(delta.x / cellWidth);
+      const deltaCellsY = Math.round(delta.y / cellHeight);
+
+      let newX = token.cellX + deltaCellsX;
+      let newY = token.cellY + deltaCellsY;
+
+      newX = Math.max(0, Math.min(gridWidth - size, newX));
+      newY = Math.max(0, Math.min(gridHeight - size, newY));
+
+      handleMove(tokenId, newX, newY);
+    },
+    [tokens, gridWidth, gridHeight, handleMove]
+  );
+
+  return (
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <div className="relative w-full h-full border-4 border-amber-400/50 rounded-xl overflow-hidden shadow-2xl battleboard-container">
+        <img
+          src={mapImage}
+          className="absolute inset-0 w-full h-full object-cover z-10"
+          alt="Battle map"
+        />
+        <GridOverlay gridWidth={gridWidth} gridHeight={gridHeight} />
+        {tokens.map((token) => (
+          <Token
+            key={token.id}
+            token={token}
+            gridWidth={gridWidth}
+            gridHeight={gridHeight}
+            onHoverToken={onHoverToken}
+          />
+        ))}
+      </div>
+    </DndContext>
+  );
+}

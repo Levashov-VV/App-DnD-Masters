@@ -1,0 +1,220 @@
+[
+  {
+    "id": 1,
+    "side": "allies",
+    "name": "DragonBorn",
+    "img": "../img/masters/Battlefield/Figures/Allies/DragonBorn.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/DragonBorn.png"
+  },
+  {
+    "id": 2,
+    "side": "allies",
+    "name": "Dwarf",
+    "img": "../img/masters/Battlefield/Figures/Allies/Dwarf.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Dwarf.png"
+  },
+  {
+    "id": 3,
+    "side": "allies",
+    "name": "Elf",
+    "img": "../img/masters/Battlefield/Figures/Allies/Elf.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Elf.png"
+  },
+  {
+    "id": 4,
+    "side": "allies",
+    "name": "Goliaf",
+    "img": "../img/masters/Battlefield/Figures/Allies/Goliaf.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Goliaf.png"
+  },
+  {
+    "id": 5,
+    "side": "allies",
+    "name": "Human",
+    "img": "../img/masters/Battlefield/Figures/Allies/Human.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Human.png"
+  },
+  {
+    "id": 6,
+    "side": "allies",
+    "name": "Kalashtar",
+    "img": "../img/masters/Battlefield/Figures/Allies/Kalashtar.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Kalashtar.png"
+  },
+  {
+    "id": 7,
+    "side": "allies",
+    "name": "Minotaur",
+    "img": "../img/masters/Battlefield/Figures/Allies/Minotaur.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Minotaur.png"
+  },
+  {
+    "id": 8,
+    "side": "allies",
+    "name": "Shifter",
+    "img": "../img/masters/Battlefield/Figures/Allies/Shifter.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Shifter.png"
+  },
+  {
+    "id": 9,
+    "side": "allies",
+    "name": "Tiffling",
+    "img": "../img/masters/Battlefield/Figures/Allies/Tiffling.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Tiffling.png"
+  },
+  {
+    "id": 10,
+    "side": "allies",
+    "name": "Orc",
+    "img": "../img/masters/Battlefield/Figures/Allies/Orc.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Orc.png"
+  },
+  {
+    "id": 11,
+    "side": "allies",
+    "name": "Aasimar",
+    "img": "../img/masters/Battlefield/Figures/Allies/Aasimar.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Aasimar.png"
+  },
+  {
+    "id": 12,
+    "side": "allies",
+    "name": "Centaur",
+    "img": "../img/masters/Battlefield/Figures/Allies/Centaur.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Centaur.png"
+  },
+  {
+    "id": 13,
+    "side": "allies",
+    "name": "Halfling",
+    "img": "../img/masters/Battlefield/Figures/Allies/Halfling.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Halfling.png"
+  },
+  {
+    "id": 14,
+    "side": "allies",
+    "name": "Leonin",
+    "img": "../img/masters/Battlefield/Figures/Allies/Leonin.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Leonin.png"
+  },
+  {
+    "id": 15,
+    "side": "allies",
+    "name": "Tabaxi",
+    "img": "../img/masters/Battlefield/Figures/Allies/Tabaxi.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Tabaxi.png"
+  },
+  {
+    "id": 16,
+    "side": "allies",
+    "name": "Genasi",
+    "img": "../img/masters/Battlefield/Figures/Allies/Genasi.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Genasi.png"
+
+  },
+  {
+    "id": 17,
+    "side": "allies",
+    "name": "Grung",
+    "img": "../img/masters/Battlefield/Figures/Allies/Grung.png",
+    "logo": "../img/masters/Battlefield/Figures/Allies/Logo/Grung.png"
+  },
+  {
+    "id": 101,
+    "side": "enemies",
+    "name": "Goblin",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Goblin.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Goblin.png"
+  },
+  {
+    "id": 102,
+    "side": "enemies",
+    "name": "Zombie",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Zombie.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Zombie.png"
+  },
+  {
+    "id": 103,
+    "side": "enemies",
+    "name": "Dragon",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Dragon.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Dragon.png"
+  },
+  {
+    "id": 104,
+    "side": "enemies",
+    "name": "Bandit",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Bandit.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Bandit.png"
+  },
+  {
+    "id": 105,
+    "side": "enemies",
+    "name": "Ghost",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Ghost.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Ghost.png"
+  },
+  {
+    "id": 106,
+    "side": "enemies",
+    "name": "Vampire",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Vampire.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Vampire.png"
+  },
+  {
+    "id": 107,
+    "side": "enemies",
+    "name": "Demon",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Demon.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Demon.png"
+  },
+  {
+    "id": 108,
+    "side": "enemies",
+    "name": "Golem",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Golem.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Golem.png"
+  },
+  {
+    "id": 109,
+    "side": "enemies",
+    "name": "Troll",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Troll.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Troll.png"
+  },
+  {
+    "id": 110,
+    "side": "enemies",
+    "name": "Kobold",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Kobold.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Kobold.png"
+  },
+  {
+    "id": 111,
+    "side": "enemies",
+    "name": "Мимик",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Mimic.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Mimic.png"
+  },
+  {
+    "id": 112,
+    "side": "enemies",
+    "name": "Skeleton",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Skeleton.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Skeleton.png"
+  },
+  {
+    "id": 113,
+    "side": "enemies",
+    "name": "Spider",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Spider.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Spider.png"
+  },
+  {
+    "id": 114,
+    "side": "enemies",
+    "name": "Beholder",
+    "img": "../img/masters/Battlefield/Figures/Enemies/Beholder.png",
+    "logo": "../img/masters/Battlefield/Figures/Enemies/Logo/Beholder.png"
+  }
+]

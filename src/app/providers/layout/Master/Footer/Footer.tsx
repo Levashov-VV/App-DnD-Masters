@@ -32,7 +32,11 @@ export function Footer() {
             <Link to="/DiceTray">Броски кубиков</Link>
           </li>
           <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
+<<<<<<< HEAD
             <Link to="/SoundPad">Саундпады</Link>
+=======
+            <Link to="/SoundPad">Саундпад</Link>
+>>>>>>> 3a5e96b6430a78bbd1955d2da18657abd8f200b0
           </li>
           <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
             <Link to="/CloneVoice">Генерация голоса</Link>

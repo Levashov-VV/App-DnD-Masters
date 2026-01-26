@@ -48,7 +48,7 @@ export const SoundPadScenePage: React.FC = () => {
 
   if (!sceneSlug || !scenes || error) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen text-white gap-4">
+      <div className="flex flex-col justify-center items-center h-screen text-white gap-[2vh]">
         <p>Ошибка загрузки сцены</p>
         <Link to="/soundpad" className="text-purple-400 underline">
           Вернуться к списку локаций
@@ -61,7 +61,7 @@ export const SoundPadScenePage: React.FC = () => {
 
   if (!entry) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen text-white gap-4">
+      <div className="flex flex-col justify-center items-center h-screen text-white gap-[2vh]">
         <p>Сцена не найдена</p>
         <Link to="/soundpad" className="text-purple-400 underline">
           Вернуться к списку локаций
@@ -71,33 +71,34 @@ export const SoundPadScenePage: React.FC = () => {
   }
 
   const [name, scene] = entry;
+  const sortedMusic = scene.music.sort((a, b) =>
+  a.name.localeCompare(b.name, 'ru')
+);
 
   return (
-    <div className="relative top-[20vh] h-screen text-white">
-      {/* Header */}
-      <header className="border-b border-white/10 flex items-center justify-between">
-        <Link to="/soundpad" className="text-[1.5vh] text-gray-300 hover:text-white">
-          ← Все локации
-        </Link>
-        <h1 className="text-[3vh] font-semibold">{name}</h1>
+    <div className="relative top-[20vh] h-[150vh] text-white">
+      <header className="border-b border-white/10 flex items-center justify-center">
+        <h1 className="text-[4vh] font-semibold">{name}</h1>
         <div />
       </header>
+        <Link to="/soundpad" className="absolute left-[1vw] top-[1vh] text-[2vh] text-gray-300 hover:text-white">
+          ← Все локации
+        </Link>
 
       <main className="flex flex-col items-center justify-center gap-[5vh] flex-1">
-        <div className="relative top-[2vh] w-[20vw]">
+        <div className="relative top-[2vh] w-[25vw]">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
             <img
               src={`https://cdn.jsdelivr.net/gh/Levashov-VV/DnD-Audio@main/${scene.cover}`}
               alt={name}
-              className="w-[20vw] h-[30vh]"
+              className="w-[25vw] h-[50vh]"
             />
           </div>
         </div>
 
-        {/* Кнопки на всю ширину экрана */}
-        <div className="w-[40vw]">
-          <div className="grid gap-3 grid-cols-4">
-            {scene.music.map((track) => (
+        <div className="w-[60vw]">
+          <div className="grid gap-[2vh] grid-cols-4">
+            {sortedMusic.map((track) => (
 							<SoundItem key={track.url} track={track} />
             ))}
           </div>

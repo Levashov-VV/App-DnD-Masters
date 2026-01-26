@@ -66,27 +66,27 @@ export const SoundItem: React.FC<SoundButtonProps> = ({ track }) => {
   }, []);
 
   return (
-    <div className="group w-full text-left rounded-xl bg-white/5 hover:bg-white/10 border-white/10 hover:border-purple-400/60 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 p-4 flex flex-col gap-2">
+    <div className="group w-full h-[7vh] text-left flex flex-col gap-[0.5vh]">
       {/* Название трека */}
-      <span className="text-sm sm:text-base font-medium text-white truncate">{track.name}</span>
+      <span className="text-[1.8vh] font-medium text-white truncate">{track.name}</span>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[0.5vw]">
         {/* Play/Pause */}
         <button
           onClick={togglePlayPause}
-          className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-all flex items-center justify-center w-10 h-10"
+          className="rounded-lg bg-white/20 hover:bg-white/30 transition-all flex items-center justify-center w-[2vw] h-[1.5vw]"
         >
           {isPlaying ? (
-            <MdPause className="w-5 h-5 text-white" />
+            <MdPause className="w-[1vw] h-[1vw] text-white" />
           ) : (
-            <MdPlayArrow className="w-5 h-5 text-white" />
+            <MdPlayArrow className="w-[1vw] h-[1vw] text-white" />
           )}
         </button>
 
         {/* Громкость */}
-        <div className="flex items-center gap-1 flex-1">
-          <div className="w-16 h-8 bg-white/10 rounded flex items-center justify-center">
-            <span className="text-xs text-gray-300">{Math.round(volume * 100)}%</span>
+        <div className="flex items-center gap-[0.5vw] flex-1">
+          <div className="w-[3vw] h-[1.5vw] bg-white/10 rounded flex items-center justify-center">
+            <span className="text-[0.7vw] text-gray-300">{Math.round(volume * 100)}%</span>
           </div>
           <input
             type="range"
@@ -95,20 +95,20 @@ export const SoundItem: React.FC<SoundButtonProps> = ({ track }) => {
             step="0.05"
             value={volume}
             onChange={handleVolumeChange}
-            className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-purple-500 hover:accent-purple-400"
+            className="w-full h-[0.5vw] bg-white/20 rounded-lg appearance-none cursor-pointer accent-blue-300 hover:accent-blue-400"
           />
         </div>
 
         {/* Repeat */}
         <button
           onClick={toggleLoop}
-          className={`p-2 rounded-lg transition-all ${
+          className={`rounded-lg transition-all ${
             isLoop
-              ? 'bg-purple-500/50 text-purple-200 hover:bg-purple-500'
+              ? 'bg-purple-500/50 text-purple-200 hover:bg-blue-400'
               : 'bg-white/20 hover:bg-white/30'
           }`}
         >
-          {isLoop ? <MdRepeatOne className="w-4 h-4" /> : <MdRepeat className="w-4 h-4" />}
+          {isLoop ? <MdRepeatOne className="w-[1vw] h-[1vw]" /> : <MdRepeat className="w-[1vw] h-[1vw]" />}
         </button>
       </div>
 

@@ -45,7 +45,7 @@ const SceneCard: React.FC<{
   return (
     <Link
       to={`/soundpad/${slug}`}
-      className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-xl border-white/20 hover:border-white/40 hover:scale-105 transition-all duration-500 shadow-2xl hover:shadow-purple-500/50"
+      className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-xl border-white/20 hover:border-white/40 hover:scale-105 transition-all duration-500 shadow-2xl hover:shadow-amber-500/50"
       aria-label={`Открыть саундпад ${name}`}
     >
       <div className="w-full h-full">
@@ -58,7 +58,7 @@ const SceneCard: React.FC<{
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
         <div className="absolute bottom-[1vh] left-[1vw]">
-          <h3 className="text-[3vh] font-bold text-purple-300 drop-shadow-lg group-hover:text-purple-400 transition-colors line-clamp-2">
+          <h3 className="text-[3vh] font-bold text-amber-200 drop-shadow-lg group-hover:text-amber-300 transition-colors line-clamp-2">
             {name}
           </h3>
           <p className="text-amber-100 text-[2vh]">
@@ -80,8 +80,8 @@ export const SoundPad: React.FC = () => {
   } = useQuery<ScenesMap, Error>({
     queryKey: ['soundpad-json'],
     queryFn: fetchSoundPad,
-    staleTime: 0, // всегда stale → всегда можно рефетчить
-    refetchOnWindowFocus: true, // по желанию
+    staleTime: 0,
+    refetchOnWindowFocus: true, 
   });
 
   if (isPending) {

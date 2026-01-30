@@ -57,7 +57,8 @@ export function Environment({
           return (
             <div
               key={env.id}
-              className="flex flex-col bg-neutral-800/90 rounded-xl overflow-hidden  transition-all" {...isExpanded ? { style: { height: '6.5vh' } } : {}}
+              className="flex flex-col bg-neutral-800/90 rounded-xl overflow-hidden  transition-all"
+              {...(isExpanded ? { style: { height: '6.5vh' } } : {})}
             >
               <div className="flex items-center gap-[0.5vw]">
                 <select
@@ -132,7 +133,7 @@ export function Environment({
 
               {/* Развернутая панель поворота */}
               {isExpanded && (
-                <div className='relative top-[0.5vh]'>
+                <div className="relative top-[0.5vh]">
                   <div className="flex items-center gap-[0.4vw]">
                     <span className="relative left-[0.2vw] text-[1.5vh] text-amber-100 font-semibold whitespace-nowrap w-[5vw]">
                       Поворот:

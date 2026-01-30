@@ -38,7 +38,7 @@ export const History = () => {
           onClick={clearHistory}
           className="w-[5vw] bg-red-500/50 rounded text-[1.4vh] hover:bg-red-700/45 transition-colors"
         >
-					Очистить
+          Очистить
         </button>
       </div>
       {history.slice().map((roll: RollHistoryItem) => (

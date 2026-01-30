@@ -18,24 +18,20 @@ export function Routing() {
       <Route index element={<App />} />
       <Route path="select-role" element={<SelectRole />} />
 
-      {/* ВСЕ мастер-страницы под LayoutMaster */}
+      {/* Master */}
       <Route element={<LayoutMaster />}>
         <Route path="master" element={<DashboardMaster />} />
-        
-        {/* SoundPad: список + детальная страница */}
         <Route path="soundpad" element={<SoundPad />} />
         <Route path="soundpad/:sceneSlug" element={<SoundPadScenePage />} />
-        
-        {/* Остальные */}
         <Route path="battlefield" element={<BattleField />} />
         <Route path="diceTray" element={<DiceTray />} />
         <Route path="cloneVoice" element={<CloneVoice />} />
       </Route>
 
-      {/* Player отдельно */}
+      {/* Player */}
       <Route element={<LayoutPlayer />}>
         <Route path="player" element={<DashboardPlayer />} />
-        <Route path='CharacterSheet' element={<CharacterSheet />} />
+        <Route path="CharacterSheet" element={<CharacterSheet />} />
       </Route>
     </Routes>
   );

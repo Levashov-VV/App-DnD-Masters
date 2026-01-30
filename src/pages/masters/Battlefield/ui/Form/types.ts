@@ -41,7 +41,7 @@ export type Environment = {
   presetId: number;
   label?: string;
   img?: string;
-  shape: 'cone' | 'line' | 'sphere' | 'hemisphere' | 'cube' ;
+  shape: 'cone' | 'line' | 'sphere' | 'hemisphere' | 'cube';
   color: string;
   sizeCells: number;
   sizeY?: number;

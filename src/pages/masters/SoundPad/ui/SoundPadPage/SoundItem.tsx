@@ -108,7 +108,11 @@ export const SoundItem: React.FC<SoundButtonProps> = ({ track }) => {
               : 'bg-white/20 hover:bg-white/30'
           }`}
         >
-          {isLoop ? <MdRepeatOne className="w-[1vw] h-[1vw]" /> : <MdRepeat className="w-[1vw] h-[1vw]" />}
+          {isLoop ? (
+            <MdRepeatOne className="w-[1vw] h-[1vw]" />
+          ) : (
+            <MdRepeat className="w-[1vw] h-[1vw]" />
+          )}
         </button>
       </div>
 

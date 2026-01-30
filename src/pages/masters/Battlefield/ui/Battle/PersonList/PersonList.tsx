@@ -30,6 +30,9 @@ export function PersonList({
   const sortedInitiative = [...data].sort((a, b) => (b.initiative ?? 1) - (a.initiative ?? 1));
   const defaultTitle = side === 'users' ? 'Герои' : 'Противники';
 
+  // Создаем refs для всех существ заранее
+  const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
+
   const getImageSrc = (item: User | Enemies) => {
     const sideType: CreatureSide = side === 'users' ? 'allies' : 'enemies';
     const itemClassName = (item as User).className;
@@ -51,8 +54,11 @@ export function PersonList({
   };
 
   const getMaxHp = (creature: Creature): number => {
-    const anyCreature = creature as any;
-    const maxHp = anyCreature.maxHp ?? anyCreature.totalHp ?? 100;
+    // Правильная типизация вместо any
+    const maxHp =
+      ('maxHp' in creature ? creature.maxHp : undefined) ??
+      ('totalHp' in creature ? (creature as { totalHp?: number }).totalHp : undefined) ??
+      100;
     return maxHp;
   };
 
@@ -84,7 +90,9 @@ export function PersonList({
 
   return (
     <div className="flex flex-col gap-[1.5vh] bg-neutral-900/70 rounded-2xl">
-      <h3 className={`text-lg font-bold ${side === 'users' ? 'text-emerald-400' : 'text-red-400'}`}>
+      <h3
+        className={`text-[2vh] font-bold ${side === 'users' ? 'text-emerald-400' : 'text-red-400'}`}
+      >
         {title ?? defaultTitle}
       </h3>
       {sortedInitiative.map((creature: Creature) => {
@@ -96,12 +104,9 @@ export function PersonList({
           hpValue !== null ? Math.max(0, Math.min(100, (hpValue / maxHpValue) * 100)) : 0;
         const isEnemy = side === 'enemies';
         const src = getImageSrc(creature);
-
-        // ✅ Логика состояний
         const hasHp = hpValue !== null;
         const isDeadByHp = hasHp && hpValue <= 0;
         const enemyIsDead = !hasHp && (creature as Enemies).isDead;
-        const inputRef = useRef<HTMLInputElement>(null);
 
         const isHoveredRow =
           hoveredToken &&
@@ -121,7 +126,6 @@ export function PersonList({
               .filter(Boolean)
               .join(' ')}
           >
-            {/* Аватарка */}
             <div className="relative flex-shrink-0">
               <img
                 src={src}
@@ -137,8 +141,6 @@ export function PersonList({
             </div>
 
             <span className="flex-1 font-semibold text-[1.8vh] truncate">{creature.name}</span>
-
-            {/* ✅ HP БЛОК - только герои */}
             {hasHp && (
               <div className="flex-shrink-0 w-[6vw] flex flex-col items-center gap-px bg-neutral-900/90 rounded-lg shadow-md group-hover:shadow-lg">
                 <div className="w-full h-[0.4vh] bg-neutral-700 rounded-full overflow-hidden shadow-inner">
@@ -165,20 +167,22 @@ export function PersonList({
                     type="button"
                     className="flex-1 h-[3vh] bg-red-600/95 hover:bg-red-500 text-[1.5vh] font-bold rounded shadow transition-all active:scale-[0.97]"
                     onClick={() => {
-                      const val = Number(inputRef.current?.value) || 5;
-                      handleHpChange(entityId, -1, val, hpValue || 0, maxHpValue); // ✅ −
+                      const val = Number(inputRefs.current[entityId]?.value) || 5;
+                      handleHpChange(entityId, -1, val, hpValue || 0, maxHpValue);
                     }}
                     title="Уменьшить"
                   >
                     −
                   </button>
                   <input
-                    ref={inputRef}
+                    ref={(el) => {
+                      inputRefs.current[entityId] = el;
+                    }}
                     type="number"
                     defaultValue="5"
                     min="1"
                     max={maxHpValue}
-                    className="w-[2.2vw] h-[3vh] bg-neutral-700/90 border-neutral-600 hover:border-amber-400 focus:border-amber-400 focus:ring-1 focus:ring-amber-500/50 focus:outline-none text-center text-[1.5vh] text-amber-100 rounded shadow-sm transition-colors duration-200 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none pr-0"
+                    className="w-[2.2vw] h-[3vh] bg-neutral-700/90 border-neutral-600 hover:border-amber-400 focus:border-amber-400 focus:ring-1 focus:ring-amber-500/50 focus:outline-none text-center text-[1.5vh] text-amber-100 rounded shadow-sm transition-colors duration-200"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         const val = Number((e.target as HTMLInputElement).value) || 5;
@@ -190,8 +194,8 @@ export function PersonList({
                     type="button"
                     className="flex-1 h-[3vh] bg-emerald-600/95 hover:bg-emerald-500 text-[1.2vh] font-bold rounded shadow transition-all active:scale-[0.97]"
                     onClick={() => {
-                      const val = Number(inputRef.current?.value) || 5;
-                      handleHpChange(entityId, 1, val, hpValue || 0, maxHpValue); // ✅ +
+                      const val = Number(inputRefs.current[entityId]?.value) || 5;
+                      handleHpChange(entityId, 1, val, hpValue || 0, maxHpValue);
                     }}
                     title="Увеличить"
                   >
@@ -208,7 +212,6 @@ export function PersonList({
               </span>
             </div>
 
-            {/* ✅ КНОПКИ ВРАГОВ (без HP) */}
             {isEnemy && !hasHp && originalIndex >= 0 && (
               <>
                 {!enemyIsDead && (

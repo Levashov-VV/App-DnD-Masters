@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import type { User, Enemies, HoveredToken } from '../../Form/types';
 import DefaultLogo from '../../../../../../../public/img/masters/Battlefield/Figures/Logo-Profile.png';
 
@@ -22,14 +22,18 @@ const STROKE = 10;
 const R = (VIEWBOX - STROKE) / 2;
 const CIRC = 2 * Math.PI * R;
 
-export function InitiativeTimer({ users, enemies, hoveredToken, onNextTurn }: InitiativeTimerProps) {
+export function InitiativeTimer({
+  users,
+  enemies,
+  hoveredToken,
+  onNextTurn,
+}: InitiativeTimerProps) {
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
   const [isPaused, setIsPaused] = useState(false);
-  const [initiativeQueue, setInitiativeQueue] = useState<InitiativeItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const updateQueue = useCallback(() => {
+  const initiativeQueue = useMemo(() => {
     const allCreatures: InitiativeItem[] = [
       ...users.map((u) => ({
         id: u.id,
@@ -45,13 +49,14 @@ export function InitiativeTimer({ users, enemies, hoveredToken, onNextTurn }: In
       })),
     ].sort((a, b) => b.initiative - a.initiative);
 
-    setInitiativeQueue(allCreatures);
-    if (allCreatures.length > 0) setCurrentIndex(0);
+    return allCreatures;
   }, [users, enemies]);
 
-  useEffect(() => {
-    updateQueue();
-  }, [updateQueue]);
+  // Вычисляем безопасный индекс
+  const safeCurrentIndex = useMemo(() => {
+    if (initiativeQueue.length === 0) return 0;
+    return currentIndex % initiativeQueue.length;
+  }, [currentIndex, initiativeQueue.length]);
 
   useEffect(() => {
     if (isPaused || initiativeQueue.length === 0) return;
@@ -87,9 +92,10 @@ export function InitiativeTimer({ users, enemies, hoveredToken, onNextTurn }: In
     onNextTurn();
   };
 
-  const currentCreature = initiativeQueue[currentIndex];
+  const currentCreature = initiativeQueue[safeCurrentIndex];
 
-  const progress = initiativeQueue.length === 0 ? 0 : Math.max(0, Math.min(1, timeLeft / TURN_SECONDS));
+  const progress =
+    initiativeQueue.length === 0 ? 0 : Math.max(0, Math.min(1, timeLeft / TURN_SECONDS));
   const dashOffset = CIRC * (1 - progress);
 
   return (
@@ -109,7 +115,10 @@ export function InitiativeTimer({ users, enemies, hoveredToken, onNextTurn }: In
           />
           <div className="absolute inset-0 rounded-full ring-2 ring-neutral-900/70" />
 
-          <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}>
+          <svg
+            className="absolute inset-0 w-full h-full -rotate-90"
+            viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}
+          >
             <defs>
               <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#fbbf24" />
@@ -143,34 +152,34 @@ export function InitiativeTimer({ users, enemies, hoveredToken, onNextTurn }: In
           </svg>
         </div>
 
-        {/* ИМЯ + ИНИЦИАТИВА */}
         <div className="flex-1 min-w-0">
           <span className="font-bold text-[2vh] text-amber-300 block truncate leading-tight bg-gradient-to-r from-amber-300 to-amber-100 bg-clip-text text-transparent">
             {currentCreature?.name || 'Нет игроков'}
           </span>
           <span className="text-[1.4vh] text-neutral-300 font-mono tracking-wide">
-            Инициатива: <span className="text-amber-400 font-bold">{currentCreature?.initiative ?? 0}</span>
+            Инициатива:{' '}
+            <span className="text-amber-400 font-bold">{currentCreature?.initiative ?? 0}</span>
           </span>
         </div>
 
-        {/* ЦИФРА ВРЕМЕНИ */}
         <div className="relative right-[0.5vw] flex flex-col items-center gap-[0.4vh] flex-shrink-0">
           <div
             className={`w-[5vh] h-[5vh] rounded-2xl flex items-center justify-center shadow-2xl font-mono font-black text-[2vh] border-2 transition-all duration-300 ${
               timeLeft <= 10
                 ? 'bg-red-500/90 border-red-400 shadow-red-500/50 animate-pulse'
                 : timeLeft <= 30
-                ? 'bg-amber-500/90 border-amber-400 shadow-amber-500/50'
-                : 'bg-emerald-500/90 border-emerald-400 shadow-emerald-500/50'
+                  ? 'bg-amber-500/90 border-amber-400 shadow-amber-500/50'
+                  : 'bg-emerald-500/90 border-emerald-400 shadow-emerald-500/50'
             }`}
           >
             {timeLeft.toString().padStart(2, '0')}
           </div>
-          <span className="text-[1vh] text-neutral-400 font-medium uppercase tracking-wide">сек</span>
+          <span className="text-[1vh] text-neutral-400 font-medium uppercase tracking-wide">
+            сек
+          </span>
         </div>
       </div>
 
-      {/* КНОПКИ */}
       <div className="flex gap-[0.6vh] relative z-10">
         <button
           type="button"

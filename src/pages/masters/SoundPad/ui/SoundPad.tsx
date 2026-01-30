@@ -81,7 +81,7 @@ export const SoundPad: React.FC = () => {
     queryKey: ['soundpad-json'],
     queryFn: fetchSoundPad,
     staleTime: 0,
-    refetchOnWindowFocus: true, 
+    refetchOnWindowFocus: true,
   });
 
   if (isPending) {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { BattlePreload } from '../../../../../app/providers/BattlefieldPreload/BattlePreload';
 import { PersonList } from './PersonList/PersonList';
 import { Environment, type EnvironmentPreset } from './Environment/Environment';
@@ -11,12 +11,25 @@ interface BattleProps {
   battleData: BattleFormData;
 }
 
-const normalizeBattleData = (data: BattleFormData): BattleFormData => ({
-  ...data,
-  users: data.users ?? [],
-  enemies: data.enemies ?? [],
-  environment: data.environment ?? [],
-});
+const normalizeBattleData = (data: BattleFormData): BattleFormData => {
+  const normalized = {
+    ...data,
+    users: data.users ?? [],
+    enemies: data.enemies ?? [],
+    environment: data.environment ?? [],
+  };
+
+  // Фиксим maxHp для users
+  const fixedUsers = normalized.users.map((user) => ({
+    ...user,
+    maxHp: user.maxHp ?? user.hp ?? 100,
+  }));
+
+  return {
+    ...normalized,
+    users: fixedUsers,
+  };
+};
 
 const feetToCells = (feet: number) => Math.max(1, Math.round(feet / 5));
 
@@ -24,7 +37,10 @@ export function Battle({ battleData }: BattleProps) {
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [battleState, setBattleState] = useState<BattleFormData>(() => normalizeBattleData(battleData));
+  // Используем useMemo вместо useEffect + setState
+  const initialBattleState = useMemo(() => normalizeBattleData(battleData), [battleData]);
+
+  const [battleState, setBattleState] = useState<BattleFormData>(initialBattleState);
   const [hoveredToken, setHoveredToken] = useState<HoveredToken>(null);
 
   const environmentPresets: readonly EnvironmentPreset[] = [
@@ -46,25 +62,16 @@ export function Battle({ battleData }: BattleProps) {
     };
   }, []);
 
+  // Обновляем состояние только когда изменились данные битвы
   useEffect(() => {
-    const normalized = normalizeBattleData(battleData);
-
-    const fixedUsers = normalized.users.map((user) => ({
-      ...user,
-      maxHp: user.maxHp ?? user.hp ?? 100,
-    }));
-
-    setBattleState({
-      ...normalized,
-      users: fixedUsers,
-    });
-  }, [battleData]);
+    setBattleState(initialBattleState);
+  }, [initialBattleState]);
 
   const handleHpChange = (entityId: number, hp: number) => {
     setBattleState((prev) => ({
       ...prev,
       users: prev.users.map((user) => (user.id === entityId ? { ...user, hp } : user)),
-      enemies: prev.enemies.map((enemy) => (enemy.id === entityId ? ({ ...enemy, hp } as any) : enemy)),
+      enemies: prev.enemies.map((enemy) => (enemy.id === entityId ? { ...enemy, hp } : enemy)),
     }));
   };
 
@@ -130,7 +137,11 @@ export function Battle({ battleData }: BattleProps) {
     }));
   };
 
-  const handleChangeEnvironmentSizeFeet = (index: number, widthFeet: number, heightFeet: number) => {
+  const handleChangeEnvironmentSizeFeet = (
+    index: number,
+    widthFeet: number,
+    heightFeet: number
+  ) => {
     setBattleState((prev) => ({
       ...prev,
       environment: prev.environment.map((item, i) =>
@@ -160,7 +171,6 @@ export function Battle({ battleData }: BattleProps) {
   };
 
   const handleNextTurn = () => {
-    // Тут мастер может писать лог, подсветку токена, звук и т.д.
     console.log('Next turn (manual)');
   };
 
@@ -175,7 +185,6 @@ export function Battle({ battleData }: BattleProps) {
 
   return (
     <div className="w-full h-[85vh] relative left-[1vw] top-[1vh] z-100 flex flex-row items-center gap-[1vw] text-white">
-      {/* ЛЕВО: герои + окружение */}
       <div className="flex flex-col justify-between w-[20vw] h-[90vh] gap-[1vh]">
         <div className="relative top-[9vh] w-[20vw] h-[65vh] overflow-x-auto">
           <PersonList
@@ -201,7 +210,6 @@ export function Battle({ battleData }: BattleProps) {
         </div>
       </div>
 
-      {/* ЦЕНТР: поле */}
       <div className="relative w-[55vw] h-[85vh] top-[5vh]">
         <BattleBoard
           battleData={battleState}
@@ -215,13 +223,13 @@ export function Battle({ battleData }: BattleProps) {
 
             setBattleState((prev) => ({
               ...prev,
-              environment: prev.environment.map((e) => (e.id === envId ? { ...e, cellX, cellY } : e)),
+              environment: prev.environment.map((e) =>
+                e.id === envId ? { ...e, cellX, cellY } : e
+              ),
             }));
           }}
         />
       </div>
-
-      {/* ПРАВО: враги + таймер */}
       <div className="relative top-[5vh] w-[20vw] h-[90vh] flex flex-col justify-center gap-[1vh]">
         <div className="w-[20vw] h-[65vh] overflow-x-auto">
           <PersonList

@@ -1,7 +1,7 @@
 import { useDraggable } from '@dnd-kit/core';
 import DefaultLogo from '/img/masters/Battlefield/Figures/Logo-Profile.png';
 import type { User, Enemies, Environment, HoveredToken } from '../../Form/types';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 type AnyTokenData = User | Enemies | Environment;
 
@@ -25,11 +25,9 @@ interface TokenProps {
 
 function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenProps) {
   const [hoverTimeout, setHoverTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
-  const [mode, setMode] = useState<'figure' | 'logo' | 'default'>('default');
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: token.id });
 
-  const dataAny = token.data as any;
   const left = (token.cellX / gridWidth) * 100;
   const top = (token.cellY / gridHeight) * 100;
   const width = (token.sizeCells / gridWidth) * 100;
@@ -42,15 +40,21 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
     return cleanPath;
   };
 
-  const figureSrc = dataAny.img ? normalizeImagePath(dataAny.img) : '';
-  const logoSrc = dataAny.logo ? normalizeImagePath(dataAny.logo) : '';
+  // Безопасный доступ к свойствам с учетом типов
+  const figureSrc = 'img' in token.data && token.data.img 
+    ? normalizeImagePath(token.data.img) 
+    : '';
+  
+  const logoSrc = 'logo' in token.data && token.data.logo 
+    ? normalizeImagePath(token.data.logo) 
+    : '';
 
-  useEffect(() => {
-    const computedMode = figureSrc ? 'figure' : logoSrc ? 'logo' : 'default';
-    setMode(computedMode);
+  // Используем useMemo вместо useEffect + setState
+  const mode = useMemo<'figure' | 'logo' | 'default'>(() => {
+    return figureSrc ? 'figure' : logoSrc ? 'logo' : 'default';
   }, [figureSrc, logoSrc]);
 
-  const entityId = typeof dataAny?.id === 'number' ? dataAny.id : null;
+  const entityId = 'id' in token.data && typeof token.data.id === 'number' ? token.data.id : null;
 
   const handleMouseEnter = useCallback(() => {
     if (hoverTimeout) clearTimeout(hoverTimeout);
@@ -77,7 +81,13 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
   const composedTransform = translate ? `${translate} ${rotate}` : rotate;
 
   const showNameBadge = token.type === 'user' || token.type === 'enemy';
-  const badgeText = (dataAny.name ?? dataAny.label ?? '').slice(0, 8);
+  
+  // Безопасное получение текста для бейджа
+  const badgeText = 'name' in token.data 
+    ? token.data.name.slice(0, 8) 
+    : 'label' in token.data && token.data.label
+      ? token.data.label.slice(0, 8)
+      : '';
 
   return (
     <div
@@ -98,7 +108,7 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
     >
       <img
         src={imageSrc}
-        alt={dataAny.name || dataAny.label || 'Token'}
+        alt={badgeText || 'Token'}
         className="w-full h-full object-contain pointer-events-none"
       />
       {showNameBadge && (
@@ -137,7 +147,8 @@ function ShapeSVG({
   const fillStrong = withAlpha(color, 0.42);
   const stroke = withAlpha(color, 0.85);
 
-  const id = useMemo(() => `grad-${Math.random().toString(16).slice(2)}`, []);
+  // Используем useState с ленивой инициализацией - вызывается только один раз
+  const [id] = useState(() => `grad-${Date.now()}-${Math.floor(Math.random() * 10000)}`);
 
   const isCircleLocked = shape === 'sphere';
 
@@ -217,9 +228,7 @@ function ShapeSVG({
       )}
 
       {/* Fallback */}
-      {!['sphere', 'hemisphere', 'cube',  'cone', 'line', ].includes(
-        shape
-      ) && (
+      {!['sphere', 'hemisphere', 'cube', 'cone', 'line'].includes(shape) && (
         <rect
           x="3"
           y="3"
@@ -240,16 +249,17 @@ function StaticToken({ token, gridWidth, gridHeight, onHoverToken }: TokenProps)
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: token.id });
 
-  const dataAny = token.data as any;
-  const shape = (dataAny.shape || 'sphere') as Environment['shape'];
-  const color = dataAny.color || '#ff4500';
+  // Правильная типизация вместо any
+  const envData = token.data as Environment;
+  const shape = (envData.shape || 'sphere') as Environment['shape'];
+  const color = envData.color || '#ff4500';
 
   const left = (token.cellX / gridWidth) * 100;
   const top = (token.cellY / gridHeight) * 100;
   const width = (token.sizeCells / gridWidth) * 100;
   const height = ((token.sizeY ?? token.sizeCells) / gridHeight) * 100;
 
-  const entityId = typeof dataAny?.id === 'number' ? dataAny.id : null;
+  const entityId = typeof envData.id === 'number' ? envData.id : null;
 
   const handleMouseEnter = useCallback(() => {
     if (hoverTimeout) clearTimeout(hoverTimeout);
@@ -265,7 +275,6 @@ function StaticToken({ token, gridWidth, gridHeight, onHoverToken }: TokenProps)
 
   const rot = token.rotation ?? 0;
 
-
   const translate = transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : '';
   const rotate = `rotate(${rot}deg)`;
   const composedTransform = translate ? `${translate} ${rotate}` : rotate;
@@ -274,7 +283,7 @@ function StaticToken({ token, gridWidth, gridHeight, onHoverToken }: TokenProps)
     <div
       ref={setNodeRef}
       {...listeners}
-      {...attributes} 
+      {...attributes}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className="absolute z-30 group hover:scale-110 active:scale-105 transition-all duration-200 cursor-grab active:cursor-grabbing select-none"

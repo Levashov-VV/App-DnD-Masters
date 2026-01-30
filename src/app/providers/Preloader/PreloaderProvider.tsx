@@ -1,10 +1,12 @@
 import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { useMediaQuery } from '../../../shared/hooks/auth/useMediaQuery';
 
 gsap.registerPlugin(MotionPathPlugin);
 
 export function PreloaderProvider() {
+  const isLaptopUp = useMediaQuery('(min-width: 1024px)');
   const preloaderRef = useRef(null);
   const diceRef = useRef(null);
   const circlePathRef = useRef(null);
@@ -79,7 +81,12 @@ export function PreloaderProvider() {
             />
           </svg>
         </div>
-        <img className="w-16 h-16 z-20" ref={diceRef} alt="dice" src="/img/logo/dice.png" />
+        <img
+          className={`z-20 ${isLaptopUp ? 'w-[100px] h-[100px]' : 'w-[40px] h-[40px]'}`}
+          ref={diceRef}
+          alt="dice"
+          src="/img/logo/dice.png"
+        />
       </div>
     </>
   );

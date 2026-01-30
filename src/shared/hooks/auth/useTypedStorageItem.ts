@@ -5,7 +5,7 @@ const noop = () => {};
 
 export function useTypedStorageItem<
   S extends TypedStorageValue,
-  K extends Extract<keyof S, string>
+  K extends Extract<keyof S, string>,
 >(
   key: K,
   {
@@ -52,7 +52,10 @@ export function useTypedStorageItem<
 
   const value = useSyncExternalStore(subscribe, getSnapshot, () => defaultValue ?? null);
 
-  const set = useCallback((val: S[K]) => storage.set(key, val, { validate }), [key, storage, validate]);
+  const set = useCallback(
+    (val: S[K]) => storage.set(key, val, { validate }),
+    [key, storage, validate]
+  );
   const remove = useCallback(() => storage.remove(key), [key, storage]);
 
   return useMemo(() => ({ value, set, remove }), [value, set, remove]);

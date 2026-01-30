@@ -1,3 +1,3 @@
 export const CharacterSheet = () => {
-    return <div>CharacterSheet</div>;
+  return <div>CharacterSheet</div>;
 };

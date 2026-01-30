@@ -71,9 +71,7 @@ export const SoundPadScenePage: React.FC = () => {
   }
 
   const [name, scene] = entry;
-  const sortedMusic = scene.music.sort((a, b) =>
-  a.name.localeCompare(b.name, 'ru')
-);
+  const sortedMusic = scene.music.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
 
   return (
     <div className="relative top-[20vh] h-[150vh] text-white">
@@ -81,9 +79,12 @@ export const SoundPadScenePage: React.FC = () => {
         <h1 className="text-[4vh] font-semibold">{name}</h1>
         <div />
       </header>
-        <Link to="/soundpad" className="absolute left-[1vw] top-[1vh] text-[2vh] text-gray-300 hover:text-white">
-          ← Все локации
-        </Link>
+      <Link
+        to="/soundpad"
+        className="absolute left-[1vw] top-[1vh] text-[2vh] text-gray-300 hover:text-white"
+      >
+        ← Все локации
+      </Link>
 
       <main className="flex flex-col items-center justify-center gap-[5vh] flex-1">
         <div className="relative top-[2vh] w-[25vw]">
@@ -99,7 +100,7 @@ export const SoundPadScenePage: React.FC = () => {
         <div className="w-[60vw]">
           <div className="grid gap-[2vh] grid-cols-4">
             {sortedMusic.map((track) => (
-							<SoundItem key={track.url} track={track} />
+              <SoundItem key={track.url} track={track} />
             ))}
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { DndContext, MouseSensor, TouchSensor, useSensors, useSensor } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { User, Enemies, BattleFormData, HoveredToken, Environment } from '../../Form/types';
@@ -46,104 +46,93 @@ export function BattleBoard({
   onTokenMove,
   onHoverToken,
 }: BattleBoardProps) {
-  const [tokens, setTokens] = useState<TokenType[]>([]);
+  // Хранит только изменения позиций токенов (перемещения)
+  const [tokenPositions, setTokenPositions] = useState<
+    Record<string, { cellX: number; cellY: number }>
+  >({});
+
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 4 } });
   const touchSensor = useSensor(TouchSensor);
   const sensors = useSensors(mouseSensor, touchSensor);
 
-  useEffect(() => {
-    setTokens((prev) => {
-      const next: TokenType[] = [];
+  // Базовые токены из battleData (без позиций)
+  const baseTokens = useMemo(() => {
+    const next: TokenType[] = [];
 
-      battleData.users.forEach((user, i) => {
-        const id = `user-${user.id ?? i}`;
-        const existing = prev.find((t) => t.id === id);
+    battleData.users.forEach((user, i) => {
+      const id = `user-${user.id ?? i}`;
+      const sizeCells = getCreatureSizeCells(user.size);
 
-        const sizeCells = getCreatureSizeCells(user.size);
-
-        next.push(
-          existing
-            ? { ...existing, data: user, sizeCells }
-            : {
-                id,
-                type: 'user',
-                data: user,
-                cellX: Math.max(0, i * 1),
-                cellY: Math.floor(i / 3),
-                sizeCells,
-              }
-        );
+      next.push({
+        id,
+        type: 'user',
+        data: user,
+        cellX: Math.max(0, i * 1),
+        cellY: Math.floor(i / 3),
+        sizeCells,
       });
-
-      battleData.enemies.forEach((enemy, i) => {
-        const id = `enemy-${enemy.id ?? i}`;
-        const existing = prev.find((t) => t.id === id);
-
-        const sizeCells = getCreatureSizeCells(enemy.size);
-
-        next.push(
-          existing
-            ? { ...existing, data: enemy, sizeCells }
-            : {
-                id,
-                type: 'enemy',
-                data: enemy,
-                cellX: Math.max(0, gridWidth - sizeCells - i * 2),
-                cellY: Math.floor(i / 3),
-                sizeCells,
-              }
-        );
-      });
-
-      battleData.environment.forEach((env, i) => {
-        const id = `env-${env.id}`;
-        const existing = prev.find((t) => t.id === id);
-
-        next.push(
-          existing
-            ? {
-                ...existing,
-                data: env,
-                cellX: env.cellX,
-                cellY: env.cellY,
-                sizeCells: env.sizeCells,
-                sizeY: env.sizeY,
-                rotation: env.rotation,
-              }
-            : {
-                id,
-                type: 'environment',
-                data: env,
-                cellX: env.cellX ?? i,
-                cellY: env.cellY ?? 0,
-                sizeCells: env.sizeCells,
-                sizeY: env.sizeY,
-                rotation: env.rotation ?? 0,
-              }
-        );
-      });
-
-      return next;
     });
-  }, [battleData, gridWidth, gridHeight]);
+
+    battleData.enemies.forEach((enemy, i) => {
+      const id = `enemy-${enemy.id ?? i}`;
+      const sizeCells = getCreatureSizeCells(enemy.size);
+
+      next.push({
+        id,
+        type: 'enemy',
+        data: enemy,
+        cellX: Math.max(0, gridWidth - sizeCells - i * 2),
+        cellY: Math.floor(i / 3),
+        sizeCells,
+      });
+    });
+
+    battleData.environment.forEach((env, i) => {
+      const id = `env-${env.id}`;
+
+      next.push({
+        id,
+        type: 'environment',
+        data: env,
+        cellX: env.cellX ?? i,
+        cellY: env.cellY ?? 0,
+        sizeCells: env.sizeCells,
+        sizeY: env.sizeY,
+        rotation: env.rotation ?? 0,
+      });
+    });
+
+    return next;
+  }, [battleData.users, battleData.enemies, battleData.environment, gridWidth]);
+
+  // Финальные токены с примененными позициями
+  const tokens = useMemo(() => {
+    return baseTokens.map((token) => {
+      const override = tokenPositions[token.id];
+      if (override) {
+        return { ...token, cellX: override.cellX, cellY: override.cellY };
+      }
+      return token;
+    });
+  }, [baseTokens, tokenPositions]);
 
   const handleMove = useCallback(
     (id: string, newX: number, newY: number) => {
-      setTokens((prev) => {
-        const token = prev.find((t) => t.id === id);
-        if (!token) return prev;
+      const token = tokens.find((t) => t.id === id);
+      if (!token) return;
 
-        const size = token.sizeCells;
-        const clampedX = Math.max(0, Math.min(gridWidth - size, newX));
-        const clampedY = Math.max(0, Math.min(gridHeight - size, newY));
+      const size = token.sizeCells;
+      const clampedX = Math.max(0, Math.min(gridWidth - size, newX));
+      const clampedY = Math.max(0, Math.min(gridHeight - size, newY));
 
-        const newToken: TokenType = { ...token, cellX: clampedX, cellY: clampedY };
-        onTokenMove?.(id, newToken.cellX, newToken.cellY);
+      setTokenPositions((prev) => ({
+        ...prev,
+        [id]: { cellX: clampedX, cellY: clampedY },
+      }));
 
-        return prev.map((t) => (t.id === id ? newToken : t));
-      });
+      onTokenMove?.(id, clampedX, clampedY);
     },
-    [gridWidth, gridHeight, onTokenMove]
+    [tokens, gridWidth, gridHeight, onTokenMove]
   );
 
   const handleDragEnd = useCallback(

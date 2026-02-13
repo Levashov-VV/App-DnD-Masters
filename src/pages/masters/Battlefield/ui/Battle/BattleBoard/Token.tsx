@@ -41,13 +41,10 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
   };
 
   // Безопасный доступ к свойствам с учетом типов
-  const figureSrc = 'img' in token.data && token.data.img 
-    ? normalizeImagePath(token.data.img) 
-    : '';
-  
-  const logoSrc = 'logo' in token.data && token.data.logo 
-    ? normalizeImagePath(token.data.logo) 
-    : '';
+  const figureSrc = 'img' in token.data && token.data.img ? normalizeImagePath(token.data.img) : '';
+
+  const logoSrc =
+    'logo' in token.data && token.data.logo ? normalizeImagePath(token.data.logo) : '';
 
   // Используем useMemo вместо useEffect + setState
   const mode = useMemo<'figure' | 'logo' | 'default'>(() => {
@@ -81,13 +78,14 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
   const composedTransform = translate ? `${translate} ${rotate}` : rotate;
 
   const showNameBadge = token.type === 'user' || token.type === 'enemy';
-  
+
   // Безопасное получение текста для бейджа
-  const badgeText = 'name' in token.data 
-    ? token.data.name.slice(0, 8) 
-    : 'label' in token.data && token.data.label
-      ? token.data.label.slice(0, 8)
-      : '';
+  const badgeText =
+    'name' in token.data
+      ? token.data.name.slice(0, 8)
+      : 'label' in token.data && token.data.label
+        ? token.data.label.slice(0, 8)
+        : '';
 
   return (
     <div

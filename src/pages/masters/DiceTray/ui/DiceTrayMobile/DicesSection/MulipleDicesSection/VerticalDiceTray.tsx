@@ -1,0 +1,130 @@
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Dice } from './DiceLoader';
+import { DiceColorSelector } from './DiceColorSelector';
+import { useCallback } from 'react';
+import type { RollMode, DiceCounts, DiceType, DiceSetColor } from '../../types/rollTypes';
+
+const diceOrder: { type: DiceType; label: string }[] = [
+  { type: 'd20', label: 'D20' },
+  { type: 'd12', label: 'D12' },
+  { type: 'd10', label: 'D10' },
+  { type: 'd100', label: 'D100' },
+  { type: 'd8', label: 'D8' },
+  { type: 'd6', label: 'D6' },
+  { type: 'd4', label: 'D4' },
+];
+
+interface VerticalDiceTrayProps {
+  rollMode: RollMode;
+  diceCounts: DiceCounts;
+  onDiceCountsChange: (counts: DiceCounts) => void;
+  onSingleThrow?: (type: DiceType, colorSet: DiceSetColor) => void;
+
+  colorSet: DiceSetColor;
+  onColorSetChange: (c: DiceSetColor) => void;
+}
+
+interface SingleDiceSectionProps {
+  type: DiceType;
+  colorSet: DiceSetColor;
+  label: string;
+  count: number;
+  onCountChange: (type: DiceType, newCount: number) => void;
+  rollMode: RollMode;
+  onSingleThrow?: (type: DiceType, colorSet: DiceSetColor) => void;
+}
+
+function SingleDiceSection({
+  type,
+  colorSet,
+  label,
+  count,
+  onCountChange,
+  rollMode,
+  onSingleThrow,
+}: SingleDiceSectionProps) {
+  const isSingle = rollMode === 'single';
+
+  const increment = () => onCountChange(type, count + 1);
+  const decrement = () => onCountChange(type, Math.max(0, count - 1));
+  const handleSingleThrow = () => {
+    onSingleThrow?.(type, colorSet);
+    onCountChange(type, 0);
+  };
+
+  return (
+    <div className="w-full h-[4vh] flex flex-row gap-[1vw] items-center rounded-xl overflow-hidden">
+      {isSingle ? (
+        <button
+          onClick={handleSingleThrow}
+          className="w-[20vw] h-[4vh] bg-amber-500 text-neutral-900 rounded-xl shadow-lg flex items-center justify-center text-[1.4vh]"
+        >
+          Бросить {label}
+        </button>
+      ) : (
+        <div>
+          <div className="text-[1.4vh] font-mono text-slate-400 text-center">{label}</div>
+          <div className="flex flex-row items-center gap-[2vw] ">
+            <button
+              onClick={increment}
+              className="w-[2.5vh] h-[2.5vh] bg-slate-600/70 rounded-lg text-white font-mono text-[1.4vh] flex items-center justify-center"
+              title="Добавить"
+            >
+              +
+            </button>
+            <span className="text-[1.6vh] font-bold text-slate-100 flex items-center">{count}</span>
+            <button
+              onClick={decrement}
+              className="w-[2.5vh] h-[2.5vh] bg-slate-600/70 hover:bg-slate-500 rounded-lg text-white font-mono text-[1.4vh] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={count === 0}
+              title="Убрать"
+            >
+              −
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function VerticalDiceTray({
+  rollMode,
+  diceCounts,
+  onDiceCountsChange,
+  onSingleThrow,
+  colorSet,
+  onColorSetChange,
+}: VerticalDiceTrayProps) {
+  const handleCountChange = useCallback(
+    (type: DiceType, newCount: number) => {
+      onDiceCountsChange({
+        ...diceCounts,
+        [type]: newCount,
+      });
+    },
+    [diceCounts, onDiceCountsChange]
+  );
+
+  return (
+    <div className="flex flex-col items-center gap-[0.5vw] w-screen">
+      <DiceColorSelector onColorChange={onColorSetChange} />
+
+      <div className="grid grid-cols-4 gap-[0.5vw] w-[90vw] h-[10vh]">
+        {diceOrder.map((d) => (
+          <SingleDiceSection
+            key={d.type}
+            type={d.type}
+            colorSet={colorSet}
+            label={d.label}
+            count={diceCounts[d.type] || 0}
+            onCountChange={handleCountChange}
+            rollMode={rollMode}
+            onSingleThrow={onSingleThrow}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

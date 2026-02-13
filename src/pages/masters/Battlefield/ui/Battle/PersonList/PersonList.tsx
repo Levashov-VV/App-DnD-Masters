@@ -29,8 +29,6 @@ export function PersonList({
   const data = side === 'users' ? users : enemies;
   const sortedInitiative = [...data].sort((a, b) => (b.initiative ?? 1) - (a.initiative ?? 1));
   const defaultTitle = side === 'users' ? 'Герои' : 'Противники';
-
-  // Создаем refs для всех существ заранее
   const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   const getImageSrc = (item: User | Enemies) => {
@@ -54,7 +52,6 @@ export function PersonList({
   };
 
   const getMaxHp = (creature: Creature): number => {
-    // Правильная типизация вместо any
     const maxHp =
       ('maxHp' in creature ? creature.maxHp : undefined) ??
       ('totalHp' in creature ? (creature as { totalHp?: number }).totalHp : undefined) ??

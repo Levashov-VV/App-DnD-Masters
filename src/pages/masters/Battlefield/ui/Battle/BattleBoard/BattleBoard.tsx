@@ -46,7 +46,6 @@ export function BattleBoard({
   onTokenMove,
   onHoverToken,
 }: BattleBoardProps) {
-  // Хранит только изменения позиций токенов (перемещения)
   const [tokenPositions, setTokenPositions] = useState<
     Record<string, { cellX: number; cellY: number }>
   >({});
@@ -55,7 +54,6 @@ export function BattleBoard({
   const touchSensor = useSensor(TouchSensor);
   const sensors = useSensors(mouseSensor, touchSensor);
 
-  // Базовые токены из battleData (без позиций)
   const baseTokens = useMemo(() => {
     const next: TokenType[] = [];
 
@@ -105,7 +103,6 @@ export function BattleBoard({
     return next;
   }, [battleData.users, battleData.enemies, battleData.environment, gridWidth]);
 
-  // Финальные токены с примененными позициями
   const tokens = useMemo(() => {
     return baseTokens.map((token) => {
       const override = tokenPositions[token.id];

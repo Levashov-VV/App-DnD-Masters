@@ -43,11 +43,11 @@ export function StartBlock() {
   return (
     <section>
       <div
-        className="relative z-20 flex flex-col items-center justify-center text-center h-screen"
+        className="relative z-20 flex flex-col items-center justify-center text-center h-screen overflow-x-hidden"
         style={{
           backgroundImage: `url(${BackgroundMobileImage})`,
           width: '100vw',
-          height: '87vh',
+          height: '100vh',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -57,11 +57,11 @@ export function StartBlock() {
         <div className="relative top-[30vh] z-10 flex flex-col w-full">
           <SplittingText
             className="flex justify-center text-[15vw] font-bold drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] leading-tight -tracking-[0.02em]"
-            text="D&D"
+            text="Ассистент"
           />
           <LazyMotion features={domAnimation} strict>
             <BlurText
-              text="хранилище"
+              text="Мастера Подземелий"
               delay={500}
               animateBy="words"
               direction="top"

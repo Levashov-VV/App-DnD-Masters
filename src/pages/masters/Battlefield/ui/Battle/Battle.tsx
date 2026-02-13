@@ -19,7 +19,6 @@ const normalizeBattleData = (data: BattleFormData): BattleFormData => {
     environment: data.environment ?? [],
   };
 
-  // Фиксим maxHp для users
   const fixedUsers = normalized.users.map((user) => ({
     ...user,
     maxHp: user.maxHp ?? user.hp ?? 100,

@@ -1,3 +1,4 @@
+// shared/hooks/auth/typedStorage.ts (или shared/lib/typedStorage.ts)
 export type TypedStorageValue = Record<string, unknown>;
 
 export type StorageValidator<T> = (value: unknown) => T;
@@ -85,7 +86,6 @@ export function createTypedStorage<S extends TypedStorageValue>(
       }
     },
 
-    // ✅ FIX: диспатчим storage-${key}, чтобы same-tab подписчики обновились
     remove(key: Extract<keyof S, string>) {
       getStorage()?.removeItem(key);
       cache.delete(key);
@@ -93,7 +93,6 @@ export function createTypedStorage<S extends TypedStorageValue>(
       if (isClient) window.dispatchEvent(new CustomEvent(`storage-${key}`));
     },
 
-    // ✅ FIX: диспатчим clear-storage (как в хуке) — этого достаточно для всех ключей
     clear() {
       getStorage()?.clear();
       cache.clear();

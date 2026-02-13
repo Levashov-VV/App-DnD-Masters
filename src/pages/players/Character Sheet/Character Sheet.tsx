@@ -1,3 +1,3 @@
-export const CharacterSheet = () => {
+export const Library = () => {
   return <div>CharacterSheet</div>;
 };

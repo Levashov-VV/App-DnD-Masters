@@ -56,7 +56,7 @@ export function useSavedTeams() {
         };
         setTeams((prev) => [newTeam, ...prev]);
       } else {
-        console.warn('⚠️ Нет героев для сохранения');
+        console.warn('Нет героев для сохранения');
       }
     } catch (error) {
       console.error('Ошибка сохранения:', error);
@@ -72,6 +72,7 @@ export function useSavedTeams() {
           enemies: [],
           mapId: 1,
           customMapImage: '',
+          environment: [],
         };
 
         sessionStorage.setItem('dnd-current-battle', JSON.stringify(newBattleData));

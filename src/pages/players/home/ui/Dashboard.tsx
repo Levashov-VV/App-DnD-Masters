@@ -1,4 +1,4 @@
-import { StartBlock } from '../../../masters/home/ui/StartBlock/StartBlock';
+import { StartBlock } from './StartBlock/StartBlock';
 import { DescriptionApp } from '../../../masters/home/ui/DescriptionApp/DescriptionApp';
 import { CharacterSheet } from './Character Sheet/CharacterSheet';
 import { DiceTray } from '../../../masters/home/ui/DiceTray/DiceTray';

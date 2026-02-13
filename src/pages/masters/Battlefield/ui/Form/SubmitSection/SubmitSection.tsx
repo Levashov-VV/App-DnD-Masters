@@ -27,7 +27,7 @@ export function SubmitSection() {
     setIsCreating(true);
     try {
       const formData = getValues();
-      navigate('/battlefield', { state: { battleData: formData } });
+      navigate('/Master/battlefield', { state: { battleData: formData } });
     } catch (error) {
       console.error('Ошибка создания битвы:', error);
     } finally {

@@ -64,7 +64,6 @@ export function DescriptionAppMobile() {
       const section3 = section3Ref.current;
 
       if (!container) return;
-      // Секция 1
       // Время приключений
       if (adventureTextRef.current && section1) {
         gsap.fromTo(
@@ -170,7 +169,6 @@ export function DescriptionAppMobile() {
           }
         );
       }
-      // СЕКЦИЯ 2
       // Заголовок
       if (tableTextRef.current && section2) {
         gsap.fromTo(
@@ -306,7 +304,6 @@ export function DescriptionAppMobile() {
           }
         });
       }
-      // СЕКЦИЯ 3
       // Заголовок
       if (airTextRef.current) {
         gsap.fromTo(
@@ -342,8 +339,8 @@ export function DescriptionAppMobile() {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: section3,
-              start: 'top 50%',
-              end: 'top 20%',
+              start: 'top 20%',
+              end: 'top 5%',
               scrub: 2,
             },
           }
@@ -366,8 +363,8 @@ export function DescriptionAppMobile() {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: section3,
-              start: 'top 50%',
-              end: 'top 20%',
+              start: 'top 20%',
+              end: 'top 5%',
               scrub: 1.5,
             },
           }
@@ -391,8 +388,8 @@ export function DescriptionAppMobile() {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: section3,
-              start: 'top 50%',
-              end: 'top 20%',
+              start: 'top 20%',
+              end: 'top 5%',
               scrub: 1.5,
             },
           }

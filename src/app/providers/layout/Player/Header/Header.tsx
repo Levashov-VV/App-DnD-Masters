@@ -9,8 +9,8 @@ export function Header() {
 
   if (isLaptopUp) {
     return (
-      <header className="w-screen fixed top-0 left-0 right-0 z-50 bg-neutral-900/95">
-        <div className="flex items-center justify-start gap-[25vw] px-6 py-4">
+      <header className="w-screen fixed top-0 left-0 right-0 z-90 bg-neutral-900/95">
+        <div className="flex items-center justify-start gap-[25vw]">
           <Link to="/" className="flex-shrink-0">
             <img className="w-[8vw] h-[8vw] object-contain" src="/img/logo/logo.png" alt="Logo" />
           </Link>
@@ -21,12 +21,12 @@ export function Header() {
               </Link>
             </li>
             <li>
-              <Link to="/CharacterSheet" className="hover:text-red-500 font-medium">
-                Листы персонажей
+              <Link to="player/heroes" className="hover:text-red-500 font-medium">
+                Библиотека персонажей
               </Link>
             </li>
             <li>
-              <Link to="/DiceTray" className="hover:text-red-500 font-medium">
+              <Link to="/player/diceTray" className="hover:text-red-500 font-medium">
                 Броски кубиков
               </Link>
             </li>
@@ -38,7 +38,7 @@ export function Header() {
 
   // Мобильный
   return (
-    <header className="w-screen z-50 bg-neutral-900/95">
+    <header className="w-screen fixed top-0 left-0 z-200 bg-neutral-900/95">
       {/* Мобильный хедер */}
       <div className="flex items-center justify-between">
         <Link to="/" className="flex-shrink-0">
@@ -107,16 +107,16 @@ export function Header() {
                 </li>
                 <li>
                   <Link
-                    to="/CharacterSheet"
+                    to="player/heroes"
                     className="flex items-center text-[3vh] font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Листы персонажей
+                    Библиотека персонажей
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/DiceTray"
+                    to="/player/diceTray"
                     className="flex items-center text-[3vh] font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >

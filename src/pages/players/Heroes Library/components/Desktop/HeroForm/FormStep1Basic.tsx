@@ -1,0 +1,546 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
+import type { HeroFormData } from '../../../../../../features/heroes/schemas/heroSchema';
+import { Input } from '../HeroForm/ui/Input';
+import { CircularInput } from '../HeroForm/ui/CircularInputProps';
+import { Select } from '../HeroForm/ui/Select';
+import { SelectOrInput } from '../HeroForm/ui/SelectOrInput';
+import { SquareInput } from '../HeroForm/ui/SquareInput';
+import { StatsPanel } from './ui/StatsPanel';
+import { ArmorClassShield } from '../HeroForm/ui/Shield';
+import { ExperienceInfoModal } from '../../../components/Desktop/HeroForm/ui/FormStep1/ExperienceInfoModal';
+import { getAbilityModifier } from '../../../../../../features/heroes/constants/dndData';
+import {
+  DND_RACES,
+  DND_CLASSES,
+  DND_BACKGROUNDS,
+  DND_ALIGNMENTS,
+  CLASS_HIT_DICE,
+  getSubclassesForClass,
+  hasSubclasses,
+} from '../../../../../../features/heroes/constants/dndData';
+import raceData from '../../../../../../../public/data/charactersPerson.json';
+
+interface FormStep1BasicProps {
+  register: UseFormRegister<HeroFormData>;
+  errors: FieldErrors<HeroFormData>;
+  watch: UseFormWatch<HeroFormData>;
+  setValue: UseFormSetValue<HeroFormData>;
+}
+
+const RACE_NAME_MAPPING: Record<string, string> = {
+  Человек: 'Human',
+  Эльф: 'Elf',
+  Дварф: 'Dwarf',
+  Полурослик: 'Halfling',
+  Драконорожденный: 'DragonBorn',
+  Гном: 'Gnome',
+  Полуэльф: 'Elf',
+  Полуорк: 'Orc',
+  Орк: 'Orc',
+  Тифлинг: 'Tiffling',
+  Голиаф: 'Goliaf',
+  Калаштар: 'Kalashtar',
+  Минотавр: 'Minotaur',
+  Шифтер: 'Shifter',
+  Аасимар: 'Aasimar',
+  Кентавр: 'Centaur',
+  Леонин: 'Leonin',
+  Табакси: 'Tabaxi',
+  Дженази: 'Genasi',
+  Грунг: 'Grung',
+};
+
+export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1BasicProps) {
+  const selectedRace = watch('race');
+  const selectedClass = watch('class');
+
+  const [customAvatar, setCustomAvatar] = useState<string | null>(null);
+  const [raceImages, setRaceImages] = useState<{ figure: string; logo: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [availableSubclasses, setAvailableSubclasses] = useState<string[]>([]);
+  const [isSubclassDisabled, setIsSubclassDisabled] = useState(true);
+  const [isExpModalOpen, setIsExpModalOpen] = useState(false);
+
+  const [displayHitDice, setDisplayHitDice] = useState('d8');
+  const [displayDeathSaveSuccesses, setDisplayDeathSaveSuccesses] = useState(0);
+  const [displayDeathSaveFailures, setDisplayDeathSaveFailures] = useState(0);
+
+  const level = watch('level') || 1;
+  const constitution = watch('abilityScores.constitution') || 10;
+
+  const formDeathSaveSuccesses = watch('deathSaves.successes') || 0;
+  const formDeathSaveFailures = watch('deathSaves.failures') || 0;
+  const formHitDiceType = watch('hitDice.type') || 'd8';
+
+  const conModifier = getAbilityModifier(constitution);
+  const suggestedMaxHP = 10 + conModifier + (level - 1) * (6 + conModifier);
+
+  useEffect(() => {
+    setDisplayHitDice(formHitDiceType);
+  }, [formHitDiceType]);
+
+  useEffect(() => {
+    setDisplayDeathSaveSuccesses(formDeathSaveSuccesses);
+    setDisplayDeathSaveFailures(formDeathSaveFailures);
+  }, [formDeathSaveSuccesses, formDeathSaveFailures]);
+
+  const updateRaceImages = useCallback((race: string) => {
+    if (race && race.trim() !== '') {
+      const englishRaceName = RACE_NAME_MAPPING[race];
+
+      if (englishRaceName) {
+        const raceInfo = raceData.find((r) => r.name === englishRaceName && r.side === 'allies');
+
+        if (raceInfo) {
+          setRaceImages({
+            figure: raceInfo.img,
+            logo: raceInfo.logo,
+          });
+          return;
+        }
+      }
+    }
+    setRaceImages(null);
+  }, []);
+
+  useEffect(() => {
+    if (selectedClass && selectedClass.trim() !== '' && hasSubclasses(selectedClass)) {
+      const subclasses = getSubclassesForClass(selectedClass);
+      setAvailableSubclasses(subclasses);
+      setIsSubclassDisabled(false);
+      setValue('subclass', '', { shouldDirty: true });
+    } else {
+      setAvailableSubclasses([]);
+      setIsSubclassDisabled(true);
+      setValue('subclass', '', { shouldDirty: true });
+    }
+  }, [selectedClass, setValue]);
+
+  useEffect(() => {
+    if (selectedClass && CLASS_HIT_DICE[selectedClass]) {
+      const hitDieType = CLASS_HIT_DICE[selectedClass];
+      setValue('hitDice.type', hitDieType, { shouldDirty: true });
+      setValue('hitDice.total', level, { shouldDirty: true });
+      setDisplayHitDice(hitDieType);
+    }
+  }, [selectedClass, level, setValue]);
+
+  useEffect(() => {
+    if (displayDeathSaveSuccesses >= 3) {
+      setValue('deathSaves.successes', 0, { shouldDirty: true });
+      setValue('deathSaves.failures', 0, { shouldDirty: true });
+      setDisplayDeathSaveSuccesses(0);
+      setDisplayDeathSaveFailures(0);
+    }
+  }, [displayDeathSaveSuccesses, setValue]);
+
+  useEffect(() => {
+    updateRaceImages(selectedRace);
+  }, [selectedRace, updateRaceImages]);
+
+  const handleRaceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newRace = e.target.value;
+    setValue('race', newRace, { shouldValidate: true, shouldDirty: true });
+    updateRaceImages(newRace);
+  };
+
+  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newClass = e.target.value;
+    setValue('class', newClass, { shouldValidate: true, shouldDirty: true });
+
+    if (newClass && newClass.trim() !== '' && hasSubclasses(newClass)) {
+      const subclasses = getSubclassesForClass(newClass);
+      setAvailableSubclasses(subclasses);
+      setIsSubclassDisabled(false);
+    } else {
+      setAvailableSubclasses([]);
+      setIsSubclassDisabled(true);
+    }
+    setValue('subclass', '', { shouldDirty: true });
+
+    if (newClass && CLASS_HIT_DICE[newClass]) {
+      const hitDieType = CLASS_HIT_DICE[newClass];
+      setValue('hitDice.type', hitDieType, { shouldDirty: true });
+      setValue('hitDice.total', level, { shouldDirty: true });
+      setDisplayHitDice(hitDieType);
+    }
+  };
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setCustomAvatar(base64String);
+        setValue('customAvatar', base64String, { shouldDirty: true });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveCustomAvatar = () => {
+    if (customAvatar && customAvatar.startsWith('blob:')) {
+      URL.revokeObjectURL(customAvatar);
+    }
+    setCustomAvatar(null);
+    setValue('customAvatar', '', { shouldDirty: true });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (customAvatar && customAvatar.startsWith('blob:')) {
+        URL.revokeObjectURL(customAvatar);
+      }
+    };
+  }, [customAvatar]);
+
+  const displayAvatar = customAvatar || raceImages?.logo;
+  const hasCustomAvatar = !!customAvatar;
+
+  const handleDeathSaveSuccess = (index: number) => {
+    const newSuccesses = displayDeathSaveSuccesses === index + 1 ? index : index + 1;
+    setValue('deathSaves.successes', newSuccesses, { shouldDirty: true });
+    setDisplayDeathSaveSuccesses(newSuccesses);
+  };
+
+  const handleDeathSaveFailure = (index: number) => {
+    const newFailures = displayDeathSaveFailures === index + 1 ? index : index + 1;
+    setValue('deathSaves.failures', newFailures, { shouldDirty: true });
+    setDisplayDeathSaveFailures(newFailures);
+
+    if (newFailures >= 3) {
+      setTimeout(() => {
+        alert('Персонаж умер!');
+        setValue('deathSaves.successes', 0, { shouldDirty: true });
+        setValue('deathSaves.failures', 0, { shouldDirty: true });
+        setDisplayDeathSaveSuccesses(0);
+        setDisplayDeathSaveFailures(0);
+      }, 100);
+    }
+  };
+
+  return (
+    <div className="relative left-[0.5vw] top-[1vh] flex flex-col gap-[2vh] uppercase">
+      <h2 className="text-left text-[2.5vh] font-bold text-amber-100">Основная информация</h2>
+
+      <div className="w-[75vw] flex items-start">
+        <div className="flex items-center gap-[2vw]">
+          <div className="relative">
+            <div className="w-[10vw] h-[10vw] rounded-full border-2 border-amber-600 bg-stone-800 overflow-hidden flex items-center justify-center">
+              {displayAvatar ? (
+                <img
+                  key={displayAvatar}
+                  src={displayAvatar}
+                  alt="Аватар персонажа"
+                  className="w-full h-full object-contain"
+                  loading="eager"
+                />
+              ) : (
+                <span className="text-amber-600/50 text-[1.5vh]">Нет фото</span>
+              )}
+            </div>
+
+            <div className="absolute bottom-[-1vh] right-[-1vh] flex gap-[0.5vh]">
+              {hasCustomAvatar && (
+                <button
+                  type="button"
+                  onClick={handleRemoveCustomAvatar}
+                  className="w-[3vh] h-[3vh] bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg"
+                  title="Удалить фото"
+                >
+                  <svg
+                    className="w-[1.5vh] h-[1.5vh] text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              )}
+
+              <label className="w-[3vh] h-[3vh] bg-amber-600 hover:bg-amber-500 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                />
+                <svg
+                  className="w-[1.5vh] h-[1.5vh] text-stone-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={
+                      hasCustomAvatar
+                        ? 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
+                        : 'M12 4v16m8-8H4'
+                    }
+                  />
+                </svg>
+              </label>
+            </div>
+          </div>
+
+          {raceImages?.figure ? (
+            <div
+              key={raceImages.figure}
+              className="w-[10vw] h-[10vh] overflow-hidden flex items-end justify-center"
+            >
+              <img
+                src={raceImages.figure}
+                alt="Фигурка расы"
+                className="max-w-full max-h-full object-contain drop-shadow-lg"
+                loading="eager"
+              />
+            </div>
+          ) : (
+            <div className="w-[10vw] h-[10vw] flex items-center justify-center">
+              <span className="text-amber-600/50 text-[1.5vh]">Нет фигурки</span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col items-center gap-[1vw] w-[50vw]">
+          <div className="w-[30vw] text-center">
+            <Input
+              label="Имя персонажа"
+              placeholder="Введите имя персонажа..."
+              style={{paddingLeft: '0.2vw'}}
+              {...register('name')}
+              error={errors.name?.message}
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-[2vw] items-start">
+            <div className="flex flex-row items-center gap-[1vh] relative">
+              <CircularInput
+                label="Уровень"
+                type="number"
+                min={1}
+                max={20}
+                defaultValue={1}
+                {...register('level', { valueAsNumber: true })}
+                error={errors.level?.message}
+              />
+              <SquareInput
+                label="Опыт"
+                type="number"
+                min={0}
+                defaultValue={0}
+                placeholder="0"
+                {...register('experience', { valueAsNumber: true })}
+                error={errors.experience?.message}
+              />
+
+              <button
+                type="button"
+                onClick={() => setIsExpModalOpen(true)}
+                className="absolute top-0 right-0 w-[2.5vh] h-[2.5vh] bg-amber-600/80 hover:bg-amber-500 rounded-full flex items-center justify-center transition-colors shadow-lg"
+                title="Таблица опыта"
+              >
+                <svg
+                  className="w-[1.3vh] h-[1.3vh] text-stone-900"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="w-[30vw] grid grid-cols-2 gap-[2vh]">
+              <Select
+                label="Раса"
+                options={DND_RACES}
+                {...register('race')}
+                onChange={handleRaceChange}
+                error={errors.race?.message}
+              />
+
+              <Select
+                label="Класс"
+                options={DND_CLASSES}
+                {...register('class')}
+                onChange={handleClassChange}
+                error={errors.class?.message}
+              />
+
+              <SelectOrInput
+                label="Предыстория"
+                options={DND_BACKGROUNDS}
+                placeholder="Введите свою предысторию..."
+                {...register('background')}
+                error={errors.background?.message}
+              />
+
+              <Select
+                label="Мировоззрение"
+                options={DND_ALIGNMENTS}
+                {...register('alignment')}
+                error={errors.alignment?.message}
+              />
+
+              <div className="col-span-2">
+                <SelectOrInput
+                  key={`subclass-${selectedClass || 'empty'}-${availableSubclasses.length}`}
+                  label="Подкласс"
+                  placeholder="Выберите подкласс..."
+                  options={availableSubclasses}
+                  {...register('subclass')}
+                  error={errors.subclass?.message}
+                  disabled={isSubclassDisabled}
+                />
+                {isSubclassDisabled && (
+                  <p className="text-[1.2vh] text-amber-100/60">
+                    Сначала выберите класс
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-[1vw]">
+        <div className="flex flex-row items-start">
+          <ArmorClassShield register={register} fieldName="armorClass" errors={errors} />
+          <StatsPanel register={register} watch={watch} setValue={setValue} />
+        </div>
+
+        <div className="h-[21vh] w-[30vw] border-2 border-amber-600 text-amber-100">
+          <div className="flex flex-row gap-[5vw] text-[2.2vh]">
+            <h2 className="relative left-[3.8vw] w-[8vw] font-bold">Хиты</h2>
+            <h3 className="relative left-[2.2vw] w-[10vw] font-bold">Кости хитов</h3>
+            <h3 className="relative right-[2vw] w-[10vw] text-[2vh] text-center font-bold">
+              Спасброски от смерти
+            </h3>
+          </div>
+          <div className="relative left-[0.2vw] flex flex-row gap-[2vw] items-start">
+            <div className="w-[10vw] flex flex-row items-center gap-[1vw]">
+              <div>
+                <Input
+                  style={{ paddingLeft: '0.2vw' }}
+                  label="Текущий"
+                  type="number"
+                  min={0}
+                  {...register('hitPoints.current', { valueAsNumber: true })}
+                  error={errors.hitPoints?.current?.message}
+                />
+              </div>
+              <div className="absolute bottom-[-1.2vh] left-[4.6vw] border-2 border-amber-600 h-[17vh]" />
+              <div className="flex flex-col">
+                <Input
+                  label="Временные"
+                  style={{ paddingLeft: '0.2vw' }}
+                  type="number"
+                  min={0}
+                  {...register('hitPoints.temporary', { valueAsNumber: true })}
+                />
+                <Input
+                  label="Макс"
+                  style={{ paddingLeft: '0.2vw' }}
+                  type="number"
+                  min={1}
+                  placeholder={`Рек: ${suggestedMaxHP}`}
+                  {...register('hitPoints.max', { valueAsNumber: true })}
+                  error={errors.hitPoints?.max?.message}
+                />
+              </div>
+            </div>
+
+            <div className="absolute bottom-[-1.2vh] left-[11vw] border-2 border-amber-600 h-[20.6vh]" />
+
+            <div className="flex flex-col">
+              <label className="text-[1.6vh] text-center">Потрачено</label>
+              <Input
+                type="number"
+                style={{ paddingLeft: '0.2vw' }}
+                min={0}
+                max={level}
+                {...register('hitDice.spent', { valueAsNumber: true })}
+              />
+              <div className="flex flex-col">
+                <label className="text-[1.6vh] text-center">Кость</label>
+                <div className="text-[2vh] font-bold text-center">{displayHitDice}</div>
+                <input type="hidden" {...register('hitDice.type')} />
+                <input type="hidden" {...register('hitDice.total')} value={level} />
+              </div>
+            </div>
+
+            <div className="absolute bottom-[-1.2vh] left-[18.5vw] border-2 border-amber-600 h-[20.6vh]" />
+
+            <div className="relative left-[2vw] flex flex-col gap-[2vh]">
+              <div>
+                <label className="text-[1.6vh] text-center block">Успехи</label>
+                <div className="flex gap-[1vw]">
+                  {[0, 1, 2].map((index) => (
+                    <button
+                      key={`success-${index}`}
+                      type="button"
+                      onClick={() => handleDeathSaveSuccess(index)}
+                      className={`w-[3vh] h-[3vh] rounded-full border-2 transition-all ${
+                        displayDeathSaveSuccesses > index
+                          ? 'bg-green-500 border-green-400'
+                          : 'bg-stone-800 border-green-600 hover:border-green-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <input
+                  type="hidden"
+                  {...register('deathSaves.successes', { valueAsNumber: true })}
+                />
+              </div>
+
+              <div>
+                <label className="text-[1.6vh] text-center block">Провалы</label>
+                <div className="flex gap-[1vw]">
+                  {[0, 1, 2].map((index) => (
+                    <button
+                      key={`failure-${index}`}
+                      type="button"
+                      onClick={() => handleDeathSaveFailure(index)}
+                      className={`w-[3vh] h-[3vh] rounded-full border-2 transition-all ${
+                        displayDeathSaveFailures > index
+                          ? 'bg-red-500 border-red-400'
+                          : 'bg-stone-800 border-red-600 hover:border-red-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <input
+                  type="hidden"
+                  {...register('deathSaves.failures', { valueAsNumber: true })}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ExperienceInfoModal isOpen={isExpModalOpen} onClose={() => setIsExpModalOpen(false)} />
+    </div>
+  );
+}

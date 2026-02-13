@@ -1,3 +1,4 @@
+// widgets/router/Routing.tsx
 import { LayoutMaster } from '../layout/LayoutMaster';
 import { LayoutPlayer } from '../layout/LayoutPlayer';
 import { Routes, Route } from 'react-router-dom';
@@ -10,7 +11,8 @@ import { BattleField } from '../../../pages/masters/Battlefield/ui/Battlefield';
 import { DiceTray } from '../../../pages/masters/DiceTray/ui/DiceTray';
 import { DashboardPlayer } from '../../../pages/players/home/ui/Dashboard';
 import { CloneVoice } from '@/pages/masters/home/ui/CloneVoice/CloneVoice';
-import { CharacterSheet } from '../../../pages/players/Character Sheet/Character Sheet';
+import { HeroLibrary } from '../../../pages/players/Heroes Library/Library';
+import HeroForm from '../../../pages/players/Heroes Library/LibraryDesktop/pages/HeroForm';
 
 export function Routing() {
   return (
@@ -21,17 +23,20 @@ export function Routing() {
       {/* Master */}
       <Route element={<LayoutMaster />}>
         <Route path="master" element={<DashboardMaster />} />
-        <Route path="soundpad" element={<SoundPad />} />
-        <Route path="soundpad/:sceneSlug" element={<SoundPadScenePage />} />
-        <Route path="battlefield" element={<BattleField />} />
-        <Route path="diceTray" element={<DiceTray />} />
-        <Route path="cloneVoice" element={<CloneVoice />} />
+        <Route path="master/soundpad" element={<SoundPad />} />
+        <Route path="master/soundpad/:sceneSlug" element={<SoundPadScenePage />} />
+        <Route path="master/battlefield" element={<BattleField />} />
+        <Route path="master/diceTray" element={<DiceTray />} />
+        <Route path="master/cloneVoice" element={<CloneVoice />} />
       </Route>
 
       {/* Player */}
       <Route element={<LayoutPlayer />}>
         <Route path="player" element={<DashboardPlayer />} />
-        <Route path="CharacterSheet" element={<CharacterSheet />} />
+        <Route path="player/heroes" element={<HeroLibrary />} />
+        <Route path="player/heroes/create" element={<HeroForm mode="create" />} />
+        <Route path="player/heroes/:id/edit" element={<HeroForm mode="edit" />} /> {/* ✅ Исправлено */}
+        <Route path="player/diceTray" element={<DiceTray />} />
       </Route>
     </Routes>
   );

@@ -81,7 +81,6 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
     name: `${arrayName}.${index}` as Path<BattleFormData>,
   }) as User | Enemies | undefined;
 
-  // Все вычисления после хуков
   const side: CreatureSide = arrayName === 'users' ? 'allies' : 'enemies';
   const itemWithClass = item as User;
   const raceKey = itemWithClass.className;

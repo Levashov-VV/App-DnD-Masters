@@ -397,6 +397,7 @@ export function FormStep2AbilitiesAndSkills({
                   handleAddCustomLanguage();
                 }
               }}
+              style={{paddingLeft: '0.2vw'}}
               className="w-[15vw] h-[3vh] uppercase bg-stone-900 border-2 border-amber-600 rounded-lg text-[1.4vh] text-amber-100 focus:outline-none focus:border-amber-400 placeholder:text-amber-600/50"
             />
             <button
@@ -409,8 +410,8 @@ export function FormStep2AbilitiesAndSkills({
           </div>
         </div>
 
-        <div className="flex flex-row justify-between">
-          <div className="relative w-[30vw] h-[10vh] border-2 border-amber-600 bg-stone-800 rounded-lg">
+        <div  className="flex flex-row justify-between">
+          <div style={{padding: '0 0.2vw'}} className="relative w-[30vw] h-[10vh] border-2 border-amber-600 bg-stone-800 rounded-lg">
             <button
               type="button"
               onClick={() => {

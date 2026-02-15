@@ -15,20 +15,20 @@ export function ConsumableCard({
   onDelete,
 }: ConsumableCardProps) {
   return (
-    <div className="p-[1vh] bg-stone-900 border-2 border-amber-600 rounded-lg">
+    <div style={{padding: '0 0.5vw'}} className="bg-stone-900 border-2 border-amber-600 rounded-lg">
       <div className="flex items-start justify-between gap-[1vw]">
         <div className="flex-1">
           <div className="text-[1.6vh] font-bold text-amber-100">{consumable.name}</div>
           {consumable.description && (
-            <div className="text-[1.2vh] text-amber-100/70 mt-[0.3vh]">
+            <div className="text-[1.2vh] text-amber-100/70 ">
               {consumable.description}
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-[1vw]">
+        <div style={{padding: '0.5vw'}} className="flex items-center justify-center gap-[1vw]">
           {/* Количество */}
-          <div className="flex items-center gap-[0.5vw]">
+          <div className="flex items-center justify-center gap-[0.5vw]">
             <button
               type="button"
               onClick={() => onQuantityChange(Math.max(0, consumable.quantity - 1))}
@@ -60,9 +60,10 @@ export function ConsumableCard({
             type="button"
             onClick={onUse}
             disabled={consumable.quantity === 0}
-            className={`px-[1vw] py-[0.5vh] rounded font-bold transition-colors text-[1.3vh] ${
+            style={{padding: '0.5vw'}}
+            className={`rounded font-bold transition-colors text-[1.3vh] ${
               consumable.quantity > 0
-                ? 'bg-blue-600 hover:bg-blue-500 text-white'
+                ? 'bg-amber-600 hover:bg-amber-500 text-black'
                 : 'bg-gray-600 text-gray-400 cursor-not-allowed'
             }`}
           >

@@ -70,7 +70,7 @@ export function TeamMemberCard({ member, onEdit, onRemove }: TeamMemberCardProps
             {member.name || 'Без имени'}
           </h3>
         </div>
-        <div style={{ marginRight: '0.2vw' }} className="w-[98%] grid grid-cols-2  gap-[1vh]">
+        <div style={{ marginRight: '0.2vw' }} className="w-[98%] grid grid-cols-2 gap-[1vh]">
           <p className="text-[1.1vh] text-amber-100/80 truncate">Раса: {member.race}</p>
           <p className="text-[1.1vh] text-amber-100/80 truncate">Класс: {member.class}</p>
           <p className="text-[1.1vh] text-amber-100/80 truncate">Уровень: {''}

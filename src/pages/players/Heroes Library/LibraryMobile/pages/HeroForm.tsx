@@ -10,7 +10,7 @@ import { FormStep1Basic } from '../../components/Desktop/HeroForm/FormStep1Basic
 import { FormStep2Abilities } from '../../components/Desktop/HeroForm/FormStep2Abilities';
 import { FormStep3Skills } from '../../components/Desktop/HeroForm/FormStep3Skills';
 import { FormStep4Equipment } from '../../components/Desktop/HeroForm/FormStep5Equipment';
-import { FormStep5Details } from '../../components/Desktop/HeroForm/FormStep7Details';
+import { FormStep5Details } from '../../components/Desktop/HeroForm/FormStep8Details';
 import { useEffect } from 'react';
 import { getProficiencyBonus } from '../../../../../features/heroes/constants/dndData';
 

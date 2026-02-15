@@ -97,7 +97,7 @@ export function AbilityScoresGuideModal({ isOpen, onClose }: AbilityScoresGuideM
             </h3>
             <div className="grid grid-cols-2 gap-[1vw]">
               <div style={{ paddingLeft: '0.5vw' }} className="">
-                <div className="grid grid-cols-2 gap-[0.5vh] text-[1.6h]">
+                <div className="grid grid-cols-2 gap-[0.5vh] text-[1.6vh]">
                   <span className="text-amber-100 font-semibold">Значение</span>
                   <span className="text-amber-100 font-semibold">Модификатор</span>
                   {[

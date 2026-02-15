@@ -40,7 +40,7 @@ export function FormStepper({ currentStep, onStepClick }: FormStepperProps) {
                   )}
                 </div>
                 <div>
-                  <div className="font-medium">{step.title}</div>
+                  <div className="text-[1.6vh]">{step.title}</div>
                   <div className={`text-[1.4vh] ${isActive ? 'text-amber-100' : 'text-gray-400'}`}>
                     {step.description}
                   </div>

@@ -11,7 +11,7 @@ export const Input = ({ label, error, className = '', ref, ...props }: InputProp
       <input
         ref={ref}
         className={`
-          w-full bg-neutral-900/80 rounded-lg text-amber-100
+          w-full bg-neutral-900/80 rounded-lg text-amber-100 text-[1.6vh]
           focus:outline-none focus:ring-2 focus:ring-amber-500
           ${error ? 'border-red-500' : 'border-amber-600'}
           ${className}

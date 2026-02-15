@@ -8,7 +8,7 @@ interface FormStep5DetailsProps {
   errors: FieldErrors<HeroFormData>;
 }
 
-export function FormStep7Details({ register, errors }: FormStep5DetailsProps) {
+export function FormStep8Details({ register, errors }: FormStep5DetailsProps) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-white mb-6">Детали персонажа</h2>

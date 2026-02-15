@@ -13,8 +13,9 @@ import { FormStep2AbilitiesAndSkills } from '../../components/Desktop/HeroForm/F
 import { FormStep3Skills } from '../../components/Desktop/HeroForm/FormStep3Skills';
 import { FormStep4TeamAndCampaignInfo } from '../../components/Desktop/HeroForm/FormStep4Team&CampaineInfo';
 import { FormStep5Inventory } from '../../components/Desktop/HeroForm/FormStep5Equipment';
-import { FormStep6Notes } from '../../components/Desktop/HeroForm/FormStep6Notes';
-import { FormStep7Details } from '../../components/Desktop/HeroForm/FormStep7Details';
+import { FormStep6Treasure } from '../../components/Desktop/HeroForm/FormStep6Treasure';
+import { FormStep7Notes } from '../../components/Desktop/HeroForm/FormStep7Notes';
+import { FormStep8Details } from '../../components/Desktop/HeroForm/FormStep8Details';
 import { getProficiencyBonus } from '../../../../../features/heroes/constants/dndData';
 
 interface HeroFormProps {
@@ -182,12 +183,23 @@ export default function HeroForm({ mode }: HeroFormProps) {
         );
       case 5:
         return (
-          <FormStep5Inventory register={register} errors={errors} watch={watch} setValue={setValue} />
+          <FormStep5Inventory
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+          />
         );
         case 6:
-        return <FormStep6Notes register={register} errors={errors} watch={watch} control={control} />;
+        return (
+          <FormStep6Treasure register={register} errors={errors} watch={watch} setValue={setValue} />
+        )
       case 7:
-        return <FormStep7Details register={register} errors={errors} />;
+        return (
+          <FormStep7Notes register={register} errors={errors} watch={watch} control={control} />
+        );
+      case 8:
+        return <FormStep8Details register={register} errors={errors} />;
       default:
         return null;
     }
@@ -200,7 +212,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
         <header className="flex flex-row gap-[30vw]">
           <button
             onClick={() => navigate('/player/heroes')}
-            className="flex items-center gap-[1vw] text-gray-400 hover:text-white transition-colors"
+            className="flex items-center gap-[1vw] text-gray-400 hover:text-white transition-colors text-[1.6vh]"
           >
             <svg className="w-[1vw] h-[1vw]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -231,7 +243,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
                   onClick={prevStep}
                   disabled={isFirstStep}
                   className={`
-                    relative top-[2vh] z-100 rounded-lg font-medium transition-colors w-[8vw] h-[4vh]
+                    relative top-[2vh] z-10 rounded-lg text-[1.6vh] transition-colors w-[8vw] h-[4vh]
                     ${
                       isFirstStep
                         ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
@@ -246,14 +258,14 @@ export default function HeroForm({ mode }: HeroFormProps) {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="relative top-[2vh] z-100 bg-amber-600 text-neutral-900 shadow-amber-500/50 scale-105 hover:bg-amber-500 hover:scale-105 rounded-lg w-[8vw] h-[4vh]"
+                    className="relative top-[2vh] z-10 bg-amber-600 text-neutral-900  text-[1.6vh] shadow-amber-500/50 scale-105 hover:bg-amber-500 hover:scale-105 rounded-lg w-[8vw] h-[4vh]"
                   >
                     Далее →
                   </button>
                 ) : (
                   <button
                     type="submit"
-                    className="relative top-[2vh] bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors w-[8vw] h-[4vh]"
+                    className="relative top-[2vh] z-10 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[1.6vh] transition-colors w-[8vw] h-[4vh]"
                   >
                     Сохранить героя
                   </button>

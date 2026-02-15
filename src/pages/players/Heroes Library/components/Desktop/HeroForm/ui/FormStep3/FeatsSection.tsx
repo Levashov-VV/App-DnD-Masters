@@ -68,13 +68,13 @@ export function FeatsSection({
             <div
               key={feat.nameEn}
               style={{ marginLeft: '2%', paddingLeft: '0.5vw', paddingRight: '0.5vw' }}
-              className="w-[96%] bg-amber-600 text-stone-900 rounded-lg text-[1.4vh] font-bold flex items-center justify-between gap-[0.5vw]"
+              className="w-[96%] bg-amber-600 text-stone-900 rounded-lg text-[1.4vh] font-bold flex items-center justify-between gap-[0.5vw] overflow-y-hidden"
             >
               {/* Название черты */}
               <button
                 type="button"
                 onClick={() => handleFeatClick(feat)}
-                className="truncate flex-1 text-left hover:text-amber-100 hover:scale-102 transition-colors "
+                className="truncate flex-1 text-left hover:text-amber-100 hover:scale-105 transition-colors"
                 title="Показать описание"
               >
                 {feat.name}

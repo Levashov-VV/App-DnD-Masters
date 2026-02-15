@@ -95,7 +95,7 @@ export const SelectOrInput = ({
           onChange={onChange as React.ChangeEventHandler<HTMLSelectElement>}
           onBlur={onBlur as React.FocusEventHandler<HTMLSelectElement>}
           className={`
-            w-full bg-neutral-900/80 rounded-lg text-amber-100
+            w-full bg-neutral-900/80 rounded-lg text-amber-100 text-[1.6vh]
             focus:outline-none
             ${error ? 'border-2 border-red-500' : ''}
           `}
@@ -109,7 +109,7 @@ export const SelectOrInput = ({
         </select>
       )}
 
-      {error && <p className="text-[1.4vh] text-red-400 mt-[0.5vh]">{error}</p>}
+      {error && <p className="text-[1.4vh] text-red-400">{error}</p>}
     </div>
   );
 };

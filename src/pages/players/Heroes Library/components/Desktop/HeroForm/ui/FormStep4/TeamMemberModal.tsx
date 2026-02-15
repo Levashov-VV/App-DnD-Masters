@@ -346,7 +346,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
             type="button"
             onClick={onClose}
             style={{ padding: '0.5vh 1vw' }}
-            className="bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors"
+            className="bg-gray-600 hover:bg-gray-500 text-[1.6vh] text-white rounded-lg font-bold transition-colors"
           >
             Отмена
           </button>
@@ -354,7 +354,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
             type="button"
             onClick={handleSave}
             style={{ padding: '0.5vh 1vw' }}
-            className="bg-amber-600 hover:bg-amber-500 text-stone-900 rounded-lg font-bold transition-colors"
+            className="bg-amber-600 hover:bg-amber-500 text-[1.6vh] text-stone-900 rounded-lg font-bold transition-colors"
           >
             Сохранить
           </button>

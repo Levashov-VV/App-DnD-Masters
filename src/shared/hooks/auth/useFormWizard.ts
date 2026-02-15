@@ -5,9 +5,10 @@ export const FORM_STEPS = [
   { id: 2, title: 'Характеристики', description: 'Значения характеристик' },
   { id: 3, title: 'Навыки', description: 'Умения, черты и навыки' },
   { id: 4, title: 'Информация о кампании', description: 'Информация о кампании и команде' },
-  { id: 5, title: 'Инвентарь', description: 'Сокровище и снаряжение' },
-  { id: 6, title: 'Записи', description: 'Информация о происходящем' },
-  { id: 7, title: 'Детали', description: 'Personality & Backstory' },
+  { id: 5, title: 'Снаряжение', description: 'Предметы с боевым бонусом и оружие' },
+  { id: 6, title: 'Инвентарь', description: 'Сокровища и расходники' },
+  { id: 7, title: 'Записи', description: 'Информация о происходящем' },
+  { id: 8, title: 'Детали', description: 'Personality & Backstory' },
 ] as const;
 
 export function useFormWizard() {

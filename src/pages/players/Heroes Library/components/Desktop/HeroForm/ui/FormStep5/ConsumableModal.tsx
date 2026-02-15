@@ -1,4 +1,3 @@
-// components/Desktop/HeroForm/ui/FormStep5/ConsumableModal.tsx
 import { useState } from 'react';
 import type { Consumable } from '../../../../../../../../features/heroes/schemas/heroSchema';
 import { Input } from '../Input';
@@ -33,9 +32,9 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div className="relative w-[40vw] bg-stone-900 border-4 border-amber-600 rounded-2xl p-[2vh]">
+      <div style={{padding: '0.5vw'}} className="relative w-[40vw] bg-stone-900 border-4 border-amber-600 rounded-2xl">
         {/* Заголовок */}
-        <div className="flex items-center justify-between mb-[2vh]">
+        <div className="flex items-center justify-between">
           <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">Добавить расходник</h2>
           <button
             type="button"
@@ -74,14 +73,14 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
 
           {/* Описание */}
           <div>
-            <label className="block text-[1.6vh] font-semibold text-amber-100 mb-[0.5vh]">
-              Описание (опционально)
+            <label className="block text-[1.6vh] font-semibold text-amber-100">
+              Описание
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Эффект, использование..."
-              className="w-full h-[8vh] bg-stone-900 border-2 border-amber-600 rounded-lg px-[0.5vw] py-[0.5vh] text-[1.4vh] text-amber-100 focus:outline-none focus:border-amber-400 resize-none"
+              className="w-full h-[8vh] bg-stone-900 border-2 border-amber-600 rounded-lg text-[1.4vh] text-amber-100 focus:outline-none focus:border-amber-400 resize-none"
               style={{ paddingLeft: '0.2vw' }}
             />
           </div>
@@ -97,18 +96,20 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
         </div>
 
         {/* Кнопки */}
-        <div className="flex justify-end gap-[1vw] mt-[2vh]">
+        <div className="flex justify-end gap-[1vw]">
           <button
             type="button"
             onClick={onClose}
-            className="px-[2vw] py-[1vh] bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors text-[1.6vh]"
+            style={{padding: '0.5vw'}}
+            className="bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors text-[1.6vh]"
           >
             Отмена
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className="px-[2vw] py-[1vh] bg-amber-600 hover:bg-amber-500 text-stone-900 rounded-lg font-bold transition-colors text-[1.6vh]"
+            style={{padding: '0.5vw'}}
+            className="bg-amber-600 hover:bg-amber-500 text-stone-900 rounded-lg font-bold transition-colors text-[1.6vh]"
           >
             Добавить
           </button>

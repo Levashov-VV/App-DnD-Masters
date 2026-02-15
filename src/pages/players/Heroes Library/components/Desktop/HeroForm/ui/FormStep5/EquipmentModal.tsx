@@ -9,6 +9,7 @@ import { Input } from '../Input';
 interface EquipmentModalProps {
   item: EquipmentItem | null;
   slotType?: EquipmentSlot;
+  isBackpackMode?: boolean;
   onSave: (item: EquipmentItem) => void;
   onClose: () => void;
 }
@@ -20,6 +21,8 @@ const EQUIPMENT_TYPES = [
   'Броня',
   'Дальнобойное оружие',
   'Кольцо',
+  'Шлем',
+  'Корона',
   'Ожерелье',
   'Сапоги',
   'Перчатки',
@@ -31,19 +34,19 @@ const EQUIPMENT_TYPES = [
 
 // Слоты экипировки
 const EQUIPMENT_SLOTS: Record<EquipmentSlot, string> = {
-  armor: 'Броня (торс)',
+  armor: 'Броня',
   mainHand: 'Сильная рука',
   offHand: 'Слабая рука',
   ranged: 'Дальнобойное',
 };
 
-// Определение доступных слотов
+// Определение доступных слотов для типа предмета
 const getAvailableSlots = (type: string): EquipmentSlot[] => {
   switch (type) {
     case 'Оружие ближнего боя':
       return ['mainHand', 'offHand'];
     case 'Щит':
-      return ['offHand'];
+      return ['mainHand', 'offHand'];
     case 'Броня':
       return ['armor'];
     case 'Дальнобойное оружие':
@@ -53,14 +56,14 @@ const getAvailableSlots = (type: string): EquipmentSlot[] => {
   }
 };
 
-const getAvailableTypesForSlot = (slot?: EquipmentSlot): string[] => {
-  if (!slot) {
+const getAvailableTypesForSlot = (slot?: EquipmentSlot, isFromSlotClick?: boolean): string[] => {
+  if (!slot || !isFromSlotClick) {
     return EQUIPMENT_TYPES;
   }
 
   switch (slot) {
     case 'mainHand':
-      return ['Оружие ближнего боя'];
+      return ['Оружие ближнего боя', 'Щит'];
     case 'offHand':
       return ['Оружие ближнего боя', 'Щит'];
     case 'armor':
@@ -86,7 +89,13 @@ const getVisibleFields = (type: string) => {
   };
 };
 
-export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentModalProps) {
+export function EquipmentModal({
+  item,
+  slotType,
+  isBackpackMode = false,
+  onSave,
+  onClose,
+}: EquipmentModalProps) {
   const [editedItem, setEditedItem] = useState<Partial<EquipmentItem>>({
     id: item?.id || crypto.randomUUID(),
     name: item?.name || '',
@@ -102,22 +111,33 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showTwoHandedWarning, setShowTwoHandedWarning] = useState(false);
 
-  const availableTypes = getAvailableTypesForSlot(editedItem.slot);
+  const isFromSlotClick = !!slotType;
+  const availableTypes = getAvailableTypesForSlot(editedItem.slot, isFromSlotClick);
 
   useEffect(() => {
     if (editedItem.type) {
       const availableSlots = getAvailableSlots(editedItem.type);
+      if (isBackpackMode) {
+        return;
+      }
 
-      // Если был предзаданный слот (slotType), проверяем совместимость
-      if (slotType && availableSlots.includes(slotType)) {
-        setEditedItem((prev) => ({ ...prev, slot: slotType }));
-      } else if (availableSlots.length === 1) {
-        setEditedItem((prev) => ({ ...prev, slot: availableSlots[0] }));
-      } else if (availableSlots.length === 0) {
-        setEditedItem((prev) => ({ ...prev, slot: undefined }));
+      if (slotType) {
+        if (availableSlots.includes(slotType)) {
+          setEditedItem((prev) => ({ ...prev, slot: slotType }));
+        }
+      } else {
+        if (availableSlots.length === 1) {
+          setEditedItem((prev) => ({ ...prev, slot: availableSlots[0] }));
+        } else if (availableSlots.length > 0) {
+          if (editedItem.slot && !availableSlots.includes(editedItem.slot)) {
+            setEditedItem((prev) => ({ ...prev, slot: undefined }));
+          }
+        } else if (availableSlots.length === 0) {
+          setEditedItem((prev) => ({ ...prev, slot: undefined }));
+        }
       }
     }
-  }, [editedItem.type, slotType]);
+  }, [editedItem.type, slotType, isBackpackMode]);
 
   // Предупреждение о двуручном оружии
   useEffect(() => {
@@ -161,8 +181,7 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
         {/* Заголовок */}
         <div className="flex items-center justify-between ">
           <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">
-            {item ? 'Редактировать предмет' : 'Добавить предмет'}
-            {slotType && <span className="text-[1.8vh] text-amber-400"></span>}
+            {item ? 'Редактировать предмет' : isBackpackMode ? 'Добавить в рюкзак' : 'Добавить предмет'}
           </h2>
           <button
             type="button"
@@ -184,15 +203,6 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
             </svg>
           </button>
         </div>
-
-        {/* Предупреждение о двуручном оружии */}
-        {showTwoHandedWarning && (
-          <div>
-            <p className="text-[1.4vh] text-amber-500 font-semibold">
-              Двуручное оружие занимает обе руки
-            </p>
-          </div>
-        )}
 
         {/* Форма */}
         <div className="flex flex-col gap-[1.5vh]">
@@ -222,9 +232,6 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
           <div>
             <label className="block text-[1.6vh] font-semibold text-amber-100 ">
               Тип предмета
-              {slotType && availableTypes.length < EQUIPMENT_TYPES.length && (
-                <span className="text-[1.2vh] text-amber-400"></span>
-              )}
             </label>
             <select
               value={editedItem.type || ''}
@@ -241,16 +248,14 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
             </select>
           </div>
 
-          {/* Слот экипировки
-           */}
-          {availableSlots.length > 0 && (
+          {!isBackpackMode && availableSlots.length > 0 && (
             <div>
               <label className="block text-[1.6vh] font-semibold text-amber-100">
                 Слот экипировки
               </label>
-              {availableSlots.length === 1 || slotType ? (
-                <div className="h-[4vh] bg-stone-800 border-2 border-amber-600 rounded-lg flex items-center text-[1.4vh] text-amber-100">
-                  {EQUIPMENT_SLOTS[editedItem.slot || slotType!]}
+              {slotType ? (
+                <div className="h-[4vh] bg-stone-800 border-2 border-amber-600 rounded-lg flex items-center px-[0.5vw] text-[1.4vh] text-amber-100">
+                  {EQUIPMENT_SLOTS[slotType]}
                 </div>
               ) : (
                 <select
@@ -304,7 +309,7 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
           {/* Другие бонусы */}
           <div>
             <label className="block text-[1.6vh] font-semibold text-amber-100 mb-[0.5vh]">
-              Другие бонусы (опционально)
+              Другие бонусы
             </label>
             <textarea
               value={editedItem.otherBonuses || ''}
@@ -330,15 +335,24 @@ export function EquipmentModal({ item, slotType, onSave, onClose }: EquipmentMod
               </label>
             </div>
           )}
+
+          {/* Предупреждение о двуручном оружии */}
+          {showTwoHandedWarning && (
+            <div className= "border-amber-600 rounded ">
+              <p className="text-[1.4vh] text-amber-400 font-semibold">
+                Двуручное оружие занимает обе руки
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Кнопки */}
-        <div className="flex justify-end gap-[1vw] ">
+        <div className="flex justify-end gap-[1vw]">
           <button
             type="button"
             onClick={onClose}
             style={{ padding: '0.5vh 1.5vh' }}
-            className="bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors text-[1.6vh]"
+            className="bg-gray-700 hover:bg-gray-600 text-amber-100 rounded-lg font-bold transition-colors text-[1.6vh]"
           >
             Отмена
           </button>

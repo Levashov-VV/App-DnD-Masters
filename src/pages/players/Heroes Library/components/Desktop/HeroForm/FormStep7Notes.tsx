@@ -11,7 +11,7 @@ interface FormStep4EquipmentProps {
   control: Control<HeroFormData>;
 }
 
-export function FormStep6Notes({ register, errors, watch, control }: FormStep4EquipmentProps) {
+export function FormStep7Notes({ register, errors, watch, control }: FormStep4EquipmentProps) {
   const {
     fields: weapons,
     append: addWeapon,

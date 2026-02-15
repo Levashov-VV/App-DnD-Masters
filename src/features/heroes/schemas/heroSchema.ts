@@ -51,6 +51,7 @@ export const equipmentItemSchema = z.object({
   armorBonus: z.number().optional().default(0),
   otherBonuses: z.string().optional().default(''),
   isTwoHanded: z.boolean().optional().default(false),
+  image: z.string().optional(),
 });
 
 // Схема расходника

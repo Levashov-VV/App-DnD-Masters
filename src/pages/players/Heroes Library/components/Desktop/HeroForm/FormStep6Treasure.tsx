@@ -3,13 +3,14 @@ import type { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from
 import type {
   HeroFormData,
   Consumable,
-
 } from '../../../../../../features/heroes/schemas/heroSchema';
 import { TextareaWithFontControl } from './ui/TextareaFontControl';
 import { Input } from './ui/Input';
 import { ConsumableModal } from './ui/FormStep5/ConsumableModal';
 import { ConsumableCard } from './ui/FormStep5/ConsumableCard';
 import { CurrencyCalculatorModal } from './ui/FormStep5/CurrencyCalculatorModal';
+import { ConfirmDialog } from './ui/FormStep5/ConfirmDialog';
+import { CarryCapacityModal } from './ui/FormStep5/CarryCapacityModal';
 
 interface FormStep5InventoryProps {
   register: UseFormRegister<HeroFormData>;
@@ -26,7 +27,10 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
     inventory: inventoryData?.inventory || [],
     consumables: inventoryData?.consumables || [],
     treasures: inventoryData?.treasures || '',
-    magicItems: inventoryData?.magicItems || { maxSlots: 3, items: [] },
+    magicItems: {
+      maxSlots: inventoryData?.magicItems?.maxSlots ?? 3,
+      items: inventoryData?.magicItems?.items ?? [],
+    },
     currency: inventoryData?.currency || {
       copper: 0,
       silver: 0,
@@ -39,9 +43,19 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
 
   const [isConsumableModalOpen, setIsConsumableModalOpen] = useState(false);
   const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false);
+  const [isCarryCapacityModalOpen, setIsCarryCapacityModalOpen] = useState(false);
 
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    newMaxSlots: number;
+    filledItemsToRemove: string[];
+  }>({
+    isOpen: false,
+    newMaxSlots: 0,
+    filledItemsToRemove: [],
+  });
 
-  // РАСХОДНИКИ 
+  // РАСХОДНИКИ
   const handleSaveConsumable = (consumable: Consumable) => {
     setValue('inventory.consumables', [...inventory.consumables, consumable], {
       shouldDirty: true,
@@ -79,25 +93,122 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
       setValue('inventory.consumables', updated, { shouldDirty: true });
     }
   };
+  const handleMaxSlotsChange = (newMaxSlots: number) => {
+    const currentItems = inventory.magicItems.items || [];
+
+    if (newMaxSlots > currentItems.length) {
+      setValue('inventory.magicItems.maxSlots', newMaxSlots, {
+        shouldDirty: true,
+      });
+
+      const updatedItems = [...currentItems];
+      while (updatedItems.length < newMaxSlots) {
+        updatedItems.push('');
+      }
+      setValue('inventory.magicItems.items', updatedItems, {
+        shouldDirty: true,
+      });
+      return;
+    }
+
+    if (newMaxSlots < currentItems.length) {
+      const itemsWithoutEmpty = currentItems.filter((item) => item && item.trim() !== '');
+
+      if (itemsWithoutEmpty.length > newMaxSlots) {
+        const filledItemsToRemove = itemsWithoutEmpty.slice(newMaxSlots);
+
+        setConfirmDialog({
+          isOpen: true,
+          newMaxSlots,
+          filledItemsToRemove,
+        });
+        return;
+      }
+
+      const updatedItems = [...itemsWithoutEmpty];
+      while (updatedItems.length < newMaxSlots) {
+        updatedItems.push('');
+      }
+
+      setValue('inventory.magicItems.maxSlots', newMaxSlots, {
+        shouldDirty: true,
+      });
+      setValue('inventory.magicItems.items', updatedItems, {
+        shouldDirty: true,
+      });
+      return;
+    }
+
+    setValue('inventory.magicItems.maxSlots', newMaxSlots, {
+      shouldDirty: true,
+    });
+  };
+
+  const handleConfirmMaxSlotsReduction = (confirmed: boolean) => {
+    if (confirmed) {
+      const newMaxSlots = confirmDialog.newMaxSlots;
+      const currentItems = inventory.magicItems.items || [];
+
+      const itemsWithoutEmpty = currentItems.filter((item) => item && item.trim() !== '');
+      const updatedItems = itemsWithoutEmpty.slice(0, newMaxSlots);
+
+      while (updatedItems.length < newMaxSlots) {
+        updatedItems.push('');
+      }
+
+      setValue('inventory.magicItems.maxSlots', newMaxSlots, {
+        shouldDirty: true,
+      });
+      setValue('inventory.magicItems.items', updatedItems, {
+        shouldDirty: true,
+      });
+    }
+
+    setConfirmDialog({
+      isOpen: false,
+      newMaxSlots: 0,
+      filledItemsToRemove: [],
+    });
+  };
+
+  const handleMagicItemChange = (index: number, value: string) => {
+    const updatedItems = [...inventory.magicItems.items];
+    updatedItems[index] = value;
+    setValue('inventory.magicItems.items', updatedItems, {
+      shouldDirty: true,
+    });
+  };
+
+  const magicItemSlots = Array.from({ length: inventory.magicItems.maxSlots }, (_, index) => ({
+    index,
+    value: inventory.magicItems.items[index] || '',
+  }));
+
   return (
     <div className="relative left-[0.5vw] top-[1vh] w-[74vw] flex flex-col gap-[1.5vh] uppercase max-h-[63vh]">
       <h2 className="text-[2.5vh] font-bold text-amber-100">Инвентарь</h2>
 
-      {/* Секция 2: Расходники */}
-      <div style={{padding: '0 0.5vw'}} className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+      {/* Секция 1: Расходники */}
+      <div
+        style={{ padding: '0 0.5vw' }}
+        className="border-2 border-amber-600 bg-stone-800 rounded-lg"
+      >
         <div className="flex items-center justify-between">
           <h3 className="text-[2vh] font-bold text-amber-100">Расходники</h3>
           <button
             type="button"
             onClick={() => setIsConsumableModalOpen(true)}
-            style={{padding: '0.5vh 1vw', margin: '1vh 0'}}
+            style={{ padding: '0.5vh 1vw', margin: '1vh 0' }}
             className=" bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold rounded transition-colors text-[1.4vh]"
           >
             + Добавить расходник
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-[1vh] max-h-[20vh] overflow-y-auto">
+        <div
+          style={{ padding: '0.5vw 0' }}
+          className="grid grid-cols-3 gap-[1vh] max-h-[13.5vh] overflow-y-auto overflow-x-hidden"
+        >
           {inventory.consumables.length > 0 ? (
             inventory.consumables.map((consumable) => (
               <ConsumableCard
@@ -116,7 +227,7 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
         </div>
       </div>
 
-      {/* Секция 3: Сокровища + Магические предметы */}
+      {/* Секция 2: Сокровища + Магические предметы */}
       <div className="grid grid-cols-2 gap-[2vw]">
         <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
           <TextareaWithFontControl
@@ -125,106 +236,81 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
             onChange={(e) => setValue('inventory.treasures', e.target.value, { shouldDirty: true })}
             placeholder="Опишите сокровища и безделушки..."
             style={{ paddingLeft: '0.2vw' }}
-            className="h-[10vh]"
+            className="h-[13vh]"
             defaultFontSize={14}
             minFontSize={10}
             maxFontSize={24}
           />
         </div>
 
-        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg p-[1vh]">
-          <h3 className="text-[1.8vh] font-bold text-amber-100 mb-[0.8vh]">Магические предметы</h3>
-          <div className="flex items-center gap-[1vw] mb-[0.8vh]">
+        <div
+          style={{ padding: '0.2vw' }}
+          className="border-2 border-amber-600 bg-stone-800 rounded-lg "
+        >
+          <h3 className="text-[1.8vh] font-bold text-amber-100">Магические предметы</h3>
+
+          <div className="flex items-center gap-[0.5vw]">
             <span className="text-[1.3vh] text-amber-100">Максимум слотов:</span>
             <Input
               type="number"
               min={0}
-              max={20}
+              max={7}
               value={inventory.magicItems.maxSlots}
-              onChange={(e) =>
-                setValue('inventory.magicItems.maxSlots', parseInt(e.target.value) || 0, {
-                  shouldDirty: true,
-                })
-              }
+              onChange={(e) => {
+                const newValue = parseInt(e.target.value) || 0;
+                handleMaxSlotsChange(newValue);
+              }}
               className="w-[4vw]"
               style={{ paddingLeft: '0.2vw' }}
             />
           </div>
-          <div className="text-[1.3vh] text-amber-100/80 mb-[0.8vh]">
-            Занято {inventory.magicItems.items.length} из {inventory.magicItems.maxSlots}
-          </div>
 
-          <div className="flex flex-col gap-[0.5vh] mb-[0.8vh] max-h-[6vh] overflow-y-auto">
-            {inventory.magicItems.items.length > 0 &&
-              inventory.magicItems.items.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-[0.4vh] bg-stone-900 border border-amber-600 rounded"
-                >
-                  <span className="text-[1.3vh] text-amber-100">{item}</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updated = inventory.magicItems.items.filter((_, i) => i !== index);
-                      setValue('inventory.magicItems.items', updated, { shouldDirty: true });
-                    }}
-                    className="w-[2vh] h-[2vh] bg-red-600 hover:bg-red-500 rounded flex items-center justify-center transition-colors"
-                  >
-                    <svg
-                      className="w-[1vh] h-[1vh] text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
+          <div
+            style={{ padding: '0.3vh' }}
+            className="flex flex-col gap-[0.5vh] max-h-[10vh] overflow-y-auto"
+          >
+            {magicItemSlots.length > 0 ? (
+              magicItemSlots.map((slot) => (
+                <div key={slot.index} className="flex items-center gap-[0.5vw]">
+                  <span className="text-[1.2vh] text-amber-100/60 w-[2vw]">{slot.index + 1}.</span>
+                  <Input
+                    value={slot.value}
+                    onChange={(e) => handleMagicItemChange(slot.index, e.target.value)}
+                    placeholder="Название предмета..."
+                    className="flex-1"
+                    style={{ paddingLeft: '0.5vw', height: '2.5vh' }}
+                  />
                 </div>
-              ))}
+              ))
+            ) : (
+              <p
+                style={{ paddingTop: '3vh' }}
+                className="text-amber-100/60 text-center text-[1.6vh]"
+              >
+                Укажите количество слотов
+              </p>
+            )}
           </div>
-
-          {inventory.magicItems.items.length < inventory.magicItems.maxSlots ? (
-            <Input
-              placeholder="Добавить... (Enter)"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  const input = e.target as HTMLInputElement;
-                  const value = input.value.trim();
-                  if (value) {
-                    setValue('inventory.magicItems.items', [...inventory.magicItems.items, value], {
-                      shouldDirty: true,
-                    });
-                    input.value = '';
-                  }
-                }
-              }}
-              style={{ paddingLeft: '0.2vw' }}
-            />
-          ) : (
-            <p className="text-[1.1vh] text-orange-400">⚠️ Максимум слотов</p>
-          )}
         </div>
       </div>
 
-      {/* Секция 4: Монеты */}
-      <div className="border-2 border-amber-600 bg-stone-800 rounded-lg p-[1vh]">
-        <div className="flex items-center justify-between mb-[0.8vh]">
+      {/* Секция 3: Монеты */}
+      <div
+        style={{ padding: '0.2vh 0.5vw' }}
+        className="relative bottom-[0.5vh] border-2 border-amber-600 bg-stone-800 rounded-lg"
+      >
+        <div className="flex items-center justify-between">
           <h3 className="text-[1.8vh] font-bold text-amber-100">Монеты</h3>
           <button
             type="button"
             onClick={() => setIsCurrencyModalOpen(true)}
-            className="px-[1.2vw] py-[0.4vh] bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold rounded transition-colors text-[1.3vh]"
+            style={{ padding: '0.2vh 0.5vw' }}
+            className="bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold rounded transition-colors text-[1.3vh]"
           >
-            Управлять
+            Калькулятор
           </button>
         </div>
-
-        <div className="grid grid-cols-5 gap-[0.8vw]">
+        <div style={{ paddingBottom: '0.5vh' }} className="grid grid-cols-5 gap-[0.8vw]">
           {[
             { key: 'copper', label: 'ММ' },
             { key: 'silver', label: 'СМ' },
@@ -233,7 +319,7 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
             { key: 'platinum', label: 'ПМ' },
           ].map(({ key, label }) => (
             <div key={key} className="flex flex-col items-center">
-              <label className="text-[1.4vh] font-bold text-amber-100 mb-[0.3vh]">{label}</label>
+              <label className="text-[1.4vh] font-bold text-amber-100">{label}</label>
               <Input
                 type="number"
                 min={0}
@@ -252,41 +338,67 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
       </div>
 
       {/* Секция 5: Переносимый вес */}
-      <div className="border-2 border-amber-600 bg-stone-800 rounded-lg p-[1vh]">
-        <h3 className="text-[1.8vh] font-bold text-amber-100 mb-[0.8vh]">Переносимый вес</h3>
-        <div className="grid grid-cols-2 gap-[2vw]">
+      <div
+        style={{ padding: '0.2vh 0.5vw' }}
+        className=" relative bottom-[0.8vh] border-2 border-amber-600 bg-stone-800 rounded-lg"
+      >
+        <div className="flex justify-between">
+          <h3 className="text-[1.8vh] font-bold text-amber-100">Переносимый вес</h3>
+          <button
+            type="button"
+            onClick={() => setIsCarryCapacityModalOpen(true)}
+            style={{ padding: '0.2vh 0.2vw', marginTop: '0.5vh' }}
+            className="flex items-center gap-[0.5vw] bg-amber-600 hover:bg-amber-500 border-2 border-amber-600 hover:border-amber-500 rounded-lg transition-colors shadow-lg group"
+            title="Открыть памятку"
+          >
+            <svg
+              className="w-[1.4vh] h-[1.4vh] text-stone-900"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="text-[1.4vh] font-bold text-stone-900">Памятка</span>
+          </button>
+        </div>
+        <div className="relative bottom-[1vh] grid grid-cols-2 gap-[2vw]">
+          {/* Текущий вес */}
           <Input
             label="Текущий вес"
             type="number"
             min={0}
-            value={inventory.carryCapacity.current}
+            value={inventory.carryCapacity.current || 0}
             onChange={(e) =>
-              setValue('inventory.carryCapacity.current', parseInt(e.target.value) || 0, {
+              setValue('inventory.carryCapacity.current', Number(e.target.value) || 0, {
                 shouldDirty: true,
               })
             }
             style={{ paddingLeft: '0.2vw' }}
-            className="h-[3.5vh]"
+            className="h-[2.5vh]"
           />
+
+          {/* Максимальный вес */}
           <Input
             label="Максимальный вес"
             type="number"
             min={0}
-            value={inventory.carryCapacity.max}
+            value={inventory.carryCapacity.max || 0}
             onChange={(e) =>
-              setValue('inventory.carryCapacity.max', parseInt(e.target.value) || 0, {
+              setValue('inventory.carryCapacity.max', Number(e.target.value) || 0, {
                 shouldDirty: true,
               })
             }
             style={{ paddingLeft: '0.2vw' }}
-            className="h-[3.5vh]"
+            className="h-[2.5vh]"
           />
         </div>
-        <p className="text-[1.1vh] text-amber-100/60 mt-[0.5vh]">
-          💡 Обычно максимальный вес = Сила × 15 (если нет особых способностей)
-        </p>
       </div>
 
+      {/* Модальные окна */}
       {isConsumableModalOpen && (
         <ConsumableModal
           onSave={handleSaveConsumable}
@@ -304,6 +416,34 @@ export function FormStep6Treasure({ register, errors, watch, setValue }: FormSte
           onClose={() => setIsCurrencyModalOpen(false)}
         />
       )}
+
+      {/* Модалка грузоподъёмности */}
+      {isCarryCapacityModalOpen && (
+        <CarryCapacityModal
+          currentSize={watch('size') || 'medium'}
+          currentStrength={watch('abilityScores.strength') || 10}
+          currentWeight={inventory.carryCapacity.current || 0}
+          maxWeight={inventory.carryCapacity.max || 0}
+          onApply={(newCurrentWeight, newMaxWeight) => {
+            setValue('inventory.carryCapacity.current', newCurrentWeight, { shouldDirty: true });
+            setValue('inventory.carryCapacity.max', newMaxWeight, { shouldDirty: true });
+            setIsCarryCapacityModalOpen(false);
+          }}
+          onClose={() => setIsCarryCapacityModalOpen(false)}
+        />
+      )}
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        config={{
+          title: 'Уменьшение слотов',
+          message: `Вы уменьшаете количество слотов до ${confirmDialog.newMaxSlots}.\n\nБудут удалены следующие предметы:\n${confirmDialog.filledItemsToRemove.map((item, i) => `${i + 1}. ${item}`).join('\n')}\n\nПродолжить?`,
+          type: 'confirm',
+          confirmText: 'Да, продолжить',
+          cancelText: 'Отмена',
+        }}
+        onClose={handleConfirmMaxSlotsReduction}
+      />
     </div>
   );
 }

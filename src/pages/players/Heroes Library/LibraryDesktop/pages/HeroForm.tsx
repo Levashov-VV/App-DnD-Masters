@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import type { Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,12 +16,34 @@ import { FormStep4TeamAndCampaignInfo } from '../../components/Desktop/HeroForm/
 import { FormStep5Inventory } from '../../components/Desktop/HeroForm/FormStep5Equipment';
 import { FormStep6Treasure } from '../../components/Desktop/HeroForm/FormStep6Treasure';
 import { FormStep7Notes } from '../../components/Desktop/HeroForm/FormStep7Notes';
-import { FormStep8Details } from '../../components/Desktop/HeroForm/FormStep8Details';
+import { FormStep8Spells } from '../../components/Desktop/HeroForm/FormStep8Spells';
 import { getProficiencyBonus } from '../../../../../features/heroes/constants/dndData';
 
 interface HeroFormProps {
   mode: 'create' | 'edit';
 }
+
+// Карта: поле → шаг формы
+const FIELD_STEP_MAP: Partial<Record<keyof HeroFormData, number>> = {
+  name: 1,
+  race: 1,
+  class: 1,
+  background: 1,
+  alignment: 1,
+  size: 1,
+  abilityScores: 2,
+  skills: 2,
+  savingThrows: 2,
+  weaponProficiencies: 3,
+  armorProficiencies: 3,
+  feats: 3,
+  teamMembers: 4,
+  backstory: 4,
+  equipment: 5,
+  inventory: 6,
+  notes: 7,
+  spellSlots: 8,
+};
 
 export default function HeroForm({ mode }: HeroFormProps) {
   const navigate = useNavigate();
@@ -34,17 +57,18 @@ export default function HeroForm({ mode }: HeroFormProps) {
     formState: { errors },
     watch,
     setValue,
+    getValues,
     control,
     reset,
   } = useForm<HeroFormData>({
     resolver: zodResolver(heroSchema) as Resolver<HeroFormData>,
     mode: 'onChange',
     defaultValues: {
-      // Основная информация
       name: '',
       race: '',
       class: '',
       subclass: '',
+      size: '',
       level: 1,
       experience: 0,
       background: '',
@@ -59,31 +83,16 @@ export default function HeroForm({ mode }: HeroFormProps) {
         wisdom: 10,
         charisma: 10,
       },
-      hitPoints: {
-        current: 10,
-        max: 10,
-        temporary: 0,
-      },
-      hitDice: {
-        total: 1,
-        spent: 0,
-        type: 'd8',
-      },
-      deathSaves: {
-        successes: 0,
-        failures: 0,
-      },
+      hitPoints: { current: 10, max: 10, temporary: 0 },
+      hitDice: { total: 1, spent: 0, type: 'd8' },
+      deathSaves: { successes: 0, failures: 0 },
       initiative: 0,
       speed: 30,
       proficiencyBonus: 2,
       inspiration: false,
-
-      // Характеристики
       skills: [],
       savingThrows: [],
       languages: [],
-
-      // Навыки
       weaponProficiencies: [],
       armorProficiencies: [],
       toolProficiencies: [],
@@ -91,38 +100,61 @@ export default function HeroForm({ mode }: HeroFormProps) {
       raceFeatures: '',
       combatAbilities: [],
       feats: [],
-
-      // Кампания и команда
       teamMembers: [],
       backstory: '',
       appearance: '',
       additionalFeatures: '',
       campaignGoals: '',
-
-      // Снаряжение
-      equipment: {
-        weapons: [],
-        armor: '',
-        items: [],
+      equipment: { weapons: [], armor: '', items: [] },
+      inventory: {
+        equipped: [],
+        inventory: [],
+        consumables: [],
+        treasures: '',
+        magicItems: { maxSlots: 3, items: [] },
+        currency: { copper: 0, silver: 0, gold: 0, electrum: 0, platinum: 0 },
+        carryCapacity: { current: 0, max: 0 },
       },
-
-      // Личность
-      personality: {
-        traits: '',
-        ideals: '',
-        bonds: '',
-        flaws: '',
+      personality: { traits: '', ideals: '', bonds: '', flaws: '' },
+      notes: {
+        plotNotes: '',
+        npcNotes: '',
+        locationNotes: '',
+        questNotes: '',
+        secretNotes: '',
+        combatNotes: '',
+        contactNotes: '',
+        rumorNotes: '',
+        miscNotes: '',
       },
-
+      spellcastingAbility: 'none',
+      spellSlots: {
+        level1: { max: 0, used: 0 },
+        level2: { max: 0, used: 0 },
+        level3: { max: 0, used: 0 },
+        level4: { max: 0, used: 0 },
+        level5: { max: 0, used: 0 },
+        level6: { max: 0, used: 0 },
+        level7: { max: 0, used: 0 },
+        level8: { max: 0, used: 0 },
+        level9: { max: 0, used: 0 },
+      },
+      restFlags: { arcaneRecoveryUsed: false, naturalRecoveryUsed: false },
+      cantrips: [],
+      preparedSpells: [],
+      knownSpells: [],
+      recommendedPreparedCount: 0,
       avatar: '',
-      customAvatar: '',
     },
   });
+
+  const avatarRef = useRef<string>('');
 
   useEffect(() => {
     if (mode === 'edit' && id) {
       const hero = getHero(id);
       if (hero) {
+        avatarRef.current = hero.avatar || '';
         reset(hero);
       } else {
         navigate('/player/heroes');
@@ -139,25 +171,35 @@ export default function HeroForm({ mode }: HeroFormProps) {
     return () => subscription.unsubscribe();
   }, [watch, setValue]);
 
-  // Отправка формы
+  // ✅ onSubmit — чистый, без JSX внутри
   const onSubmit = (data: HeroFormData) => {
+    const heroData = { ...data, avatar: avatarRef.current };
     try {
-      if (mode === 'create') {
-        addHero(data);
-      } else if (mode === 'edit' && id) {
-        updateHero(id, data);
-      }
+      if (mode === 'create') addHero(heroData);
+      else if (mode === 'edit' && id) updateHero(id, heroData);
       navigate('/player/heroes');
     } catch (error) {
       console.error('Ошибка сохранения героя:', error);
     }
   };
 
+  const onValidationError = (validationErrors: typeof errors) => {
+    console.error('❌ Поля с ошибками:', Object.keys(validationErrors));
+    console.error('❌ Детали:', JSON.stringify(validationErrors, null, 2));
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
         return (
-          <FormStep1Basic register={register} errors={errors} watch={watch} setValue={setValue} />
+          <FormStep1Basic
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+            getValues={getValues}
+            avatarRef={avatarRef}
+          />
         );
       case 2:
         return (
@@ -190,16 +232,29 @@ export default function HeroForm({ mode }: HeroFormProps) {
             setValue={setValue}
           />
         );
-        case 6:
+      case 6:
         return (
-          <FormStep6Treasure register={register} errors={errors} watch={watch} setValue={setValue} />
-        )
+          <FormStep6Treasure
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+          />
+        );
       case 7:
         return (
           <FormStep7Notes register={register} errors={errors} watch={watch} control={control} />
         );
       case 8:
-        return <FormStep8Details register={register} errors={errors} />;
+        return (
+          <FormStep8Spells
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+            control={control}
+          />
+        );
       default:
         return null;
     }
@@ -208,9 +263,9 @@ export default function HeroForm({ mode }: HeroFormProps) {
   return (
     <div className="relative top-[20vh] flex flex-col items-center h-screen">
       <div className="w-[95vw]">
-        {/* Header */}
         <header className="flex flex-row gap-[30vw]">
           <button
+            type="button"
             onClick={() => navigate('/player/heroes')}
             className="flex items-center gap-[1vw] text-gray-400 hover:text-white transition-colors text-[1.6vh]"
           >
@@ -224,17 +279,16 @@ export default function HeroForm({ mode }: HeroFormProps) {
             </svg>
             Назад к библиотеке
           </button>
-
           <h1 className="text-[2vw] text-center font-bold text-amber-100">
             {mode === 'create' ? 'Создание героя' : 'Редактирование героя'}
           </h1>
         </header>
 
-        {/* Форма */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        {/* ✅ onError передан вторым аргументом — отдельно от onSubmit */}
+        <form onSubmit={handleSubmit(onSubmit, onValidationError)}>
           <div className="grid grid-cols-5 gap-[2vw]">
             <div className="col-span-4">
-              <div className="bg-neutral-700/70 rounded-2xl h-[65vh] max-h-[65vh]">
+              <div className="bg-neutral-700/70 rounded-2xl h-[65vh]">
                 {renderStep()}
               </div>
               <div className="flex justify-between">
@@ -258,7 +312,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="relative top-[2vh] z-10 bg-amber-600 text-neutral-900  text-[1.6vh] shadow-amber-500/50 scale-105 hover:bg-amber-500 hover:scale-105 rounded-lg w-[8vw] h-[4vh]"
+                    className="relative top-[2vh] z-10 bg-amber-600 text-neutral-900 text-[1.6vh] shadow-amber-500/50 scale-105 hover:bg-amber-500 hover:scale-105 rounded-lg w-[8vw] h-[4vh]"
                   >
                     Далее →
                   </button>
@@ -272,7 +326,6 @@ export default function HeroForm({ mode }: HeroFormProps) {
                 )}
               </div>
             </div>
-            {/* Sidebar */}
             <div className="col-span-1">
               <FormStepper currentStep={currentStep} onStepClick={goToStep} />
             </div>

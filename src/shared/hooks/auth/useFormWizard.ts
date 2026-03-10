@@ -8,7 +8,7 @@ export const FORM_STEPS = [
   { id: 5, title: 'Снаряжение', description: 'Предметы с боевым бонусом и оружие' },
   { id: 6, title: 'Инвентарь', description: 'Сокровища и расходники' },
   { id: 7, title: 'Записи', description: 'Информация о происходящем' },
-  { id: 8, title: 'Детали', description: 'Personality & Backstory' },
+  { id: 8, title: 'Заклинания', description: 'Информация о заклинаниях' },
 ] as const;
 
 export function useFormWizard() {

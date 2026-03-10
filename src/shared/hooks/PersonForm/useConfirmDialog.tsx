@@ -10,7 +10,6 @@ export function useConfirmDialog() {
 
   const resolveRef = useRef<((value: boolean) => void) | null>(null);
 
-  // Функция для показа диалога подтверждения
   const confirm = useCallback((config: ConfirmDialogConfig): Promise<boolean> => {
     return new Promise((resolve) => {
       setConfig({ ...config, type: 'confirm' });
@@ -19,7 +18,6 @@ export function useConfirmDialog() {
     });
   }, []);
 
-  // Функция для показа alert (только OK)
   const alert = useCallback((title: string, message: string): Promise<boolean> => {
     return new Promise((resolve) => {
       setConfig({
@@ -33,7 +31,6 @@ export function useConfirmDialog() {
     });
   }, []);
 
-  // Функция для показа ошибки
   const error = useCallback((title: string, message: string): Promise<boolean> => {
     return new Promise((resolve) => {
       setConfig({

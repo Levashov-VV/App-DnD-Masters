@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useHeroes } from '../../Context/HeroesContext';
-import { HeroCard } from '../../components/Desktop/HeroCard';
-import { HeroEmptyState } from '../../components/Desktop/HeroEmptyState';
+import { HeroCard } from '../../components/Mobile/HeroCard';
+import { HeroEmptyState } from '../../components/Mobile/HeroEmptyState';
 
 export function HeroesLibrary() {
   const navigate = useNavigate();
@@ -12,13 +12,13 @@ export function HeroesLibrary() {
   };
 
   return (
-    <div className="relative top-[20vh] min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative top-[20vh] flex flex-col items-center min-h-screen">
+      <div>
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Библиотека героев</h1>
-            <p className="text-gray-400">
+        <div className="flex items-center">
+          <div className="w-screen text-center">
+            <h1 className="text-[3.5vh] font-bold text-amber-100">Библиотека героев</h1>
+            <p className="text-amber-100 text-[2vh]">
               {heroes.length === 0
                 ? 'Создайте своего первого персонажа'
                 : `Всего персонажей: ${heroes.length}`}
@@ -28,7 +28,8 @@ export function HeroesLibrary() {
           {heroes.length > 0 && (
             <button
               onClick={handleCreateHero}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium"
+              style={{ padding: '0.4vh 0.8vw' }}
+              className="absolute right-10 top-10 flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-amber-100 rounded-lg transition-colors font-medium"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -43,11 +44,14 @@ export function HeroesLibrary() {
           )}
         </div>
 
-        {/* Content */}
+        {/* Контент */}
         {heroes.length === 0 ? (
           <HeroEmptyState onCreateHero={handleCreateHero} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div
+            style={{ padding: '0.4vh 0.8vw', marginBottom: '30vh' }}
+            className=" grid grid-cols-4 gap-6 overflow-y-auto"
+          >
             {heroes.map((hero) => (
               <HeroCard key={hero.id} hero={hero} />
             ))}

@@ -1,4 +1,3 @@
-// features/heroes/lib/validators.ts
 import type { Hero } from '../types/hero';
 
 export function validateHeroesArray(value: unknown): Hero[] {

@@ -476,18 +476,18 @@ export function FormStep5Inventory({ register, errors, watch, setValue }: FormSt
                             title="Переместить в рюкзак"
                           >
                             <svg
-                            className="w-[1.2vh] h-[1.2vh] text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"
-                            />
-                          </svg>
+                              className="w-[1.2vh] h-[1.2vh] text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"
+                              />
+                            </svg>
                           </button>
                           <button
                             type="button"
@@ -561,10 +561,7 @@ export function FormStep5Inventory({ register, errors, watch, setValue }: FormSt
             <div className="grid grid-cols-2 gap-[0.8vh] max-h-[18vh] overflow-y-auto">
               {inventory.inventory.length > 0 ? (
                 inventory.inventory.map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-stone-900 border-2 border-amber-600 rounded-lg"
-                  >
+                  <div key={item.id} className="bg-stone-900 border-2 border-amber-600 rounded-lg">
                     <div className="flex items-start justify-between">
                       <div style={{ margin: '0.2vh 0.2vw' }} className="flex-1">
                         <div className="flex items-center gap-[0.5vw]">
@@ -594,10 +591,7 @@ export function FormStep5Inventory({ register, errors, watch, setValue }: FormSt
                           </div>
                         ) : null}
                       </div>
-                      <div
-                        style={{ margin: '0.4vh 0.2vw' }}
-                        className="flex flex-col gap-[0.3vh]"
-                      >
+                      <div style={{ margin: '0.4vh 0.2vw' }} className="flex flex-col gap-[0.3vh]">
                         <button
                           type="button"
                           onClick={() => handleEquipFromBackpack(item.id)}

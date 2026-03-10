@@ -24,6 +24,7 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
       name: name.trim(),
       description: description.trim() || '',
       quantity: quantity,
+      weight: 0.5,
     };
 
     onSave(newConsumable);
@@ -32,7 +33,10 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div style={{padding: '0.5vw'}} className="relative w-[40vw] bg-stone-900 border-4 border-amber-600 rounded-2xl">
+      <div
+        style={{ padding: '0.5vw' }}
+        className="relative w-[40vw] bg-stone-900 border-4 border-amber-600 rounded-2xl"
+      >
         {/* Заголовок */}
         <div className="flex items-center justify-between">
           <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">Добавить расходник</h2>
@@ -73,9 +77,7 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
 
           {/* Описание */}
           <div>
-            <label className="block text-[1.6vh] font-semibold text-amber-100">
-              Описание
-            </label>
+            <label className="block text-[1.6vh] font-semibold text-amber-100">Описание</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -100,7 +102,7 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
           <button
             type="button"
             onClick={onClose}
-            style={{padding: '0.5vw'}}
+            style={{ padding: '0.5vw' }}
             className="bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors text-[1.6vh]"
           >
             Отмена
@@ -108,7 +110,7 @@ export function ConsumableModal({ onSave, onClose }: ConsumableModalProps) {
           <button
             type="button"
             onClick={handleSave}
-            style={{padding: '0.5vw'}}
+            style={{ padding: '0.5vw' }}
             className="bg-amber-600 hover:bg-amber-500 text-stone-900 rounded-lg font-bold transition-colors text-[1.6vh]"
           >
             Добавить

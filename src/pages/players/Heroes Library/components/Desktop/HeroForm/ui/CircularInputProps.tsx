@@ -9,13 +9,12 @@ export const CircularInput = ({
   error,
   className = '',
   ref,
+  onChange,
   ...props
 }: CircularInputProps) => {
   return (
     <div className="flex flex-col items-center w-full">
-      {label && (
-        <label className="block text-[2vh] font-medium text-amber-100">{label}</label>
-      )}
+      {label && <label className="block text-[2vh] font-medium text-amber-100">{label}</label>}
       <input
         ref={ref}
         className={`

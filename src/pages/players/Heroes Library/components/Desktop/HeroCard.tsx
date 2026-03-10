@@ -1,4 +1,3 @@
-// features/heroes/components/Desktop/HeroCard.tsx
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import type { Hero } from '../../types/hero';
@@ -13,9 +12,9 @@ export function HeroCard({ hero }: HeroCardProps) {
   const { deleteHero } = useHeroes();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-const handleEdit = () => {
-  navigate(`/player/heroes/${hero.id}/edit`);
-};
+  const handleEdit = () => {
+    navigate(`/player/heroes/${hero.id}/edit`);
+  };
 
   const handleDelete = () => {
     deleteHero(hero.id);
@@ -25,13 +24,12 @@ const handleEdit = () => {
   return (
     <>
       <div className="bg-gray-800 rounded-lg overflow-hidden border-gray-700 hover:border-purple-500 transition-all group">
-        {/* Avatar */}
-        <div className="h-48 bg-gradient-to-br from-purple-900 to-gray-900 flex items-center justify-center relative overflow-hidden">
+        <div className="h-[30vh] bg-gradient-to-br from-amber-600 to-gray-800 flex items-center justify-center relative overflow-hidden">
           {hero.avatar ? (
-            <img src={hero.avatar} alt={hero.name} className="w-full h-full object-cover" />
+            <img src={hero.avatar} alt={hero.name} className="w-full h-full object-contain" />
           ) : (
             <svg
-              className="w-24 h-24 text-gray-600"
+              className="w-[10vh] h-[10vh] text-gray-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -45,25 +43,24 @@ const handleEdit = () => {
             </svg>
           )}
 
-          {/* Level Badge */}
-          <div className="absolute top-3 right-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+          <div className="w-[5vh] h-[5vh] flex items-center justify-center absolute top-3 right-3 bg-amber-600 text-amber-100 rounded-full text-[1.5vh] font-bold">
             Ур. {hero.level}
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-4">
-          <h3 className="text-xl font-bold text-white mb-2 truncate">{hero.name}</h3>
+        {/* Контент */}
+        <div>
+          <h3 className="text-[2.5vh] font-bold text-amber-100 truncate">{hero.name}</h3>
 
-          <div className="text-gray-400 text-sm mb-4">
+          <div className="text-amber-100 text-[1.6vh]">
             <div>
               {hero.race} • {hero.class}
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-red-400">
-                ❤️ {hero.hitPoints.current}/{hero.hitPoints.max}
+            <div className="flex items-center gap-2">
+              <span className="text-amber-100">
+                HP: {hero.hitPoints.current}/{hero.hitPoints.max}
               </span>
-              <span className="text-blue-400">🛡️ AC {hero.armorClass}</span>
+              <span className="text-amber-100">КД: {hero.armorClass}</span>
             </div>
           </div>
 
@@ -71,15 +68,20 @@ const handleEdit = () => {
           <div className="flex gap-2">
             <button
               onClick={handleEdit}
-              className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm font-medium"
+              className="flex-1 bg-amber-600 hover:bg-amber-500 text-amber-100 rounded-lg transition-colors text-[1.6vh] font-medium"
             >
               Редактировать
             </button>
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="px-4 py-2 bg-gray-700 hover:bg-red-600 text-white rounded-lg transition-colors"
+              className="w-[3vh] h-[3vh] bg-amber-600 hover:bg-amber-500 hover:scale-110 text-amber-100 rounded-lg transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-[3vh] h-[2vh]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -92,26 +94,29 @@ const handleEdit = () => {
         </div>
       </div>
 
-      {/* Delete Modal */}
+      {/* Окно удаления */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border-gray-700">
-            <h3 className="text-xl font-bold text-white mb-3">Удалить персонажа?</h3>
-            <p className="text-gray-400 mb-6">
+        <div className="fixed inset-0 bg-stone-900 bg-opacity-50 flex items-center justify-center z-100">
+          <div
+            style={{ padding: '2vh 1.5vw' }}
+            className="bg-stone-800 rounded-lg w-[20vw] border-gray-700"
+          >
+            <h3 className="text-[2vh] text-center font-bold text-amber-100">Удалить персонажа?</h3>
+            <p className="text-amber-100">
               Вы уверены, что хотите удалить{' '}
-              <span className="text-white font-semibold">{hero.name}</span>? Это действие нельзя
+              <span className="text-amber-400 font-semibold">{hero.name}</span>? Это действие нельзя
               отменить.
             </p>
-            <div className="flex gap-3">
+            <div style={{ margin: '0.5vh 0' }} className="flex gap-[1vw]">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                className="flex-1 bg-gray-600 hover:bg-gray-500 text-amber-100 rounded-lg transition-colors"
               >
                 Отмена
               </button>
               <button
                 onClick={handleDelete}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                className="flex-1 bg-amber-600 hover:bg-amber-500 text-amber-100 rounded-lg transition-colors"
               >
                 Удалить
               </button>

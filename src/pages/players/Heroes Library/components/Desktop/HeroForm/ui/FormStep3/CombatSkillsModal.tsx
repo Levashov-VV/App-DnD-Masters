@@ -82,10 +82,11 @@ export function CombatSkillsModal({
               paddingBottom: '1vh',
             }}
           >
-            <h4 className="text-[1.8vh] text-center font-bold text-amber-100">
-              Описание эффекта
-            </h4>
-            <p style= {{ marginLeft: '0.5vw' }} className="text-[1.6vh] text-amber-100 leading-relaxed whitespace-pre-wrap">
+            <h4 className="text-[1.8vh] text-center font-bold text-amber-100">Описание эффекта</h4>
+            <p
+              style={{ marginLeft: '0.5vw' }}
+              className="text-[1.6vh] text-amber-100 leading-relaxed whitespace-pre-wrap"
+            >
               {ability.description}
             </p>
           </div>
@@ -171,9 +172,7 @@ export function CombatSkillsModal({
 
           {ability.type === 'spell' && (
             <div>
-              <label className="block text-[1.4vh] text-amber-500">
-                Описание эффекта
-              </label>
+              <label className="block text-[1.4vh] text-amber-500">Описание эффекта</label>
               <textarea
                 value={ability.description || ''}
                 onChange={(e) => onChange?.({ ...ability, description: e.target.value })}

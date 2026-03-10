@@ -1,4 +1,3 @@
-// shared/hooks/auth/typedStorage.ts (или shared/lib/typedStorage.ts)
 export type TypedStorageValue = Record<string, unknown>;
 
 export type StorageValidator<T> = (value: unknown) => T;
@@ -44,7 +43,9 @@ export function createTypedStorage<S extends TypedStorageValue>(
         const raw = storage.getItem(key);
 
         const cached = cache.get(key);
-        if (cached && cached.raw === raw) return cached.parsed as S[K];
+        if (cached && cached.raw === raw) {
+          return cached.parsed as S[K];
+        }
 
         if (!raw) return options?.defaultValue ?? null;
 
@@ -75,7 +76,7 @@ export function createTypedStorage<S extends TypedStorageValue>(
         const raw = JSON.stringify(valueToSave);
 
         storage.setItem(key, raw);
-        cache.set(key, { raw, parsed: valueToSave });
+        cache.delete(key);
 
         if (isClient) window.dispatchEvent(new CustomEvent(`storage-${key}`));
 

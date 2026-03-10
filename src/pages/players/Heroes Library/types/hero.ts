@@ -1,9 +1,8 @@
-// features/heroes/types/hero.ts
 export interface Hero {
   id: string;
   createdAt: string;
   updatedAt: string;
-  
+
   // Основная информация
   name: string;
   race: string;
@@ -11,7 +10,8 @@ export interface Hero {
   level: number;
   background: string;
   alignment: string;
-  
+  avatar?: string;
+
   // Характеристики
   abilityScores: {
     strength: number;
@@ -21,7 +21,7 @@ export interface Hero {
     wisdom: number;
     charisma: number;
   };
-  
+
   // Боевые характеристики
   hitPoints: {
     current: number;
@@ -32,19 +32,19 @@ export interface Hero {
   initiative: number;
   speed: number;
   proficiencyBonus: number;
-  
+
   // Навыки и владения
   skills: string[];
   savingThrows: string[];
   languages: string[];
-  
+
   // Снаряжение
   equipment: {
-    weapons: Array<{ name: string; damage: string; }>;
+    weapons: Array<{ name: string; damage: string }>;
     armor: string;
     items: Array<{ name: string }>;
   };
-  
+
   // Детали персонажа
   personality: {
     traits: string;
@@ -52,10 +52,9 @@ export interface Hero {
     bonds: string;
     flaws: string;
   };
-  
+
   backstory?: string;
   appearance?: string;
-  avatar?: string; // Пользовательский аватар
   raceLogo?: string; // Логотип расы
   raceFigure?: string; // Фигурка расы
 }

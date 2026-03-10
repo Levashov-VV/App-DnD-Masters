@@ -11,9 +11,7 @@ export function useFeats(
 
   const [isFeatsOpen, setIsFeatsOpen] = useState(false);
   const [selectedFeat, setSelectedFeat] = useState<Feat | null>(null);
-  const [activeFeats, setActiveFeats] = useState<Set<string>>(
-    new Set(formFeats.map((feat) => feat.name))
-  );
+  const [activeFeats, setActiveFeats] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeatType, setSelectedFeatType] = useState<string>('all');
 
@@ -21,26 +19,25 @@ export function useFeats(
     setActiveFeats(new Set(formFeats.map((feat) => feat.name)));
   }, [JSON.stringify(formFeats)]);
 
-  useEffect(() => {
-    const featsArray = Array.from(activeFeats).map((featName) => ({
+  const updateFeats = (newSet: Set<string>) => {
+    setActiveFeats(newSet);
+    const featsArray = Array.from(newSet).map((featName) => ({
       name: featName,
       description: '',
       source: '',
       prerequisite: '',
     }));
     setValue('feats', featsArray, { shouldDirty: true });
-  }, [activeFeats, setValue]);
+  };
 
   const toggleFeat = (featNameEn: string) => {
-    setActiveFeats((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(featNameEn)) {
-        newSet.delete(featNameEn);
-      } else {
-        newSet.add(featNameEn);
-      }
-      return newSet;
-    });
+    const newSet = new Set(activeFeats);
+    if (newSet.has(featNameEn)) {
+      newSet.delete(featNameEn);
+    } else {
+      newSet.add(featNameEn);
+    }
+    updateFeats(newSet);
   };
 
   const handleFeatClick = (feat: Feat, action: 'toggle' | 'details', e: React.MouseEvent) => {
@@ -58,13 +55,9 @@ export function useFeats(
     setIsFeatsOpen(false);
   };
 
-  const goBackToFeatsList = () => {
-    setSelectedFeat(null);
-  };
+  const goBackToFeatsList = () => setSelectedFeat(null);
 
-  const clearAllFeats = () => {
-    setActiveFeats(new Set());
-  };
+  const clearAllFeats = () => updateFeats(new Set());
 
   return {
     isFeatsOpen,

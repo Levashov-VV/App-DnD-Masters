@@ -1,6 +1,10 @@
 // components/Desktop/HeroForm/ui/FormStep5/CurrencyCalculatorModal.tsx
 import { useState } from 'react';
-import { COIN_CONVERSION, COIN_TYPES, type CoinType } from '../../../../../../../../features/heroes/constants/inventoryData';
+import {
+  COIN_CONVERSION,
+  COIN_TYPES,
+  type CoinType,
+} from '../../../../../../../../features/heroes/constants/inventoryData';
 import type { Currency } from '../../../../../../../../features/heroes/schemas/heroSchema';
 import { Select } from '../Select';
 import { Input } from '../Input';
@@ -75,13 +79,17 @@ export function CurrencyCalculatorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div className="relative w-[45vw] bg-stone-900 border-4 border-amber-600 rounded-2xl p-[2vh]">
+    <div
+      style={{ margin: '0.5vw' }}
+      className="fixed inset-0 z-50 flex items-center justify-center gap-[1vw] bg-black/70"
+    >
+      <div
+        style={{ padding: '0.5vw' }}
+        className="relative w-[45vw] flex flex-col gap-[1vw] bg-stone-900 border-4 border-amber-600 rounded-2xl"
+      >
         {/* Заголовок */}
-        <div className="flex items-center justify-between mb-[2vh]">
-          <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">
-            Калькулятор Валют
-          </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">Калькулятор Валют</h2>
           <button
             type="button"
             onClick={onClose}
@@ -104,11 +112,13 @@ export function CurrencyCalculatorModal({
         </div>
 
         {/* Текущий баланс */}
-        <div className="mb-[2vh] p-[1vh] bg-stone-800 border-2 border-amber-600 rounded-lg">
-          <h3 className="text-[1.6vh] font-bold text-amber-100 mb-[1vh]">Текущий баланс:</h3>
+        <div className=" bg-stone-800 border-2 border-amber-600 rounded-lg">
+          <h3 className="text-[1.6vh] font-bold text-center text-amber-100 mb-[1vh]">
+            Текущий баланс:
+          </h3>
           <div className="grid grid-cols-5 gap-[0.5vw] text-center">
             {coinTypesArray.map((coin) => (
-              <div key={coin}>
+              <div style={{ paddingBottom: '0.5vh' }} key={coin}>
                 <div className="text-[1.4vh] font-semibold text-amber-100">{coin}</div>
                 <div className="text-[1.6vh] font-bold text-amber-100">
                   {currentCurrency[getCoinKey(coin)]}
@@ -122,15 +132,14 @@ export function CurrencyCalculatorModal({
         <div className="flex flex-col gap-[1.5vh]">
           {/* Из */}
           <div>
-            <label className="block text-[1.6vh] font-semibold text-amber-100 mb-[0.5vh]">
-              Из:
-            </label>
+            <label className="block text-[1.6vh] font-semibold text-amber-100">Из:</label>
             <div className="grid grid-cols-2 gap-[1vw]">
               <Input
                 type="number"
                 min={0}
                 placeholder="Количество"
                 value={fromAmount}
+                className="bg-stone-900 border-2 border-amber-600 rounded-lg text-[1.8vh] text-amber-100 focus:outline-none focus:border-amber-400 placeholder:text-amber-600/50"
                 onChange={(e) => setFromAmount(parseInt(e.target.value) || 0)}
                 style={{ paddingLeft: '0.2vw' }}
               />
@@ -138,7 +147,9 @@ export function CurrencyCalculatorModal({
                 options={coinTypesArray}
                 value={fromType}
                 onChange={(e) => setFromType(e.target.value as CoinType)}
+                placeholder="Выберите валюту"
                 style={{ paddingLeft: '0.2vw' }}
+                className="bg-stone-900 border-2 border-amber-400 focus:border-none rounded-lg text-[2vh] text-amber-100"
               />
             </div>
           </div>
@@ -162,11 +173,9 @@ export function CurrencyCalculatorModal({
 
           {/* В */}
           <div>
-            <label className="block text-[1.6vh] font-semibold text-amber-100 mb-[0.5vh]">
-              В:
-            </label>
+            <label className="block text-[1.6vh] font-semibold text-amber-100">В:</label>
             <div className="grid grid-cols-2 gap-[1vw]">
-              <div className="h-[4vh] bg-stone-800 border-2 border-amber-600 rounded-lg flex items-center justify-center">
+              <div className="bg-stone-800 border-2 border-amber-600 rounded-lg flex items-center justify-center">
                 <span className="text-[1.8vh] font-bold text-green-400">{convertedAmount}</span>
               </div>
               <Select
@@ -174,21 +183,23 @@ export function CurrencyCalculatorModal({
                 value={toType}
                 onChange={(e) => setToType(e.target.value as CoinType)}
                 style={{ paddingLeft: '0.2vw' }}
+                placeholder="Выберите валюту"
+                className="bg-stone-900 border-2 border-amber-400 focus:border-none rounded-lg text-[2vh] text-amber-100"
               />
             </div>
           </div>
 
           {/* Результат */}
-          <div className="p-[1vh] bg-amber-600/10 border-2 border-amber-600 rounded-lg">
+          <div className="bg-amber-600/10 border-2 border-amber-600 rounded-lg">
             <p className="text-[1.6vh] text-amber-100 text-center">
               <strong>Результат:</strong> {fromAmount} {fromType} = {convertedAmount} {toType}
             </p>
           </div>
 
           {/* Таблица конвертации */}
-          <div className="p-[1vh] bg-stone-800 border-2 border-amber-600 rounded-lg">
-            <h4 className="text-[1.4vh] font-bold text-amber-100 mb-[0.5vh]">
-              💡 Курсы обмена (в медных монетах):
+          <div className=" bg-stone-800 border-2 border-amber-600 rounded-lg">
+            <h4 className="text-[1.4vh] font-bold text-center text-amber-100">
+              Курсы обмена (в медных монетах):
             </h4>
             <div className="grid grid-cols-5 gap-[0.5vw] text-[1.2vh] text-amber-100/80">
               {coinTypesArray.map((coin) => (
@@ -201,20 +212,22 @@ export function CurrencyCalculatorModal({
         </div>
 
         {/* Кнопки */}
-        <div className="flex justify-end gap-[1vw] mt-[2vh]">
+        <div className="flex justify-end gap-[1vw]">
           <button
             type="button"
             onClick={onClose}
-            className="px-[2vw] py-[1vh] bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors text-[1.6vh]"
+            style={{ padding: '0.5vw' }}
+            className="bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors text-[1.6vh]"
           >
             Отмена
           </button>
           <button
             type="button"
             onClick={handleApply}
-            className="px-[2vw] py-[1vh] bg-amber-600 hover:bg-amber-500 text-stone-900 rounded-lg font-bold transition-colors text-[1.6vh]"
+            style={{ padding: '0.5vw' }}
+            className="bg-amber-600 hover:bg-amber-500 text-stone-900 rounded-lg font-bold transition-colors text-[1.6vh]"
           >
-            Применить
+            Обменять
           </button>
         </div>
       </div>

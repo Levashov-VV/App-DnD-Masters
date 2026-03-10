@@ -10,9 +10,9 @@ export function useProficiencies(
   const formArmorProficiencies = watch('armorProficiencies') || [];
   const formToolProficiencies = watch('toolProficiencies') || [];
 
-  const [weaponProficiencies, setWeaponProficiencies] = useState<string[]>(formWeaponProficiencies);
-  const [armorProficiencies, setArmorProficiencies] = useState<string[]>(formArmorProficiencies);
-  const [toolProficiencies, setToolProficiencies] = useState<string[]>(formToolProficiencies);
+  const [weaponProficiencies, setWeaponProficiencies] = useState<string[]>([]);
+  const [armorProficiencies, setArmorProficiencies] = useState<string[]>([]);
+  const [toolProficiencies, setToolProficiencies] = useState<string[]>([]);
   const [newToolName, setNewToolName] = useState('');
 
   useEffect(() => {
@@ -28,30 +28,25 @@ export function useProficiencies(
   }, [JSON.stringify(formToolProficiencies)]);
 
   const toggleProficiency = (type: 'weapon' | 'armor' | 'tool', value: string) => {
-    let current: string[];
-    let setter: (val: string[]) => void;
-    let fieldName: 'weaponProficiencies' | 'armorProficiencies' | 'toolProficiencies';
-
     if (type === 'weapon') {
-      current = weaponProficiencies;
-      setter = setWeaponProficiencies;
-      fieldName = 'weaponProficiencies';
+      const updated = weaponProficiencies.includes(value)
+        ? weaponProficiencies.filter((i) => i !== value)
+        : [...weaponProficiencies, value];
+      setWeaponProficiencies(updated);
+      setValue('weaponProficiencies', updated, { shouldDirty: true });
     } else if (type === 'armor') {
-      current = armorProficiencies;
-      setter = setArmorProficiencies;
-      fieldName = 'armorProficiencies';
+      const updated = armorProficiencies.includes(value)
+        ? armorProficiencies.filter((i) => i !== value)
+        : [...armorProficiencies, value];
+      setArmorProficiencies(updated);
+      setValue('armorProficiencies', updated, { shouldDirty: true });
     } else {
-      current = toolProficiencies;
-      setter = setToolProficiencies;
-      fieldName = 'toolProficiencies';
+      const updated = toolProficiencies.includes(value)
+        ? toolProficiencies.filter((i) => i !== value)
+        : [...toolProficiencies, value];
+      setToolProficiencies(updated);
+      setValue('toolProficiencies', updated, { shouldDirty: true });
     }
-
-    const updated = current.includes(value)
-      ? current.filter((item) => item !== value)
-      : [...current, value];
-
-    setter(updated);
-    setValue(fieldName, updated, { shouldDirty: true });
   };
 
   const addTool = () => {

@@ -42,14 +42,14 @@ export function HeaderDesktop() {
               Саундпады
             </Link>
           </li>
-          <li className="shrink-0">
+          {/* <li className="shrink-0">
             <Link
               to={'/Master/CloneVoice'}
               className="block hover:text-red-500 transition-colors duration-300 whitespace-nowrap"
             >
               Генерация голоса
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </header>

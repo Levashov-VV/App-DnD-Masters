@@ -185,10 +185,8 @@ export function FormStep2AbilitiesAndSkills({
   return (
     <div className="relative left-[0.5vw] top-[1vh] w-[74vw] flex flex-col gap-[2vh] uppercase">
       <div className="flex items-center justify-between">
-        <h2 className="text-left text-[2.5vh] font-bold text-amber-100">
-          Характеристики и навыки
-        </h2>
-        
+        <h2 className="text-left text-[2.5vh] font-bold text-amber-100">Характеристики и навыки</h2>
+
         <button
           type="button"
           onClick={() => setIsGuideModalOpen(true)}
@@ -196,11 +194,7 @@ export function FormStep2AbilitiesAndSkills({
           className="flex items-center gap-[0.5vw] bg-amber-600 hover:bg-amber-500 border-2 border-amber-600 hover:border-amber-500 rounded-lg transition-colors shadow-lg group"
           title="Открыть памятку"
         >
-          <svg
-            className="w-[2vh] h-[2vh] text-stone-900"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+          <svg className="w-[2vh] h-[2vh] text-stone-900" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -397,7 +391,7 @@ export function FormStep2AbilitiesAndSkills({
                   handleAddCustomLanguage();
                 }
               }}
-              style={{paddingLeft: '0.2vw'}}
+              style={{ paddingLeft: '0.2vw' }}
               className="w-[15vw] h-[3vh] uppercase bg-stone-900 border-2 border-amber-600 rounded-lg text-[1.4vh] text-amber-100 focus:outline-none focus:border-amber-400 placeholder:text-amber-600/50"
             />
             <button
@@ -410,8 +404,11 @@ export function FormStep2AbilitiesAndSkills({
           </div>
         </div>
 
-        <div  className="flex flex-row justify-between">
-          <div style={{padding: '0 0.2vw'}} className="relative w-[30vw] h-[10vh] border-2 border-amber-600 bg-stone-800 rounded-lg">
+        <div className="flex flex-row justify-between">
+          <div
+            style={{ padding: '0 0.2vw' }}
+            className="relative w-[30vw] h-[10vh] border-2 border-amber-600 bg-stone-800 rounded-lg"
+          >
             <button
               type="button"
               onClick={() => {
@@ -520,9 +517,9 @@ export function FormStep2AbilitiesAndSkills({
         </div>
       </div>
 
-      <AbilityScoresGuideModal 
-        isOpen={isGuideModalOpen} 
-        onClose={() => setIsGuideModalOpen(false)} 
+      <AbilityScoresGuideModal
+        isOpen={isGuideModalOpen}
+        onClose={() => setIsGuideModalOpen(false)}
       />
     </div>
   );

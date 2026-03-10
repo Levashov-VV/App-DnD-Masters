@@ -102,7 +102,10 @@ export function ConfirmDialog({ isOpen, config, onClose }: ConfirmDialogProps) {
         </div>
 
         {/* Кнопки */}
-        <div style={{marginBottom: '1vh'}} className={`flex ${showCancelButton ? 'justify-center gap-[1vw]' : 'justify-center'}`}>
+        <div
+          style={{ marginBottom: '1vh' }}
+          className={`flex ${showCancelButton ? 'justify-center gap-[1vw]' : 'justify-center'}`}
+        >
           {showCancelButton && (
             <button
               type="button"

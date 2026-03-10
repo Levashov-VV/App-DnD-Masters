@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import type { TeamMember } from '../../../../../../../../features/heroes/schemas/heroSchema';
 import { teamMemberSchema } from '../../../../../../../../features/heroes/schemas/heroSchema';
@@ -75,7 +74,11 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
   }, [editedMember.race, customAvatar]);
 
   useEffect(() => {
-    if (editedMember.class && editedMember.class.trim() !== '' && hasSubclasses(editedMember.class)) {
+    if (
+      editedMember.class &&
+      editedMember.class.trim() !== '' &&
+      hasSubclasses(editedMember.class)
+    ) {
       const subclasses = getSubclassesForClass(editedMember.class);
       setAvailableSubclasses(subclasses);
       setIsSubclassDisabled(false);
@@ -111,7 +114,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
 
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
-    
+
     setEditedMember({ ...editedMember, class: newClass, subclass: '' });
 
     if (newClass && newClass.trim() !== '' && hasSubclasses(newClass)) {
@@ -278,6 +281,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
                 label="Раса"
                 options={DND_RACES}
                 value={editedMember.race}
+                placeholder="Выберите расу..."
                 onChange={(e) => setEditedMember({ ...editedMember, race: e.target.value })}
                 style={{ paddingLeft: '0.2vw' }}
                 error={errors.race}
@@ -287,6 +291,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
                 label="Класс"
                 options={DND_CLASSES}
                 value={editedMember.class}
+                placeholder="Выберите класс..."
                 onChange={handleClassChange}
                 style={{ paddingLeft: '0.2vw' }}
                 error={errors.class}
@@ -341,7 +346,10 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
         </div>
 
         {/* Кнопки */}
-        <div style={{ marginRight: '1vw', marginTop: '1vh' }} className="flex justify-end gap-[1vw]">
+        <div
+          style={{ marginRight: '1vw', marginTop: '1vh' }}
+          className="flex justify-end gap-[1vw]"
+        >
           <button
             type="button"
             onClick={onClose}

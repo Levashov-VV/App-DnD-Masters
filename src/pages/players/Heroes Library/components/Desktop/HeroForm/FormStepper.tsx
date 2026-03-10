@@ -12,10 +12,11 @@ export function FormStepper({ currentStep, onStepClick }: FormStepperProps) {
         {FORM_STEPS.map((step) => {
           const isActive = step.id === currentStep;
           const isCompleted = step.id < currentStep;
-          
+
           return (
             <button
               key={step.id}
+              type="button"
               onClick={() => onStepClick(step.id)}
               className={`
                 w-full text-left rounded-lg  transition-all
@@ -25,15 +26,27 @@ export function FormStepper({ currentStep, onStepClick }: FormStepperProps) {
               `}
             >
               <div className="relative left-[0.5vw] flex items-center gap-[1vw]">
-                <div className={`
+                <div
+                  className={`
                   w-[1.5vw] h-[1.5vw] rounded-full flex items-center justify-center font-bold text-[1.6vh]
                   ${isActive ? 'bg-amber-500/90 text-neutral-900 hover:bg-amber-500 hover:scale-105' : ''}
                   ${isCompleted ? 'bg-green-600' : ''}
                   ${!isActive && !isCompleted ? 'bg-gray-700' : ''}
-                `}>
+                `}
+                >
                   {isCompleted ? (
-                    <svg className="w-[0.8vw] h-[0.8vw]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="w-[0.8vw] h-[0.8vw]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   ) : (
                     step.id
@@ -53,4 +66,3 @@ export function FormStepper({ currentStep, onStepClick }: FormStepperProps) {
     </div>
   );
 }
-

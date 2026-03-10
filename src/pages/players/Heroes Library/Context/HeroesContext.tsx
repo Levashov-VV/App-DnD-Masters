@@ -1,4 +1,3 @@
-// features/heroes/contexts/HeroesContext.tsx
 import { createContext, useContext, useCallback } from 'react';
 import { useTypedStorageItem } from '../../../../shared/hooks/auth/useTypedStorageItem';
 import { appStorage } from '../lib/storage';
@@ -33,7 +32,7 @@ export function HeroesProvider({ children }: { children: React.ReactNode }) {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      
+
       setHeroes([...heroesArray, newHero]);
       return newHero.id;
     },
@@ -42,10 +41,8 @@ export function HeroesProvider({ children }: { children: React.ReactNode }) {
 
   const updateHero = useCallback(
     (id: string, updates: Partial<Hero>) => {
-      const updatedHeroes = heroesArray.map(hero =>
-        hero.id === id
-          ? { ...hero, ...updates, updatedAt: new Date().toISOString() }
-          : hero
+      const updatedHeroes = heroesArray.map((hero) =>
+        hero.id === id ? { ...hero, ...updates, updatedAt: new Date().toISOString() } : hero
       );
       setHeroes(updatedHeroes);
     },
@@ -54,7 +51,7 @@ export function HeroesProvider({ children }: { children: React.ReactNode }) {
 
   const deleteHero = useCallback(
     (id: string) => {
-      const filteredHeroes = heroesArray.filter(hero => hero.id !== id);
+      const filteredHeroes = heroesArray.filter((hero) => hero.id !== id);
       setHeroes(filteredHeroes);
     },
     [heroesArray, setHeroes]
@@ -62,7 +59,8 @@ export function HeroesProvider({ children }: { children: React.ReactNode }) {
 
   const getHero = useCallback(
     (id: string) => {
-      return heroesArray.find(hero => hero.id === id);
+      const hero = heroesArray.find((hero) => hero.id === id);
+      return hero;
     },
     [heroesArray]
   );

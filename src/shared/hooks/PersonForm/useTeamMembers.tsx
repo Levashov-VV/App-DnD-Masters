@@ -7,7 +7,7 @@ export function useTeamMembers(
   watch: UseFormWatch<HeroFormData>
 ) {
   const formTeamMembers = watch('teamMembers') || [];
-  
+
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(formTeamMembers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
@@ -47,16 +47,16 @@ export function useTeamMembers(
 
   const saveTeamMember = (member: TeamMember) => {
     let updated: TeamMember[];
-    
+
     if (editingIndex !== null) {
       updated = [...teamMembers];
       updated[editingIndex] = member;
     } else {
       updated = [...teamMembers, member];
     }
-    
+
     setTeamMembers(updated);
-    setValue('teamMembers', updated, { shouldDirty: true }); // ДОБАВЛЕНО: прямое сохранение в форму
+    setValue('teamMembers', updated, { shouldDirty: true });
     setIsModalOpen(false);
     setSelectedMember(null);
     setEditingIndex(null);

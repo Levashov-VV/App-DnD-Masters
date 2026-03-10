@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import type { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
+import type {
+  UseFormRegister,
+  FieldErrors,
+  UseFormWatch,
+  UseFormSetValue,
+  UseFormGetValues,
+} from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../features/heroes/schemas/heroSchema';
 import { Input } from '../HeroForm/ui/Input';
 import { CircularInput } from '../HeroForm/ui/CircularInputProps';
@@ -9,15 +15,19 @@ import { SquareInput } from '../HeroForm/ui/SquareInput';
 import { StatsPanel } from './ui/StatsPanel';
 import { ArmorClassShield } from '../HeroForm/ui/Shield';
 import { ExperienceInfoModal } from '../../../components/Desktop/HeroForm/ui/FormStep1/ExperienceInfoModal';
+import { ConfirmDialog } from '../../../components/Desktop/HeroForm/ui/FormStep5/ConfirmDialog';
+import type { ConfirmDialogConfig } from '../../../components/Desktop/HeroForm/ui/FormStep5/ConfirmDialog';
 import { getAbilityModifier } from '../../../../../../features/heroes/constants/dndData';
 import {
   DND_RACES,
   DND_CLASSES,
+  DND_SIZES,
   DND_BACKGROUNDS,
   DND_ALIGNMENTS,
   CLASS_HIT_DICE,
   getSubclassesForClass,
   hasSubclasses,
+  EXPERIENCE_TABLE,
 } from '../../../../../../features/heroes/constants/dndData';
 import raceData from '../../../../../../../public/data/charactersPerson.json';
 
@@ -26,6 +36,8 @@ interface FormStep1BasicProps {
   errors: FieldErrors<HeroFormData>;
   watch: UseFormWatch<HeroFormData>;
   setValue: UseFormSetValue<HeroFormData>;
+  getValues: UseFormGetValues<HeroFormData>;
+  avatarRef: React.MutableRefObject<string>;
 }
 
 const RACE_NAME_MAPPING: Record<string, string> = {
@@ -51,28 +63,54 @@ const RACE_NAME_MAPPING: Record<string, string> = {
   Грунг: 'Grung',
 };
 
-export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1BasicProps) {
+export function FormStep1Basic({
+  register,
+  errors,
+  watch,
+  setValue,
+  avatarRef,
+}: FormStep1BasicProps) {
   const selectedRace = watch('race');
   const selectedClass = watch('class');
+  const constitution = watch('abilityScores.constitution') || 10;
+  const level = watch('level', 1);
+  const formDeathSaveSuccesses = watch('deathSaves.successes') || 0;
+  const formDeathSaveFailures = watch('deathSaves.failures') || 0;
+  const formHitDiceType = watch('hitDice.type') || 'd8';
+  const armorClass = watch('armorClass') ?? 10;
+  const inspiration = watch('inspiration') ?? false;
+  const experience = watch('experience') ?? 0;
+  const exhaustionLevel = watch('exhaustionLevel') ?? 0;
+  const conditions = watch('conditions') ?? [];
 
-  const [customAvatar, setCustomAvatar] = useState<string | null>(null);
+  const [localAvatar, setLocalAvatar] = useState<string>(() => avatarRef.current);
   const [raceImages, setRaceImages] = useState<{ figure: string; logo: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isInitialized = useRef(false);
 
-  const [availableSubclasses, setAvailableSubclasses] = useState<string[]>([]);
-  const [isSubclassDisabled, setIsSubclassDisabled] = useState(true);
+  const [availableSubclasses, setAvailableSubclasses] = useState<string[]>(() => {
+    const cls = watch('class');
+    return cls && hasSubclasses(cls) ? getSubclassesForClass(cls) : [];
+  });
+  const [isSubclassDisabled, setIsSubclassDisabled] = useState<boolean>(() => {
+    const cls = watch('class');
+    return !(cls && hasSubclasses(cls));
+  });
+
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
-
+  const [displayLevel, setDisplayLevel] = useState(1);
   const [displayHitDice, setDisplayHitDice] = useState('d8');
   const [displayDeathSaveSuccesses, setDisplayDeathSaveSuccesses] = useState(0);
   const [displayDeathSaveFailures, setDisplayDeathSaveFailures] = useState(0);
 
-  const level = watch('level') || 1;
-  const constitution = watch('abilityScores.constitution') || 10;
-
-  const formDeathSaveSuccesses = watch('deathSaves.successes') || 0;
-  const formDeathSaveFailures = watch('deathSaves.failures') || 0;
-  const formHitDiceType = watch('hitDice.type') || 'd8';
+  // ↓ Состояние модального окна смерти
+  const [deathModalOpen, setDeathModalOpen] = useState(false);
+  const [deathModalConfig] = useState<ConfirmDialogConfig>({
+    title: 'Персонаж мёртв',
+    message: 'Персонаж получил 3 провала спасброска от смерти.\nСпасброски будут сброшены.',
+    type: 'error',
+    confirmText: 'Понятно',
+  });
 
   const conModifier = getAbilityModifier(constitution);
   const suggestedMaxHP = 10 + conModifier + (level - 1) * (6 + conModifier);
@@ -86,39 +124,41 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
     setDisplayDeathSaveFailures(formDeathSaveFailures);
   }, [formDeathSaveSuccesses, formDeathSaveFailures]);
 
-  const updateRaceImages = useCallback((race: string) => {
-    if (race && race.trim() !== '') {
-      const englishRaceName = RACE_NAME_MAPPING[race];
-
-      if (englishRaceName) {
-        const raceInfo = raceData.find((r) => r.name === englishRaceName && r.side === 'allies');
-
-        if (raceInfo) {
-          setRaceImages({
-            figure: raceInfo.img,
-            logo: raceInfo.logo,
-          });
-          return;
+  const updateRaceImages = useCallback(
+    (race: string) => {
+      if (race && race.trim() !== '') {
+        const englishRaceName = RACE_NAME_MAPPING[race];
+        if (englishRaceName) {
+          const raceInfo = raceData.find((r) => r.name === englishRaceName && r.side === 'allies');
+          if (raceInfo) {
+            setRaceImages({ figure: raceInfo.img, logo: raceInfo.logo });
+            if (!localAvatar) avatarRef.current = raceInfo.logo;
+            return;
+          }
         }
       }
-    }
-    setRaceImages(null);
-  }, []);
+      setRaceImages(null);
+      if (!localAvatar) avatarRef.current = '';
+    },
+    [localAvatar, avatarRef]
+  );
 
   useEffect(() => {
     if (selectedClass && selectedClass.trim() !== '' && hasSubclasses(selectedClass)) {
       const subclasses = getSubclassesForClass(selectedClass);
       setAvailableSubclasses(subclasses);
       setIsSubclassDisabled(false);
-      setValue('subclass', '', { shouldDirty: true });
     } else {
       setAvailableSubclasses([]);
       setIsSubclassDisabled(true);
-      setValue('subclass', '', { shouldDirty: true });
     }
-  }, [selectedClass, setValue]);
+  }, [selectedClass]);
 
   useEffect(() => {
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+      return;
+    }
     if (selectedClass && CLASS_HIT_DICE[selectedClass]) {
       const hitDieType = CLASS_HIT_DICE[selectedClass];
       setValue('hitDice.type', hitDieType, { shouldDirty: true });
@@ -140,6 +180,10 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
     updateRaceImages(selectedRace);
   }, [selectedRace, updateRaceImages]);
 
+  useEffect(() => {
+    setDisplayLevel(level);
+  }, [level]);
+
   const handleRaceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newRace = e.target.value;
     setValue('race', newRace, { shouldValidate: true, shouldDirty: true });
@@ -149,7 +193,7 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
     setValue('class', newClass, { shouldValidate: true, shouldDirty: true });
-
+    setValue('subclass', '', { shouldDirty: true });
     if (newClass && newClass.trim() !== '' && hasSubclasses(newClass)) {
       const subclasses = getSubclassesForClass(newClass);
       setAvailableSubclasses(subclasses);
@@ -158,8 +202,6 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
       setAvailableSubclasses([]);
       setIsSubclassDisabled(true);
     }
-    setValue('subclass', '', { shouldDirty: true });
-
     if (newClass && CLASS_HIT_DICE[newClass]) {
       const hitDieType = CLASS_HIT_DICE[newClass];
       setValue('hitDice.type', hitDieType, { shouldDirty: true });
@@ -173,35 +215,22 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setCustomAvatar(base64String);
-        setValue('customAvatar', base64String, { shouldDirty: true });
+        const base64 = reader.result as string;
+        avatarRef.current = base64;
+        setLocalAvatar(base64);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveCustomAvatar = () => {
-    if (customAvatar && customAvatar.startsWith('blob:')) {
-      URL.revokeObjectURL(customAvatar);
-    }
-    setCustomAvatar(null);
-    setValue('customAvatar', '', { shouldDirty: true });
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    avatarRef.current = raceImages?.logo || '';
+    setLocalAvatar('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  useEffect(() => {
-    return () => {
-      if (customAvatar && customAvatar.startsWith('blob:')) {
-        URL.revokeObjectURL(customAvatar);
-      }
-    };
-  }, [customAvatar]);
-
-  const displayAvatar = customAvatar || raceImages?.logo;
-  const hasCustomAvatar = !!customAvatar;
+  const displayAvatar = localAvatar || raceImages?.logo;
+  const hasCustomAvatar = !!localAvatar;
 
   const handleDeathSaveSuccess = (index: number) => {
     const newSuccesses = displayDeathSaveSuccesses === index + 1 ? index : index + 1;
@@ -209,25 +238,59 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
     setDisplayDeathSaveSuccesses(newSuccesses);
   };
 
+  const resetDeathSaves = useCallback(() => {
+    setValue('deathSaves.successes', 0, { shouldDirty: true });
+    setValue('deathSaves.failures', 0, { shouldDirty: true });
+    setDisplayDeathSaveSuccesses(0);
+    setDisplayDeathSaveFailures(0);
+  }, [setValue]);
+
   const handleDeathSaveFailure = (index: number) => {
     const newFailures = displayDeathSaveFailures === index + 1 ? index : index + 1;
     setValue('deathSaves.failures', newFailures, { shouldDirty: true });
     setDisplayDeathSaveFailures(newFailures);
-
     if (newFailures >= 3) {
-      setTimeout(() => {
-        alert('Персонаж умер!');
-        setValue('deathSaves.successes', 0, { shouldDirty: true });
-        setValue('deathSaves.failures', 0, { shouldDirty: true });
-        setDisplayDeathSaveSuccesses(0);
-        setDisplayDeathSaveFailures(0);
-      }, 100);
+      // ↓ Открываем модальное окно вместо alert
+      setDeathModalOpen(true);
     }
   };
+
+  const calculateLevelFromExperience = useCallback((exp: number): number => {
+    if (exp < 300) return 1;
+    let calculatedLevel = 1;
+    for (const [lvl, requiredExp] of Object.entries(EXPERIENCE_TABLE)) {
+      if (exp >= requiredExp) {
+        calculatedLevel = parseInt(lvl);
+      } else {
+        break;
+      }
+    }
+    return Math.min(calculatedLevel, 20);
+  }, []);
+
+  const getExpForLevel = (lvl: number): number =>
+    (EXPERIENCE_TABLE as Record<number, number>)[lvl] ?? 0;
+
+  const currentLevelExp = getExpForLevel(displayLevel);
+  const nextLevelExp = displayLevel >= 20 ? null : getExpForLevel(displayLevel + 1);
+  const expIntoLevel = Math.max(0, experience - currentLevelExp);
+  const expNeededForNext = nextLevelExp !== null ? Math.max(1, nextLevelExp - currentLevelExp) : 1;
+  const expPercent =
+    nextLevelExp !== null
+      ? Math.min(100, Math.max(0, Math.floor((expIntoLevel / expNeededForNext) * 100)))
+      : 100;
+  const expRemaining = nextLevelExp !== null ? Math.max(0, nextLevelExp - experience) : 0;
 
   return (
     <div className="relative left-[0.5vw] top-[1vh] flex flex-col gap-[2vh] uppercase">
       <h2 className="text-left text-[2.5vh] font-bold text-amber-100">Основная информация</h2>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleAvatarUpload}
+        style={{ display: 'none' }}
+      />
 
       <div className="w-[75vw] flex items-start">
         <div className="flex items-center gap-[2vw]">
@@ -269,15 +332,11 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
                   </svg>
                 </button>
               )}
-
-              <label className="w-[3vh] h-[3vh] bg-amber-600 hover:bg-amber-500 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-[3vh] h-[3vh] bg-amber-600 hover:bg-amber-500 rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg"
+              >
                 <svg
                   className="w-[1.5vh] h-[1.5vh] text-stone-900"
                   fill="none"
@@ -295,7 +354,7 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
                     }
                   />
                 </svg>
-              </label>
+              </button>
             </div>
           </div>
 
@@ -323,70 +382,96 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
             <Input
               label="Имя персонажа"
               placeholder="Введите имя персонажа..."
-              style={{paddingLeft: '0.2vw'}}
+              style={{ paddingLeft: '0.2vw' }}
               {...register('name')}
               error={errors.name?.message}
             />
           </div>
 
           <div className="grid grid-cols-3 gap-[2vw] items-start">
-            <div className="flex flex-row items-center gap-[1vh] relative">
-              <CircularInput
-                label="Уровень"
-                type="number"
-                min={1}
-                max={20}
-                defaultValue={1}
-                {...register('level', { valueAsNumber: true })}
-                error={errors.level?.message}
-              />
-              <SquareInput
-                label="Опыт"
-                type="number"
-                min={0}
-                defaultValue={0}
-                placeholder="0"
-                {...register('experience', { valueAsNumber: true })}
-                error={errors.experience?.message}
-              />
+            <div className="flex flex-col gap-[0.5vh]">
+              <div className="flex flex-row items-center gap-[1vh] relative">
+                <CircularInput
+                  label="Уровень"
+                  type="number"
+                  min={1}
+                  max={20}
+                  value={displayLevel}
+                  readOnly={true}
+                />
+                <input type="hidden" {...register('level', { valueAsNumber: true })} />
 
-              <button
-                type="button"
-                onClick={() => setIsExpModalOpen(true)}
-                className="absolute top-0 right-0 w-[2.5vh] h-[2.5vh] bg-amber-600/80 hover:bg-amber-500 rounded-full flex items-center justify-center transition-colors shadow-lg"
-                title="Таблица опыта"
-              >
-                <svg
-                  className="w-[1.3vh] h-[1.3vh] text-stone-900"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+                <SquareInput
+                  label="Опыт"
+                  type="number"
+                  min={0}
+                  placeholder="0"
+                  {...register('experience', { valueAsNumber: true })}
+                  onChange={(e) => {
+                    register('experience', { valueAsNumber: true }).onChange(e);
+                    const exp = Number(e.target.value) || 0;
+                    const newLevel = calculateLevelFromExperience(exp);
+                    setDisplayLevel(newLevel);
+                    setValue('level', newLevel, { shouldValidate: true });
+                  }}
+                  error={errors.experience?.message}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setIsExpModalOpen(true)}
+                  className="absolute top-0 right-0 w-[2.5vh] h-[2.5vh] bg-amber-600/80 hover:bg-amber-500 rounded-full flex items-center justify-center transition-colors shadow-lg"
+                  title="Таблица опыта"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clipRule="evenodd"
+                  <svg
+                    className="w-[1.3vh] h-[1.3vh] text-stone-900"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="flex flex-col items-center gap-[0.3vh] w-full">
+                <div className="relative w-full h-[3vh] bg-stone-700 rounded-full overflow-hidden border-2 border-amber-600">
+                  <div
+                    className="h-full bg-amber-500 rounded-full transition-all duration-300"
+                    style={{ width: `${expPercent}%` }}
                   />
-                </svg>
-              </button>
+                  <span className="absolute inset-0 flex items-center justify-center text-[2vh] font-bold text-stone-900 mix-blend-multiply">
+                    {expPercent}%
+                  </span>
+                </div>
+                <span className="text-[1.4vh] text-amber-100/60 normal-case tracking-normal">
+                  {displayLevel >= 20
+                    ? 'Максимальный уровень'
+                    : `До след. уровня: ${expRemaining} оп.`}
+                </span>
+              </div>
             </div>
 
-            <div className="w-[30vw] grid grid-cols-2 gap-[2vh]">
+            <div className="w-[30vw] grid grid-cols-3 gap-[2vh]">
               <Select
                 label="Раса"
                 options={DND_RACES}
+                placeholder="Выберите расу..."
                 {...register('race')}
                 onChange={handleRaceChange}
                 error={errors.race?.message}
               />
-
               <Select
                 label="Класс"
                 options={DND_CLASSES}
+                placeholder="Выберите класс..."
                 {...register('class')}
                 onChange={handleClassChange}
                 error={errors.class?.message}
               />
-
               <SelectOrInput
                 label="Предыстория"
                 options={DND_BACKGROUNDS}
@@ -394,17 +479,15 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
                 {...register('background')}
                 error={errors.background?.message}
               />
-
               <Select
-                label="Мировоззрение"
-                options={DND_ALIGNMENTS}
-                {...register('alignment')}
-                error={errors.alignment?.message}
+                label="Размер"
+                options={DND_SIZES}
+                placeholder="Выберите размер..."
+                {...register('size')}
+                error={errors.size?.message}
               />
-
-              <div className="col-span-2">
+              <div>
                 <SelectOrInput
-                  key={`subclass-${selectedClass || 'empty'}-${availableSubclasses.length}`}
                   label="Подкласс"
                   placeholder="Выберите подкласс..."
                   options={availableSubclasses}
@@ -413,11 +496,16 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
                   disabled={isSubclassDisabled}
                 />
                 {isSubclassDisabled && (
-                  <p className="text-[1.2vh] text-amber-100/60">
-                    Сначала выберите класс
-                  </p>
+                  <p className="text-[1.2vh] text-amber-100/60">Сначала выберите класс</p>
                 )}
               </div>
+              <Select
+                label="Мировоззрение"
+                options={DND_ALIGNMENTS}
+                placeholder="Выберите мировоззрение..."
+                {...register('alignment')}
+                error={errors.alignment?.message}
+              />
             </div>
           </div>
         </div>
@@ -425,8 +513,21 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
 
       <div className="flex flex-row gap-[1vw]">
         <div className="flex flex-row items-start">
-          <ArmorClassShield register={register} fieldName="armorClass" errors={errors} />
-          <StatsPanel register={register} watch={watch} setValue={setValue} />
+          <ArmorClassShield
+            register={register}
+            fieldName="armorClass"
+            errors={errors}
+            armorClass={armorClass}
+            inspiration={inspiration}
+          />
+          <StatsPanel
+            register={register}
+            watch={watch}
+            setValue={setValue}
+            exhaustionLevel={exhaustionLevel}
+            conditions={conditions}
+          />
+          <input type="hidden" value={JSON.stringify(conditions)} onChange={() => {}} />
         </div>
 
         <div className="h-[21vh] w-[30vw] border-2 border-amber-600 text-amber-100">
@@ -478,7 +579,7 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
                 type="number"
                 style={{ paddingLeft: '0.2vw' }}
                 min={0}
-                max={level}
+                max={20}
                 {...register('hitDice.spent', { valueAsNumber: true })}
               />
               <div className="flex flex-col">
@@ -541,6 +642,15 @@ export function FormStep1Basic({ register, errors, watch, setValue }: FormStep1B
       </div>
 
       <ExperienceInfoModal isOpen={isExpModalOpen} onClose={() => setIsExpModalOpen(false)} />
+
+      <ConfirmDialog
+        isOpen={deathModalOpen}
+        config={{
+          ...deathModalConfig,
+          onConfirm: resetDeathSaves,
+        }}
+        onClose={() => setDeathModalOpen(false)}
+      />
     </div>
   );
 }

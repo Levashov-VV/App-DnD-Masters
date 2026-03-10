@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { UseFormRegister, UseFormWatch, UseFormSetValue } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../../features/heroes/schemas/heroSchema';
@@ -14,55 +14,47 @@ interface StatsPanelProps {
   register: UseFormRegister<HeroFormData>;
   watch: UseFormWatch<HeroFormData>;
   setValue: UseFormSetValue<HeroFormData>;
+  exhaustionLevel: number;
+  conditions: string[];
 }
 
-export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
+export function StatsPanel({
+  register,
+  watch,
+  setValue,
+  exhaustionLevel: formExhaustionLevel,
+  conditions,
+}: StatsPanelProps) {
   const [isConditionsOpen, setIsConditionsOpen] = useState(false);
-  const [activeConditions, setActiveConditions] = useState<Set<string>>(new Set());
   const [selectedCondition, setSelectedCondition] = useState<Condition | null>(null);
-  const [displayExhaustionLevel, setDisplayExhaustionLevel] = useState(0);
-  
+  const activeConditions = new Set(conditions);
+
   const dexterity = watch('abilityScores.dexterity') || 10;
   const wisdom = watch('abilityScores.wisdom') || 10;
   const level = watch('level') || 1;
   const skills = watch('skills') || [];
-  const formExhaustionLevel = watch('exhaustionLevel') || 0;
-  
+
   const dexModifier = getAbilityModifier(dexterity);
   const wisModifier = getAbilityModifier(wisdom);
   const proficiencyBonus = getProficiencyBonus(level);
-  
-  // Проверяем, выбрана ли Внимательность
   const hasPerceptionProficiency = skills.includes('Внимательность');
-  
   const initiative = dexModifier;
   const passivePerception = 10 + wisModifier + (hasPerceptionProficiency ? proficiencyBonus : 0);
 
-  useEffect(() => {
-    setDisplayExhaustionLevel(formExhaustionLevel);
-  }, [formExhaustionLevel]);
-
   const toggleCondition = (conditionName: string) => {
-    setActiveConditions((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(conditionName)) {
-        newSet.delete(conditionName);
-      } else {
-        newSet.add(conditionName);
-      }
-      return newSet;
-    });
+    const newConditions = activeConditions.has(conditionName)
+      ? conditions.filter((c) => c !== conditionName)
+      : [...conditions, conditionName];
+    setValue('conditions', newConditions, { shouldDirty: true });
   };
 
   const clearAllConditions = () => {
-    setActiveConditions(new Set());
-    setDisplayExhaustionLevel(0);
+    setValue('conditions', [], { shouldDirty: true });
     setValue('exhaustionLevel', 0, { shouldDirty: true });
   };
 
-  const handleExhaustionClick = (level: number) => {
-    const newLevel = displayExhaustionLevel === level ? 0 : level;
-    setDisplayExhaustionLevel(newLevel);
+  const handleExhaustionClick = (lvl: number) => {
+    const newLevel = formExhaustionLevel === lvl ? 0 : lvl;
     setValue('exhaustionLevel', newLevel, { shouldDirty: true });
   };
 
@@ -112,7 +104,6 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
             <input
               type="number"
               min={0}
-              defaultValue={30}
               {...register('speed', { valueAsNumber: true })}
               className="w-[6vw] text-[2.5vh] font-bold text-center bg-transparent border-amber-600 rounded text-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
@@ -127,27 +118,28 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
           </div>
 
           {/* Истощение */}
-          <div style={{ padding: '0.5vh' }} className="flex flex-col items-center justify-center bg-stone-800 border-2 border-amber-600 rounded-lg">
-            <label className="text-[1.4vh] text-amber-100 uppercase text-center">
-              Истощение
-            </label>
+          <div
+            style={{ padding: '0.5vh' }}
+            className="flex flex-col items-center justify-center bg-stone-800 border-2 border-amber-600 rounded-lg"
+          >
+            <label className="text-[1.4vh] text-amber-100 uppercase text-center">Истощение</label>
             <div className="flex gap-[0.3vw]">
-              {[1, 2, 3, 4, 5, 6].map((level) => {
-                const isActive = level <= displayExhaustionLevel;
+              {[1, 2, 3, 4, 5, 6].map((lvl) => {
+                const isActive = lvl <= formExhaustionLevel;
                 return (
                   <button
-                    key={level}
+                    key={lvl}
                     type="button"
-                    onClick={() => handleExhaustionClick(level)}
+                    onClick={() => handleExhaustionClick(lvl)}
                     className="relative bottom-[0.5vh] flex flex-col items-center cursor-pointer group"
-                    title={`Уровень ${level}`}
+                    title={`Уровень ${lvl}`}
                   >
                     <span
                       className={`text-[1.2vh] font-bold transition-colors ${
                         isActive ? 'text-amber-100' : 'text-amber-400'
                       }`}
                     >
-                      {level}
+                      {lvl}
                     </span>
                     <div
                       className={`w-[2.5vh] h-[2.5vh] border-2 rounded transition-all hover:scale-110 flex items-center justify-center ${
@@ -174,10 +166,8 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
                 );
               })}
             </div>
-            {displayExhaustionLevel > 0 && (
-              <p className="text-[1.4vh] text-amber-100">
-                Уровень: {displayExhaustionLevel}
-              </p>
+            {formExhaustionLevel > 0 && (
+              <p className="text-[1.4vh] text-amber-100">Уровень: {formExhaustionLevel}</p>
             )}
           </div>
 
@@ -230,7 +220,6 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
               className="fixed inset-0 bg-black/70 z-100"
               onClick={() => setIsConditionsOpen(false)}
             />
-            {/* Список состояний справа */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -238,7 +227,6 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed right-0 top-0 h-full w-[40vw] bg-stone-900 border-l-4 border-amber-600 shadow-2xl z-101 flex flex-col"
             >
-              {/* Шапка */}
               <div>
                 <div className="relative left-[0.5vw] flex items-center justify-between">
                   <h2 className="text-[3vh] font-bold text-amber-100 uppercase">
@@ -275,8 +263,7 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
                 )}
               </div>
 
-              {/* Список состояний */}
-              <div className="relative left-[0.5vw] w-[38vw] flex-1 ">
+              <div className="relative left-[0.5vw] w-[38vw] flex-1">
                 <div className="flex flex-col gap-[2vh]">
                   {DND_CONDITIONS.map((condition, index) => {
                     const isActive = activeConditions.has(condition.nameEn);
@@ -298,8 +285,6 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
                               {condition.name}
                             </h3>
                           </div>
-
-                          {/* Кнопки действий */}
                           <div className="flex gap-[1vw]">
                             <button
                               type="button"
@@ -341,7 +326,6 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
               className="fixed inset-0 bg-black/80 z-102"
               onClick={goBackToList}
             />
-
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -380,25 +364,22 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
               <div className="flex-1">
                 <div className="relative left-[0.5vw] flex flex-col gap-[2vh]">
                   <div>
-                    <div>
-                      {selectedCondition.description.split('\n').map((line, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="flex items-start gap-[1vw]"
-                        >
-                          <span className="text-amber-500 text-[2vh]">•</span>
-                          <p className="text-[1.8vh] text-amber-200 leading-relaxed flex-1">
-                            {line.replace('• ', '')}
-                          </p>
-                        </motion.div>
-                      ))}
-                    </div>
+                    {selectedCondition.description.split('\n').map((line, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start gap-[1vw]"
+                      >
+                        <span className="text-amber-500 text-[2vh]">•</span>
+                        <p className="text-[1.8vh] text-amber-200 leading-relaxed flex-1">
+                          {line.replace('• ', '')}
+                        </p>
+                      </motion.div>
+                    ))}
                   </div>
 
-                  {/* Статус */}
                   <div className="w-[38vw]">
                     <h4 className="text-[2vh] font-bold text-amber-100 uppercase">
                       ТЕКУЩИЙ СТАТУС:
@@ -446,18 +427,13 @@ export function StatsPanel({ register, watch, setValue }: StatsPanelProps) {
                 </div>
               </div>
 
-              {/* Футер с кнопкой */}
               <div className="flex items-center gap-[1vw]">
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => applyConditionAndClose(selectedCondition.nameEn)}
-                  className={`w-full font-bold text-[2vh] uppercase transition-colors shadow-lg flex items-center justify-center gap-[1vw] ${
-                    activeConditions.has(selectedCondition.nameEn)
-                      ? 'bg-amber-600 hover:bg-amber-500 text-stone-900'
-                      : 'bg-amber-600 hover:bg-amber-500 text-stone-900'
-                  }`}
+                  className="w-full bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold text-[2vh] uppercase transition-colors shadow-lg flex items-center justify-center gap-[1vw]"
                 >
                   <svg className="w-[2.5vh] h-[2.5vh]" fill="currentColor" viewBox="0 0 20 20">
                     <path

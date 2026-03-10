@@ -6,9 +6,13 @@ export interface CombatSkillsSectionProps {
   setCombatAbilityType: (type: CombatAbilityType) => void;
   combatSkills: CombatAbility[];
   newEquipment: { name: string; bonus: number; damage: string };
-  setNewEquipment: React.Dispatch<React.SetStateAction<{ name: string; bonus: number; damage: string }>>;
+  setNewEquipment: React.Dispatch<
+    React.SetStateAction<{ name: string; bonus: number; damage: string }>
+  >;
   newSpell: { name: string; bonus: number; damage: string; description: string };
-  setNewSpell: React.Dispatch<React.SetStateAction<{ name: string; bonus: number; damage: string; description: string }>>;
+  setNewSpell: React.Dispatch<
+    React.SetStateAction<{ name: string; bonus: number; damage: string; description: string }>
+  >;
   addEquipment: () => void;
   addSpell: () => void;
   removeCombatAbility: (index: number) => void;
@@ -28,13 +32,17 @@ interface SkillsListProps {
 
 interface EquipmentFormProps {
   newEquipment: { name: string; bonus: number; damage: string };
-  setNewEquipment: React.Dispatch<React.SetStateAction<{ name: string; bonus: number; damage: string }>>;
+  setNewEquipment: React.Dispatch<
+    React.SetStateAction<{ name: string; bonus: number; damage: string }>
+  >;
   addEquipment: () => void;
 }
 
 interface SpellFormProps {
   newSpell: { name: string; bonus: number; damage: string; description: string };
-  setNewSpell: React.Dispatch<React.SetStateAction<{ name: string; bonus: number; damage: string; description: string }>>;
+  setNewSpell: React.Dispatch<
+    React.SetStateAction<{ name: string; bonus: number; damage: string; description: string }>
+  >;
   addSpell: () => void;
 }
 
@@ -118,9 +126,7 @@ export function CombatSkillsSection({
           ability={editingAbility.ability}
           onClose={() => setEditingAbility(null)}
           onSave={saveEditedAbility}
-          onChange={(updated) =>
-            setEditingAbility({ ...editingAbility, ability: updated })
-          }
+          onChange={(updated) => setEditingAbility({ ...editingAbility, ability: updated })}
           mode="edit"
         />
       )}
@@ -311,9 +317,7 @@ function SpellForm({ newSpell, setNewSpell, addSpell }: SpellFormProps) {
           <input
             type="number"
             value={newSpell.bonus || ''}
-            onChange={(e) =>
-              setNewSpell({ ...newSpell, bonus: parseInt(e.target.value) || 0 })
-            }
+            onChange={(e) => setNewSpell({ ...newSpell, bonus: parseInt(e.target.value) || 0 })}
             placeholder="Бонус атаки..."
             style={{ paddingLeft: '0.2vw' }}
             className="bg-stone-900 border-2 border-amber-600 rounded-lg text-[1.4vh] text-amber-100 focus:outline-none focus:border-amber-400 placeholder:text-amber-600/50"

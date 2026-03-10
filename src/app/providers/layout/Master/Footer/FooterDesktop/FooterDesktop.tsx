@@ -34,9 +34,9 @@ export function FooterDesktop() {
           <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
             <Link to="/SoundPad">Саундпады</Link>
           </li>
-          <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
+          {/* <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
             <Link to="/CloneVoice">Генерация голоса</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </footer>

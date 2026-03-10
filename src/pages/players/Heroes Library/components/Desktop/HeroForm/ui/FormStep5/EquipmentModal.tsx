@@ -181,7 +181,11 @@ export function EquipmentModal({
         {/* Заголовок */}
         <div className="flex items-center justify-between ">
           <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">
-            {item ? 'Редактировать предмет' : isBackpackMode ? 'Добавить в рюкзак' : 'Добавить предмет'}
+            {item
+              ? 'Редактировать предмет'
+              : isBackpackMode
+                ? 'Добавить в рюкзак'
+                : 'Добавить предмет'}
           </h2>
           <button
             type="button"
@@ -230,9 +234,7 @@ export function EquipmentModal({
 
           {/* Тип предмета */}
           <div>
-            <label className="block text-[1.6vh] font-semibold text-amber-100 ">
-              Тип предмета
-            </label>
+            <label className="block text-[1.6vh] font-semibold text-amber-100 ">Тип предмета</label>
             <select
               value={editedItem.type || ''}
               onChange={(e) => setEditedItem({ ...editedItem, type: e.target.value })}
@@ -338,7 +340,7 @@ export function EquipmentModal({
 
           {/* Предупреждение о двуручном оружии */}
           {showTwoHandedWarning && (
-            <div className= "border-amber-600 rounded ">
+            <div className="border-amber-600 rounded ">
               <p className="text-[1.4vh] text-amber-400 font-semibold">
                 Двуручное оружие занимает обе руки
               </p>

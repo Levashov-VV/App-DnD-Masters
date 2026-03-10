@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
-import { WEAPON_TYPES, ARMOR_TYPES } from '../../../../../../../../features/heroes/constants/formStep3';
+import {
+  WEAPON_TYPES,
+  ARMOR_TYPES,
+} from '../../../../../../../../features/heroes/constants/formStep3';
 
 interface ProficienciesSectionProps {
   weaponProficiencies: string[];

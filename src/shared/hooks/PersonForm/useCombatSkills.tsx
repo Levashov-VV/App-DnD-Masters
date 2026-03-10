@@ -8,36 +8,25 @@ export function useCombatSkills(
 ) {
   const formCombatAbilities = watch('combatAbilities') || [];
 
-  const [combatAbilities, setCombatAbilities] = useState<CombatAbility[]>(formCombatAbilities);
-  const [combatAbilityType, setCombatAbilityType] = useState<'equipment' | 'spell'>('equipment'); // Изменено
+  const [combatAbilities, setCombatAbilities] = useState<CombatAbility[]>([]);
+  const [combatAbilityType, setCombatAbilityType] = useState<'equipment' | 'spell'>('equipment');
   const [selectedSpell, setSelectedSpell] = useState<CombatAbility | null>(null);
   const [editingAbility, setEditingAbility] = useState<{
     ability: CombatAbility;
     index: number;
   } | null>(null);
 
-  const [newEquipment, setNewEquipment] = useState({
-    name: '',
-    bonus: 0,
-    damage: '',
-  });
-
-  const [newSpell, setNewSpell] = useState({
-    name: '',
-    bonus: 0,
-    damage: '',
-    description: '',
-  });
+  const [newEquipment, setNewEquipment] = useState({ name: '', bonus: 0, damage: '' });
+  const [newSpell, setNewSpell] = useState({ name: '', bonus: 0, damage: '', description: '' });
 
   useEffect(() => {
-    if (formCombatAbilities.length > 0) {
-      setCombatAbilities(formCombatAbilities as CombatAbility[]);
-    }
+    setCombatAbilities(formCombatAbilities as CombatAbility[]);
   }, [JSON.stringify(formCombatAbilities)]);
 
-  useEffect(() => {
-    setValue('combatAbilities', combatAbilities, { shouldDirty: true });
-  }, [combatAbilities, setValue]);
+  const updateAbilities = (newAbilities: CombatAbility[]) => {
+    setCombatAbilities(newAbilities);
+    setValue('combatAbilities', newAbilities, { shouldDirty: true });
+  };
 
   const addEquipment = () => {
     if (newEquipment.name.trim()) {
@@ -47,7 +36,7 @@ export function useCombatSkills(
         bonus: newEquipment.bonus,
         damage: newEquipment.damage,
       };
-      setCombatAbilities([...combatAbilities, newAbility]);
+      updateAbilities([...combatAbilities, newAbility]);
       setNewEquipment({ name: '', bonus: 0, damage: '' });
     }
   };
@@ -61,21 +50,20 @@ export function useCombatSkills(
         damage: newSpell.damage,
         description: newSpell.description,
       };
-      setCombatAbilities([...combatAbilities, newAbility]);
+      updateAbilities([...combatAbilities, newAbility]);
       setNewSpell({ name: '', bonus: 0, damage: '', description: '' });
     }
   };
 
   const removeCombatAbility = (index: number) => {
-    const newAbilities = combatAbilities.filter((_, i) => i !== index);
-    setCombatAbilities(newAbilities);
+    updateAbilities(combatAbilities.filter((_, i) => i !== index));
   };
 
   const saveEditedAbility = () => {
     if (editingAbility) {
       const updatedAbilities = [...combatAbilities];
       updatedAbilities[editingAbility.index] = editingAbility.ability;
-      setCombatAbilities(updatedAbilities);
+      updateAbilities(updatedAbilities);
       setEditingAbility(null);
     }
   };

@@ -1,198 +1,128 @@
 import type { UseFormRegister, FieldErrors, UseFormWatch, Control } from 'react-hook-form';
-import { useFieldArray } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../features/heroes/schemas/heroSchema';
-import { Input } from './ui/Input';
-import { getAbilityModifier } from '../../../../../../features/heroes/constants/dndData';
+import { TextareaWithFontControl } from './ui/TextareaFontControl';
 
-interface FormStep4EquipmentProps {
+interface FormStep7NotesProps {
   register: UseFormRegister<HeroFormData>;
   errors: FieldErrors<HeroFormData>;
   watch: UseFormWatch<HeroFormData>;
   control: Control<HeroFormData>;
 }
 
-export function FormStep7Notes({ register, errors, watch, control }: FormStep4EquipmentProps) {
-  const {
-    fields: weapons,
-    append: addWeapon,
-    remove: removeWeapon,
-  } = useFieldArray({
-    control,
-    name: 'equipment.weapons',
-  });
-
-  const {
-    fields: items,
-    append: addItem,
-    remove: removeItem,
-  } = useFieldArray({
-    control,
-    name: 'equipment.items',
-  });
-
-  const level = watch('level') || 1;
-  const constitution = watch('abilityScores.constitution') || 10;
-  const dexterity = watch('abilityScores.dexterity') || 10;
-
-  const conModifier = getAbilityModifier(constitution);
-  const dexModifier = getAbilityModifier(dexterity);
-
-  const suggestedMaxHP = 10 + conModifier + (level - 1) * (6 + conModifier);
-
+export function FormStep7Notes({ register, errors, watch, control }: FormStep7NotesProps) {
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-6">Снаряжение и боевые характеристики</h2>
+    <div className="relative left-[0.5vw] top-[1vh] w-[74vw] flex flex-col gap-[1.5vh] uppercase max-h-[63vh] overflow-y-auto">
+      <h2 className="text-[2.5vh] font-bold text-amber-100 uppercase">Заметки</h2>
 
-      {/* Combat Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div>
-          <Input
-            label="Макс. HP *"
-            type="number"
-            min={1}
-            placeholder={`Рекомендуется: ${suggestedMaxHP}`}
-            {...register('hitPoints.max', { valueAsNumber: true })}
-            error={errors.hitPoints?.max?.message}
+      <div className="grid grid-cols-2 gap-[2vw]">
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg ">
+          <TextareaWithFontControl
+            label="Заметки о сюжете"
+            {...register('notes.plotNotes')}
+            placeholder="Важные события, подсказки, квестовые зацепки..."
+            className="h-[20vh]"
+            defaultFontSize={14}
+            minFontSize={10}
+            maxFontSize={24}
           />
-          <p className="text-xs text-gray-400 mt-1">Рекомендуется: {suggestedMaxHP}</p>
         </div>
 
-        <Input
-          label="Текущий HP *"
-          type="number"
-          min={0}
-          {...register('hitPoints.current', { valueAsNumber: true })}
-          error={errors.hitPoints?.current?.message}
-        />
-
-        <div>
-          <Input
-            label="Класс Доспеха (AC) *"
-            type="number"
-            min={0}
-            max={30}
-            placeholder={`Базовый: ${10 + dexModifier}`}
-            {...register('armorClass', { valueAsNumber: true })}
-            error={errors.armorClass?.message}
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Заметки о персонажах"
+            {...register('notes.npcNotes')}
+            placeholder="Встреченные NPC, их мотивации, отношения..."
+            className="h-[20vh]"
+            defaultFontSize={14}
+            minFontSize={10}
+            maxFontSize={24}
           />
-          <p className="text-xs text-gray-400 mt-1">Базовый AC: {10 + dexModifier}</p>
-        </div>
-
-        <Input
-          label="Скорость (футы)"
-          type="number"
-          min={0}
-          defaultValue={30}
-          {...register('speed', { valueAsNumber: true })}
-          error={errors.speed?.message}
-        />
-      </div>
-
-      <Input
-        label="Инициатива"
-        type="number"
-        defaultValue={dexModifier}
-        {...register('initiative', { valueAsNumber: true })}
-        error={errors.initiative?.message}
-      />
-
-      {/* Weapons */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-white">Оружие</h3>
-          <button
-            type="button"
-            onClick={() => addWeapon({ name: '', damage: '' })}
-            className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition-colors"
-          >
-            + Добавить оружие
-          </button>
-        </div>
-
-        <div className="space-y-3">
-          {weapons.map((field, index) => (
-            <div key={field.id} className="flex gap-3 items-start">
-              <Input
-                placeholder="Название оружия"
-                {...register(`equipment.weapons.${index}.name`)}
-                error={errors.equipment?.weapons?.[index]?.name?.message}
-              />
-              <Input
-                placeholder="Урон (например, 1d8)"
-                {...register(`equipment.weapons.${index}.damage`)}
-                error={errors.equipment?.weapons?.[index]?.damage?.message}
-              />
-              <button
-                type="button"
-                onClick={() => removeWeapon(index)}
-                className="mt-2 p-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
-
-          {weapons.length === 0 && (
-            <p className="text-gray-500 text-sm italic">Оружие не добавлено</p>
-          )}
         </div>
       </div>
-
-      {/* Armor */}
-      <Input
-        label="Доспех"
-        placeholder="Например: Кожаный доспех"
-        {...register('equipment.armor')}
-        error={errors.equipment?.armor?.message}
-      />
-
-      {/* Items */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-white">Предметы</h3>
-          <button
-            type="button"
-            onClick={() => addItem({ name: '' })}
-            className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition-colors"
-          >
-            + Добавить предмет
-          </button>
+      <div className="grid grid-cols-2 gap-[2vw]">
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Локации"
+            {...register('notes.locationNotes')}
+            placeholder="Важные места, города, подземелья..."
+            className="h-[15vh]"
+            defaultFontSize={13}
+            minFontSize={10}
+            maxFontSize={22}
+          />
         </div>
 
-        <div className="space-y-2">
-          {items.map((field, index) => (
-            <div key={field.id} className="flex gap-2 items-start">
-              <Input
-                placeholder="Название предмета"
-                {...register(`equipment.items.${index}.name`)}
-              />
-              <button
-                type="button"
-                onClick={() => removeItem(index)}
-                className="mt-2 p-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Задания и цели"
+            {...register('notes.questNotes')}
+            placeholder="Текущие квесты, цели, награды..."
+            className="h-[15vh]"
+            defaultFontSize={13}
+            minFontSize={10}
+            maxFontSize={22}
+          />
+        </div>
 
-          {items.length === 0 && (
-            <p className="text-gray-500 text-sm italic">Предметы не добавлены</p>
-          )}
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Секреты и тайны"
+            {...register('notes.secretNotes')}
+            placeholder="Скрытая информация, загадки..."
+            className="h-[15vh]"
+            defaultFontSize={13}
+            minFontSize={10}
+            maxFontSize={22}
+          />
+        </div>
+
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Боевые заметки"
+            {...register('notes.combatNotes')}
+            placeholder="Тактика, слабости врагов, стратегии..."
+            className="h-[15vh]"
+            defaultFontSize={13}
+            minFontSize={10}
+            maxFontSize={22}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Контакты"
+            {...register('notes.contactNotes')}
+            placeholder="Союзники, торговцы..."
+            className="h-[12vh]"
+            defaultFontSize={12}
+            minFontSize={10}
+            maxFontSize={20}
+          />
+        </div>
+
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Слухи и легенды"
+            {...register('notes.rumorNotes')}
+            placeholder="Услышанные истории..."
+            className="h-[12vh]"
+            defaultFontSize={12}
+            minFontSize={10}
+            maxFontSize={20}
+          />
+        </div>
+
+        <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">
+          <TextareaWithFontControl
+            label="Прочее"
+            {...register('notes.miscNotes')}
+            placeholder="Разное..."
+            className="h-[12vh]"
+            defaultFontSize={12}
+            minFontSize={10}
+            maxFontSize={20}
+          />
         </div>
       </div>
     </div>

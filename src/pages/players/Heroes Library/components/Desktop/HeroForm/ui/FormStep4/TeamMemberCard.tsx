@@ -51,7 +51,10 @@ export function TeamMemberCard({ member, onEdit, onRemove }: TeamMemberCardProps
   const displayAvatar = member.customAvatar || raceLogo;
 
   return (
-    <div style={{ margin: '0.5vw'}} className="relative w-[12vw] h-[18vh] border-2 border-amber-600 bg-stone-800 rounded-lg p-[0.5vw] flex flex-col items-center gap-[0.5vw] hover:border-amber-500 transition-colors group">
+    <div
+      style={{ margin: '0.5vw' }}
+      className="relative w-[12vw] h-[18vh] border-2 border-amber-600 bg-stone-800 rounded-lg p-[0.5vw] flex flex-col items-center gap-[0.5vw] hover:border-amber-500 transition-colors group"
+    >
       <div
         style={{ margin: '0.5vh 0' }}
         className="w-[4.5vw] h-[4.5vw] rounded-full border-2 border-amber-600 bg-stone-900 overflow-hidden flex items-center justify-center"
@@ -73,8 +76,10 @@ export function TeamMemberCard({ member, onEdit, onRemove }: TeamMemberCardProps
         <div style={{ marginRight: '0.2vw' }} className="w-[98%] grid grid-cols-2 gap-[1vh]">
           <p className="text-[1.1vh] text-amber-100/80 truncate">Раса: {member.race}</p>
           <p className="text-[1.1vh] text-amber-100/80 truncate">Класс: {member.class}</p>
-          <p className="text-[1.1vh] text-amber-100/80 truncate">Уровень: {''}
-						<span className="text-[1.1vh]">{member.level}</span></p>
+          <p className="text-[1.1vh] text-amber-100/80 truncate">
+            Уровень: {''}
+            <span className="text-[1.1vh]">{member.level}</span>
+          </p>
           {member.subclass && (
             <p className="text-[1.1vh] text-amber-100/80 truncate">Подкласс: {member.subclass}</p>
           )}

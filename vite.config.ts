@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 export default defineConfig({
-  base: '/App-DnD-Assistant/',
+  base: '/App-DnD-Masters/',
   plugins: [
     react({
       babel: {

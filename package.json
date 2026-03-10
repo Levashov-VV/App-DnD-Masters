@@ -1,5 +1,5 @@
 {
-  "homepage": "https://levashov-vv.github.io/App-DnD-Assistant/",
+  "homepage": "https://levashov-vv.github.io/App-DnD-Masters/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

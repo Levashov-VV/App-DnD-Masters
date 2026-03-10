@@ -307,7 +307,7 @@ export const RollingDice = ({ type, colorSet, rotation, onResult }: RollingDiceP
     tmpPos.current.set(p.x, p.y, p.z);
     tmpQuat.current.set(r.x, r.y, r.z, r.w).normalize();
 
-    const { bestIndex: topIndex, bestDot } = getTopSensorIndex(tmpQuat.current);
+    const { bestIndex: topIndex } = getTopSensorIndex(tmpQuat.current);
 
     const value = Array.isArray(cfg.indexToValue)
       ? (cfg.indexToValue[topIndex] ?? 0)

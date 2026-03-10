@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { diceSets } from './DiceMeshes';
 import type { DiceType, DiceSetColor } from '../../types/rollTypes';
 
+
 interface DiceProps {
   position: [number, number, number];
   scale?: number;
@@ -14,10 +15,12 @@ interface DiceProps {
   meshRef?: { current: THREE.Mesh | null };
 }
 
+
 export const Dice = ({ scale = 1, type, colorSet, autoRotate = true, meshRef }: DiceProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const diceMeshRef = useRef<THREE.Mesh | null>(null);
   const { scene } = useGLTF('/models/dice.glb');
+
 
   useEffect(() => {
     const set = diceSets[colorSet];
@@ -34,19 +37,22 @@ export const Dice = ({ scale = 1, type, colorSet, autoRotate = true, meshRef }: 
 
     if (!diceModel || !groupRef.current) return;
 
+    const mesh = diceModel as THREE.Mesh;
+
     while (groupRef.current.children.length > 0) {
       groupRef.current.remove(groupRef.current.children[0]);
     }
 
-    diceModel.position.set(0, 0, 0);
-    diceModel.rotation.set(0, 0, 0);
-    diceModel.scale.setScalar(scale);
+    mesh.position.set(0, 0, 0);
+    mesh.rotation.set(0, 0, 0);
+    mesh.scale.setScalar(scale);
 
-    diceMeshRef.current = diceModel;
-    if (meshRef) meshRef.current = diceModel;
+    diceMeshRef.current = mesh;
+    if (meshRef) meshRef.current = mesh;
 
-    groupRef.current.add(diceModel);
+    groupRef.current.add(mesh);
   }, [scene, scale, type, colorSet, meshRef]);
+
 
   useFrame((_, delta) => {
     if (!autoRotate || !groupRef.current) return;
@@ -54,6 +60,7 @@ export const Dice = ({ scale = 1, type, colorSet, autoRotate = true, meshRef }: 
     groupRef.current.rotation.y += delta * 0.7;
     groupRef.current.rotation.z += delta * 0.3;
   });
+
 
   return <group ref={groupRef} />;
 };

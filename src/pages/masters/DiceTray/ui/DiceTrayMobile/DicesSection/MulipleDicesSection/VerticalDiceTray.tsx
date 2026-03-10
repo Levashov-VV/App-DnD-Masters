@@ -1,6 +1,3 @@
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { Dice } from './DiceLoader';
 import { DiceColorSelector } from './DiceColorSelector';
 import { useCallback } from 'react';
 import type { RollMode, DiceCounts, DiceType, DiceSetColor } from '../../types/rollTypes';

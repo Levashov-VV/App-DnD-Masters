@@ -9,7 +9,7 @@ interface FormStep7NotesProps {
   control: Control<HeroFormData>;
 }
 
-export function FormStep7Notes({ register, errors, watch, control }: FormStep7NotesProps) {
+export function FormStep7Notes({ register }: FormStep7NotesProps) {
   return (
     <div className="relative left-[0.5vw] top-[1vh] w-[98vw] flex flex-col gap-[1.5vh] uppercase h-[78vh] overflow-y-auto">
       <h2 className="text-[2.5vh] text-center font-bold text-amber-100 uppercase">Заметки</h2>

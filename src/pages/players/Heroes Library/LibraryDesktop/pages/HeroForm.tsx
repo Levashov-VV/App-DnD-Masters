@@ -23,28 +23,6 @@ interface HeroFormProps {
   mode: 'create' | 'edit';
 }
 
-// Карта: поле → шаг формы
-const FIELD_STEP_MAP: Partial<Record<keyof HeroFormData, number>> = {
-  name: 1,
-  race: 1,
-  class: 1,
-  background: 1,
-  alignment: 1,
-  size: 1,
-  abilityScores: 2,
-  skills: 2,
-  savingThrows: 2,
-  weaponProficiencies: 3,
-  armorProficiencies: 3,
-  feats: 3,
-  teamMembers: 4,
-  backstory: 4,
-  equipment: 5,
-  inventory: 6,
-  notes: 7,
-  spellSlots: 8,
-};
-
 export default function HeroForm({ mode }: HeroFormProps) {
   const navigate = useNavigate();
   const { id } = useParams();

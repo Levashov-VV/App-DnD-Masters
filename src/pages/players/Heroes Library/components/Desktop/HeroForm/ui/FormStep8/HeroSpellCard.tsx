@@ -1,5 +1,4 @@
 import type { HeroSpell } from '../../../../../../../../features/heroes/schemas/heroSchema';
-import { useSpellById } from '../../../../../../../../shared/hooks/PersonForm/useSpellById';
 
 const SCHOOL_LABELS: Record<string, string> = {
   abjuration: 'Ограждение',

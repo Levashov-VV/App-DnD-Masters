@@ -18,7 +18,7 @@ interface FormStep5InventoryProps {
   setValue: UseFormSetValue<HeroFormData>;
 }
 
-export function FormStep5Inventory({ register, errors, watch, setValue }: FormStep5InventoryProps) {
+export function FormStep5Inventory({ watch, setValue }: FormStep5InventoryProps) {
   const inventoryData = watch('inventory');
 
   const inventory = {

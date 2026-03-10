@@ -1,16 +1,15 @@
 {
-  "name": "dnd-masters",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint src/**/*.{ts,tsx}",
-    "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
-    "format": "prettier --write src/**/*.{ts,tsx}",
-    "preview": "vite preview"
-  },
+  "homepage": "https://levashov-vv.github.io/dnd-masters/",
+"scripts": {
+  "dev": "vite",
+  "build": "tsc -b && vite build",
+  "lint": "eslint src/**/*.{ts,tsx}",
+  "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
+  "format": "prettier --write src/**/*.{ts,tsx}",
+  "preview": "vite preview",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+},
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.19.3",
     "@dnd-kit/core": "^6.3.1",
@@ -61,6 +60,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
+    "gh-pages": "^6.3.0",
     "globals": "^16.5.0",
     "postcss": "^8.5.6",
     "prettier": "3.7.2",

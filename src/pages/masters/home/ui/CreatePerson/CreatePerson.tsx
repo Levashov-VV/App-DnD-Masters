@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { assetUrl } from '@/shared/utils/assetUrl';
 
 type itemProps = {
   text: string;

@@ -16,6 +16,7 @@ import {
 import { createTypedStorage } from '../../../../../shared/hooks/auth/typedStorage';
 
 import './style.css';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 type RollItem = {
   id: string;
@@ -297,7 +298,7 @@ export function DiceTrayMobile() {
       <div className="relative bottom-[19vh] z-30 pointer-events-none">
         <img
           className="w-screen h-[50vh] pointer-events-none object-cover"
-          src="../../../../../public/img/masters/home/DiceTray/DiceTray.png"
+          src={assetUrl('/img/masters/home/DiceTray/DiceTray.png')}
           alt="dice tray"
         />
       </div>

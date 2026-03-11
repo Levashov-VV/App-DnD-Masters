@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 type itemProps = {
   text: string;
@@ -84,14 +85,14 @@ export function CreatePerson() {
             <div>
               <img
                 className="w-[25vw] relative bottom-[5vh] left-[6vw]"
-                src="../../../../../public/img/masters/home/CreatePerson/Box.png"
+                src="{assetUrl('/img/masters/home/CreatePerson/Box.png')}"
                 alt="box"
               />
             </div>
           </div>
           <div className="relative bottom-[10vh] w-[25vw]">
             <img
-              src="../../../../../../public/img/masters/home/CreatePerson/Kalashtar.png"
+              src="{assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')}"
               alt="Kalashtar"
             />
           </div>

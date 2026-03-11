@@ -2,7 +2,8 @@ import type { User, Enemies } from '../../Form/types';
 import { useCharacter } from '@/shared/hooks/auth/useCharacter';
 import type { CreatureSide, HoveredToken } from '../../Form/types';
 import { useRef } from 'react';
-import DefaultLogo from '../../../../../../../public/img/masters/Battlefield/Figures/Logo-Profile.png';
+import DefaultLogo from '/img/masters/Battlefield/Figures/Logo-Profile.png';
+import { GameImage } from '@/components/GameImage';
 
 type Creature = User | Enemies;
 
@@ -124,7 +125,7 @@ export function PersonList({
               .join(' ')}
           >
             <div className="relative flex-shrink-0">
-              <img
+              <GameImage
                 src={src}
                 alt={creature.name}
                 className="w-[4vw] h-[4vw] rounded-full object-cover border-neutral-600 group-hover:border-amber-400 transition-all shadow-sm"

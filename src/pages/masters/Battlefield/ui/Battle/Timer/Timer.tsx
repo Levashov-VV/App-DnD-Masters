@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import type { User, Enemies, HoveredToken } from '../../Form/types';
-import DefaultLogo from '../../../../../../../public/img/masters/Battlefield/Figures/Logo-Profile.png';
+import DefaultLogo from '/img/masters/Battlefield/Figures/Logo-Profile.png';
+import { GameImage } from '@/components/GameImage';
 
 interface InitiativeTimerProps {
   users: User[];
@@ -32,6 +33,7 @@ export function InitiativeTimer({
   const [isPaused, setIsPaused] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const prevQueueRef = useRef<InitiativeItem[]>([]);
 
   const initiativeQueue = useMemo(() => {
     const allCreatures: InitiativeItem[] = [
@@ -41,18 +43,45 @@ export function InitiativeTimer({
         initiative: u.initiative ?? 0,
         logo: u.logo || DefaultLogo,
       })),
-      ...enemies.map((e) => ({
-        id: e.id,
-        name: e.name,
-        initiative: e.initiative ?? 0,
-        logo: e.logo || DefaultLogo,
-      })),
+      ...enemies
+        .filter((e) => !e.isDead) // ← мёртвые выпадают из очереди
+        .map((e) => ({
+          id: e.id,
+          name: e.name,
+          initiative: e.initiative ?? 0,
+          logo: e.logo || DefaultLogo,
+        })),
     ].sort((a, b) => b.initiative - a.initiative);
 
     return allCreatures;
   }, [users, enemies]);
 
-  // Вычисляем безопасный индекс
+  // Корректируем индекс при изменении очереди (смерть/воскрешение)
+  useEffect(() => {
+    const prevQueue = prevQueueRef.current;
+    if (prevQueue.length === 0) {
+      prevQueueRef.current = initiativeQueue;
+      return;
+    }
+
+    const prevCreature = prevQueue[currentIndex % (prevQueue.length || 1)];
+
+    if (prevCreature && initiativeQueue.length > 0) {
+      const newIndex = initiativeQueue.findIndex((c) => c.id === prevCreature.id);
+
+      if (newIndex === -1) {
+        // Текущее существо умерло — переходим к следующему по кругу
+        setCurrentIndex((i) => i % initiativeQueue.length);
+      } else {
+        // Существо живо — обновляем на новую позицию
+        setCurrentIndex(newIndex);
+      }
+    }
+
+    prevQueueRef.current = initiativeQueue;
+  }, [initiativeQueue]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Безопасный индекс
   const safeCurrentIndex = useMemo(() => {
     if (initiativeQueue.length === 0) return 0;
     return currentIndex % initiativeQueue.length;
@@ -93,7 +122,6 @@ export function InitiativeTimer({
   };
 
   const currentCreature = initiativeQueue[safeCurrentIndex];
-
   const progress =
     initiativeQueue.length === 0 ? 0 : Math.max(0, Math.min(1, timeLeft / TURN_SECONDS));
   const dashOffset = CIRC * (1 - progress);
@@ -108,7 +136,7 @@ export function InitiativeTimer({
 
       <div className="flex-1 flex items-center gap-[0.8vw] bg-neutral-800/70 rounded-xl border-neutral-600/50 shadow-lg relative z-10 backdrop-blur-sm">
         <div className="relative flex-shrink-0 w-[5vw] h-[5vw]">
-          <img
+          <GameImage
             src={currentCreature?.logo || DefaultLogo}
             alt={currentCreature?.name || ''}
             className="absolute inset-0 w-full h-full rounded-full object-cover shadow-2xl"
@@ -199,7 +227,7 @@ export function InitiativeTimer({
           className="w-[10vw] h-[3.8vh] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-xl transition-all active:scale-[0.96] border-2 border-blue-400/50 text-[1.6vh] backdrop-blur-sm"
           title="Следующий ход"
         >
-          Cледующий ход
+          Следующий ход
         </button>
       </div>
 

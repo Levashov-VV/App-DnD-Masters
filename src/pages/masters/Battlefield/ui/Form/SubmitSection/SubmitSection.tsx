@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { BattleFormData } from '../types';
 import { useState } from 'react';
 import { maps } from '../types';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 export function SubmitSection() {
   const {
@@ -14,7 +15,9 @@ export function SubmitSection() {
   const mapId = useWatch({ name: 'mapId' }) || 1;
   const gridSize = useWatch({ name: 'gridSize' }) || 15;
   const mapName = maps.find((map) => map.id === mapId)?.title || 'Не выбрана';
-  const mapImage = maps.find((map) => map.id === mapId)?.img || '';
+  const mapImage = maps.find((map) => map.id === mapId)?.img
+    ? assetUrl(maps.find((map) => map.id === mapId)!.img)
+    : '';
   const customMapImage = useWatch({ name: 'customMapImage' }) as string | null;
   const { gridWidth, gridHeight } = useWatch<BattleFormData>();
 

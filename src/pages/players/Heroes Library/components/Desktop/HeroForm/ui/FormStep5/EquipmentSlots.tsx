@@ -4,11 +4,11 @@ import type {
   EquipmentSlot,
 } from '../../../../../../../../features/heroes/schemas/heroSchema';
 
-import Shadow from '../../../../../../../../../public/img/players/Character Sheet/PersonSection/Shadow.png';
-import Bow from '../../../../../../../../../public/img/players/Character Sheet/PersonSection/Bow.png';
-import Armor from '../../../../../../../../../public/img/players/Character Sheet/PersonSection/Armor.png';
-import Shield from '../../../../../../../../../public/img/masters/home/DescriptionApp/Shield.png';
-import Sword from '../../../../../../../../../public/img/masters/home/DescriptionApp/Sword.png';
+import Shadow from '/img/players/Character Sheet/PersonSection/Shadow.png';
+import Bow from '/img/players/Character Sheet/PersonSection/Bow.png';
+import Armor from '/img/players/Character Sheet/PersonSection/Armor.png';
+import Shield from '/img/masters/home/DescriptionApp/Shield.png';
+import Sword from '/img/masters/home/DescriptionApp/Sword.png';
 
 interface EquipmentSlotsProps {
   equipped: EquipmentItem[];

@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 export default function Battlefield() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -163,7 +164,7 @@ export default function Battlefield() {
                 <img
                   ref={leftMapRef}
                   className="w-[40vw] z-0 object-contain"
-                  src="../../../../../../public/img/masters/Battlefield/Map/Dungeon.jpg"
+                  src={assetUrl('/img/masters/Battlefield/Map/Dungeon.jpg')}
                   alt="Dungeon"
                 />
               </div>
@@ -174,7 +175,7 @@ export default function Battlefield() {
               <img
                 ref={rightMapRef}
                 className="w-[40vw] z-0"
-                src="../../../../../../public/img/masters/Battlefield/Map/CitySquare.jpg"
+                src={assetUrl('/img/masters/Battlefield/Map/CitySquare.jpg')}
                 alt="CitySquare"
               />
             </div>

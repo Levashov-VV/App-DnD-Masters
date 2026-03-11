@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import type { Hero } from '../../types/hero';
 import { useHeroes } from '../../Context/HeroesContext';
+import { GameImage } from '@/components/GameImage';
 
 interface HeroCardProps {
   hero: Hero;
@@ -26,7 +27,7 @@ export function HeroCard({ hero }: HeroCardProps) {
       <div className="bg-gray-800 rounded-lg overflow-hidden border-gray-700 hover:border-purple-500 transition-all group">
         <div className="h-[20vh] bg-gradient-to-br from-amber-600 to-gray-800 flex items-center justify-center relative overflow-hidden">
           {hero.avatar ? (
-            <img src={hero.avatar} alt={hero.name} className="w-full h-full object-contain" />
+            <GameImage src={hero.avatar} alt={hero.name} className="w-full h-full object-contain" />
           ) : (
             <svg
               className="w-[10vh] h-[10vh] text-gray-600"

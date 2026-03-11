@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 type itemProps = {
   text: string;
@@ -72,7 +73,7 @@ export function CloneVoice() {
           </div>
           <div className="relative bottom-[20vh] w-[25vw]">
             <img
-              src="../../../../../../public/img/masters/home/CreatePerson/Kalashtar.png"
+              src={assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')}
               alt="Kalashtar"
             />
           </div>

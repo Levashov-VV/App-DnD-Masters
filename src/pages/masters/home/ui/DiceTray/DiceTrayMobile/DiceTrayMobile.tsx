@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 export function DiceTrayMobile() {
   const leftTextRef = useRef<HTMLDivElement>(null);
@@ -144,7 +145,7 @@ export function DiceTrayMobile() {
         <div>
           <img
             className="h-[50vh] object-cover"
-            src="../../../../../../public/img/masters/home/DiceTray/DiceTray.png"
+            src={assetUrl('img/masters/home/DiceTray/DiceTray.png')}
             alt="Dice Tray"
           />
         </div>
@@ -155,7 +156,7 @@ export function DiceTrayMobile() {
               d4-d20
             </div>
             <div className="w-screen">
-              <img src="../../../../../../public/img/masters/home/DiceTray/Tarask.png" />
+              <img src={assetUrl('img/masters/home/DiceTray/Tarask.png')}/>
             </div>
           </div>
         </div>
@@ -165,7 +166,7 @@ export function DiceTrayMobile() {
               Комплексные формулы для подсчётов ваших результатов в игре
             </div>
             <div className="w-screen relative right-[2vw]">
-              <img src="../../../../../../public/img/masters/home/DiceTray/Beholder.png" />
+              <img src={assetUrl('img/masters/home/DiceTray/Beholder.png')} />
             </div>
           </div>
         </div>

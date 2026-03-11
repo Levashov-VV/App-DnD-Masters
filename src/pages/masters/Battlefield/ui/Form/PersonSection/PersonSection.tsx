@@ -46,17 +46,18 @@ export function PersonSection() {
     });
   };
 
-  const addEnemy = (e: React.MouseEvent) => {
-    e.preventDefault();
-    appendEnemy({
-      id: Date.now(),
-      name: `Враг ${enemyFields.length + 1}`,
-      img: '',
-      logo: '',
-      initiative: 8,
-      size: 'medium',
-    });
-  };
+const addEnemy = (e: React.MouseEvent) => {
+  e.preventDefault();
+  appendEnemy({
+    id: Date.now(),
+    name: `Враг ${enemyFields.length + 1}`,
+    className: '',
+    img: '',
+    logo: '',
+    initiative: 8,
+    size: 'medium',
+  });
+};
 
   return (
     <section className="w-full flex flex-col gap-[2vh] h-[60vh]">

@@ -19,6 +19,7 @@ export function Forms() {
     defaultValues: {
       users: [],
       enemies: [],
+      environment: [],
       mapId: 1,
       gridWidth: 10,
       gridHeight: 10,

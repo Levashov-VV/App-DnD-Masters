@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { useMediaQuery } from '../../../shared/hooks/auth/useMediaQuery';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 gsap.registerPlugin(MotionPathPlugin);
 
@@ -13,21 +14,26 @@ export function PreloaderProvider() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
-    const images = ['/img/logo/logo.png', '/img/logo/dice.png'];
-    let loadedCount = 0;
+  const images = [assetUrl('/img/logo/logo.png'), assetUrl('/img/logo/dice.png')];
+  let loadedCount = 0;
 
-    images.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === images.length) {
-          setImagesLoaded(true);
-        }
-      };
-    });
-  }, []);
-
+  images.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      loadedCount++;
+      if (loadedCount === images.length) {
+        setImagesLoaded(true);
+      }
+    };
+    img.onerror = () => {
+      loadedCount++;
+      if (loadedCount === images.length) {
+        setImagesLoaded(true);
+      }
+    };
+  });
+}, []);
   useLayoutEffect(() => {
     if (!imagesLoaded) return;
 
@@ -65,7 +71,7 @@ export function PreloaderProvider() {
         <img
           ref={preloaderRef}
           className="w-[400px] h-[400px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
-          src="/img/logo/logo.png"
+          src={assetUrl('/img/logo/logo.png')}
           alt="logo"
         />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-0">
@@ -85,7 +91,7 @@ export function PreloaderProvider() {
           className={`z-20 ${isLaptopUp ? 'w-[100px] h-[100px]' : 'w-[40px] h-[40px]'}`}
           ref={diceRef}
           alt="dice"
-          src="/img/logo/dice.png"
+          src={assetUrl('/img/logo/dice.png')}
         />
       </div>
     </>

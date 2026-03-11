@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 interface CharacterSectionProps {
   peakValue: number;
@@ -76,7 +77,7 @@ export const CharacterSectionDesktop = ({
 
       <img
         className="relative z-10 left-[3.5vw] top-[6.0vh] w-[3vw]"
-        src="../../../../../../public/img/players/Sword.png"
+        src={assetUrl('/img/players/Sword.png')}
         alt="sword"
       />
     </div>

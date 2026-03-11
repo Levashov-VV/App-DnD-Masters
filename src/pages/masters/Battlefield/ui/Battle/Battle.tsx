@@ -6,6 +6,7 @@ import { InitiativeTimer } from './Timer/Timer';
 import { BattleBoard } from './BattleBoard/BattleBoard';
 import type { BattleFormData, HoveredToken } from '../Form/types';
 import { maps } from '../Form/types';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 interface BattleProps {
   battleData: BattleFormData;
@@ -36,7 +37,6 @@ export function Battle({ battleData }: BattleProps) {
   const [loading, setLoading] = useState(true);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Используем useMemo вместо useEffect + setState
   const initialBattleState = useMemo(() => normalizeBattleData(battleData), [battleData]);
 
   const [battleState, setBattleState] = useState<BattleFormData>(initialBattleState);
@@ -178,7 +178,7 @@ export function Battle({ battleData }: BattleProps) {
   const mapId = battleState.mapId ?? 1;
   const customMapImage = battleState.customMapImage ?? '';
   const selectedMap = maps.find((map) => map.id === mapId) || maps[0];
-  const mapImage = customMapImage || selectedMap.img;
+  const mapImage = customMapImage || assetUrl(selectedMap.img);
   const gridSizeX = battleState.gridWidth ?? 30;
   const gridSizeY = battleState.gridHeight ?? 30;
 

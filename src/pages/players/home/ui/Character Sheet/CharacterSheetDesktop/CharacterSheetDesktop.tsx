@@ -1,8 +1,8 @@
 import { CharacterSection } from '../CharacterSection';
-import Equipment from '../../../../../../../public/img/players/Character Sheet/Equipment.jpg';
-import Magic from '../../../../../../../public/img/players/Character Sheet/Magic.jpg';
-import Treasures from '../../../../../../../public/img/players/Character Sheet/Treasures.jpg';
-import Table from '../../../../../../../public/img/players/Character Sheet/Table.jpg';
+import Equipment from '/img/players/Character Sheet/Equipment.jpg';
+import Magic from '/img/players/Character Sheet/Magic.jpg';
+import Treasures from '/img/players/Character Sheet/Treasures.jpg';
+import Table from '/img/players/Character Sheet/Table.jpg';
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 

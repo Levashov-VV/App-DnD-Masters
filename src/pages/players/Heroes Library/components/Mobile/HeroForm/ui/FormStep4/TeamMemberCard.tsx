@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { TeamMember } from '../../../../../../../../features/heroes/schemas/heroSchema';
 import raceData from '../../../../../../../../../public/data/charactersPerson.json';
+import { GameImage } from '@/components/GameImage';
 
 interface TeamMemberCardProps {
   member: TeamMember;
@@ -60,7 +61,7 @@ export function TeamMemberCard({ member, onEdit, onRemove }: TeamMemberCardProps
         className="w-[15vw] h-[15vw] rounded-full border-2 border-amber-600 bg-stone-900 overflow-hidden flex items-center justify-center"
       >
         {displayAvatar ? (
-          <img src={displayAvatar} alt={member.name} className="w-full h-full object-contain" />
+          <GameImage src={displayAvatar} alt={member.name} className="w-full h-full object-contain" />
         ) : (
           <span className="text-amber-600/50 text-[1.2vh]">Нет фото</span>
         )}

@@ -1,13 +1,15 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useRef, useCallback, useState } from 'react';
 import type { BattleFormData } from '../types';
+import { assetUrl } from '@/shared/utils/assetUrl';
+
 
 const maps = [
-  { title: 'Подземелье', id: 1, img: '/img/masters/Battlefield/Map/Dungeon.jpg' },
-  { title: 'Городская площадь', id: 2, img: '/img/masters/Battlefield/Map/CitySquare.jpg' },
-  { title: 'Болото', id: 3, img: '/img/masters/Battlefield/Map/Swamp.jpg' },
-  { title: 'Лес', id: 4, img: '/img/masters/Battlefield/Map/Forest.jpg' },
-  { title: 'Таверна', id: 5, img: '/img/masters/Battlefield/Map/Tavern.jpg' },
+  { title: 'Подземелье', id: 1, img: assetUrl('img/masters/Battlefield/Map/Dungeon.jpg') },
+  { title: 'Городская площадь', id: 2, img: assetUrl('img/masters/Battlefield/Map/CitySquare.jpg') },
+  { title: 'Болото', id: 3, img: assetUrl('img/masters/Battlefield/Map/Swamp.jpg') },
+  { title: 'Лес', id: 4, img: assetUrl('img/masters/Battlefield/Map/Forest.jpg') },
+  { title: 'Таверна', id: 5, img: assetUrl('img/masters/Battlefield/Map/Tavern.jpg') },
 ];
 
 export function BattleMapSection() {

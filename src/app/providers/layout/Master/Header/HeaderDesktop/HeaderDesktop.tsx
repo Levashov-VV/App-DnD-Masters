@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 export function HeaderDesktop() {
   return (
     <header className="fixed top-0 left-0 z-90 text-amber-100 bg-neutral-900/90 text-[1vw] gap-[4vw] flex items-center w-full">
       <div className="shrink-0">
         <Link to={'/'}>
-          <img className="w-[8vw] h-[8vw] object-contain" src="/img/logo/logo.png" alt="Logo" />
+          <img className="w-[8vw] h-[8vw] object-contain" src={assetUrl('/img/logo/logo.png')} alt="Logo" />
         </Link>
       </div>
       <nav className="w-full max-w-[80%]">

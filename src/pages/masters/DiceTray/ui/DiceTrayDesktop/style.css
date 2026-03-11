@@ -5,9 +5,10 @@
   pointer-events: none;
   display: grid;
   place-items: center;
+  padding-bottom: 20vh;
 
   opacity: 0;
-  animation: critOverlayFade 2400ms ease-in-out forwards;
+  animation: critOverlayFade 3500ms ease-in-out forwards;
 }
 
 /* туман */

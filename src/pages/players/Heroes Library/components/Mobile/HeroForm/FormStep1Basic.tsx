@@ -30,6 +30,7 @@ import {
   EXPERIENCE_TABLE,
 } from '../../../../../../features/heroes/constants/dndData';
 import raceData from '../../../../../../../public/data/charactersPerson.json';
+import { GameImage } from '@/components/GameImage';
 
 interface FormStep1BasicProps {
   register: UseFormRegister<HeroFormData>;
@@ -295,7 +296,7 @@ export function FormStep1Basic({
           <div className="relative">
             <div className="w-[25vw] h-[25vw] rounded-full border-2 border-amber-600 bg-stone-800 overflow-hidden flex items-center justify-center">
               {displayAvatar ? (
-                <img
+                <GameImage
                   key={displayAvatar}
                   src={displayAvatar}
                   alt="Аватар персонажа"
@@ -361,7 +362,7 @@ export function FormStep1Basic({
               key={raceImages.figure}
               className="w-[20vw] h-[20vw] overflow-hidden flex items-end justify-center"
             >
-              <img
+              <GameImage
                 src={raceImages.figure}
                 alt="Фигурка расы"
                 className="max-w-full max-h-full object-contain drop-shadow-lg"

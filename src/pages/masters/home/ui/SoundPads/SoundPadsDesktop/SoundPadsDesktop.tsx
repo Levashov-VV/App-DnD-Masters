@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import SoundPad from '../../../../../../../public/img/masters/home/SoundPads/SoundPad.png';
+import SoundPad from '/img/masters/home/SoundPads/SoundPad.png';
 
 gsap.registerPlugin(ScrollTrigger);
 

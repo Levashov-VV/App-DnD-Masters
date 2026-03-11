@@ -1,9 +1,10 @@
 import { useFormContext, useWatch } from 'react-hook-form';
-import Person from '../../../../../../../public/img/masters/Battlefield/Figures/Logo-Profile.png';
+import Person from '/img/masters/Battlefield/Figures/Logo-Profile.png';
 import { useCharacter } from '@/shared/hooks/auth/useCharacter';
 import type { Path } from 'react-hook-form';
 import { useEffect } from 'react';
 import type { User, Enemies, CreatureSide, BattleFormData } from '../types';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 interface UserItemProps {
   index: number;
@@ -116,7 +117,11 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
     }
   };
 
-  const logoForForm = character?.logo || item.logo || Person;
+  const logoForForm = character?.logo
+    ? assetUrl(character.logo)
+    : (item.logo as string)
+      ? assetUrl(item.logo as string)
+      : Person;
 
   return (
     <li className="flex items-center gap-[1vw]">

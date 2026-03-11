@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import LogoText from '../../../../../../../public/img/logo/logo-text.png';
+import LogoText from '/img/logo/logo-text.png';
 
 export const FooterDesktop = () => {
   return (

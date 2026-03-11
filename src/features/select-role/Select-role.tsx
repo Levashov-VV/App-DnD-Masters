@@ -3,6 +3,7 @@ import BlurText from '../../shared/ui/BlurText/BlurText';
 import { LazyMotion, domAnimation } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '../../shared/hooks//auth/useMediaQuery';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 export function SelectRole() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export function SelectRole() {
           <div className="imageWrapper" onClick={handleClickMaster}>
             <img
               className="selectRole desktop-selectRole"
-              src="/img/Select-role/Master.png"
+              src={assetUrl('img/Select-role/Master.png')}
               alt="Master"
             />
           </div>
@@ -36,7 +37,7 @@ export function SelectRole() {
           <div className="imageWrapper" onClick={handleClickPlayer}>
             <img
               className="selectRole desktop-selectRole"
-              src="/img/Select-role/Players.png"
+              src={assetUrl('img/Select-role/Players.png')}
               alt="Player"
             />
           </div>
@@ -61,7 +62,7 @@ export function SelectRole() {
         <div className="imageWrapper">
           <img
             className="selectRole mobile-selectRole"
-            src="/img/Select-role/Master.png"
+            src={assetUrl('img/Select-role/Master.png')}
             alt="Master"
           />
         </div>
@@ -79,7 +80,7 @@ export function SelectRole() {
         <div className="imageWrapper">
           <img
             className="selectRole mobile-selectRole"
-            src="/img/Select-role/Players.png"
+            src={assetUrl('img/Select-role/Players.png')}
             alt="Player"
           />
         </div>

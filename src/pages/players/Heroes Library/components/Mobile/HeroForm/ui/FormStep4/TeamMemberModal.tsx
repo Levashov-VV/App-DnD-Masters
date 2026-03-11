@@ -12,6 +12,7 @@ import {
 } from '../../../../../../../../features/heroes/constants/dndData';
 import { TextareaWithFontControl } from '../TextareaFontControl';
 import raceData from '../../../../../../../../../public/data/charactersPerson.json';
+import { GameImage } from '@/components/GameImage';
 
 interface TeamMemberModalProps {
   member: TeamMember;
@@ -184,7 +185,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
             {/* Фигурка */}
             <div className="w-[44vw] h-[32vh] overflow-hidden flex items-end justify-center">
               {raceFigure ? (
-                <img
+                <GameImage
                   src={raceFigure}
                   alt="Фигурка расы"
                   className="w-[50vw] h-[25vh] drop-shadow-lg"
@@ -201,7 +202,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
               <div className="relative">
                 <div className="w-[20vw] h-[20vw] rounded-full border-2 border-amber-600 bg-stone-800 overflow-hidden flex items-center justify-center">
                   {displayAvatar ? (
-                    <img
+                    <GameImage
                       src={displayAvatar}
                       alt="Аватар"
                       className="w-full h-full object-contain"

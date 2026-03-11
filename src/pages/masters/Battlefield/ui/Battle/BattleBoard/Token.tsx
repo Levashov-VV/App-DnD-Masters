@@ -2,6 +2,7 @@ import { useDraggable } from '@dnd-kit/core';
 import DefaultLogo from '/img/masters/Battlefield/Figures/Logo-Profile.png';
 import type { User, Enemies, Environment, HoveredToken } from '../../Form/types';
 import { useState, useCallback, useMemo } from 'react';
+import { GameImage } from '@/components/GameImage';
 
 type AnyTokenData = User | Enemies | Environment;
 
@@ -40,13 +41,11 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
     return cleanPath;
   };
 
-  // Безопасный доступ к свойствам с учетом типов
   const figureSrc = 'img' in token.data && token.data.img ? normalizeImagePath(token.data.img) : '';
 
   const logoSrc =
     'logo' in token.data && token.data.logo ? normalizeImagePath(token.data.logo) : '';
 
-  // Используем useMemo вместо useEffect + setState
   const mode = useMemo<'figure' | 'logo' | 'default'>(() => {
     return figureSrc ? 'figure' : logoSrc ? 'logo' : 'default';
   }, [figureSrc, logoSrc]);
@@ -104,7 +103,7 @@ function DraggableToken({ token, gridWidth, gridHeight, onHoverToken }: TokenPro
         transformOrigin: 'center',
       }}
     >
-      <img
+      <GameImage
         src={imageSrc}
         alt={badgeText || 'Token'}
         className="w-full h-full object-contain pointer-events-none"

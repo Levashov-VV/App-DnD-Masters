@@ -1,4 +1,4 @@
-import WhiteBlot from '../../../../public/img/masters/Battlefield/Preload/whiteBlot.png';
+import WhiteBlot from '/img/masters/Battlefield/Preload/whiteBlot.png';
 import { gsap } from 'gsap';
 import { useLayoutEffect, useRef } from 'react';
 

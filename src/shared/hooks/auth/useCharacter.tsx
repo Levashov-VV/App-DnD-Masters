@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import charactersData from '@/shared/data/charactersPerson.json'
+import type { CreatureSide } from '../../../pages/masters/Battlefield/ui/Form/types';
 
-type CreatureSide = 'allies' | 'enemies' | 'users';
 type Character = {
   id: number;
   side: CreatureSide;
@@ -9,18 +9,7 @@ type Character = {
   img: string;
   logo: string;
 };
+
 export function useCharacter() {
-  const [data, setData] = useState<Character[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('../../../../public/data/charactersPerson.json')
-      .then((res) => res.json())
-      .then((json: Character[]) => {
-        setData(json);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { data, loading };
+  return { data: charactersData as Character[], loading: false };
 }

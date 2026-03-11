@@ -29,6 +29,7 @@ export type Enemies = {
   name: string;
   img?: string;
   logo?: string;
+  className?: string;
   initiative?: number;
   isDead?: boolean;
   size: string;

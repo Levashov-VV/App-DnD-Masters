@@ -1,5 +1,5 @@
 import backgroundImage from '/img/masters/home/StartHomeImage.png';
-import BackgroundMobileImage from '../../../../../../public/img/players/StartBlock/BackGround.jpg';
+import BackgroundMobileImage from '/img/players/StartBlock/BackGround.jpg';
 import { SplittingText } from '@/components/ui/shadcn-io/splitting-text';
 import BlurText from '../../../../../shared/ui/BlurText/BlurText';
 import { LazyMotion, domAnimation } from 'motion/react';

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMediaQuery } from '../../../../../shared/hooks/auth/useMediaQuery';
+import { assetUrl } from '../../../../../shared/utils/assetUrl';
 
 export function Header() {
   const isLaptopUp = useMediaQuery('(min-width: 1024px)');
@@ -12,7 +13,7 @@ export function Header() {
       <header className="w-screen fixed top-0 left-0 right-0 z-90 bg-neutral-900/95">
         <div className="flex items-center justify-start gap-[25vw]">
           <Link to="/" className="flex-shrink-0">
-            <img className="w-[8vw] h-[8vw] object-contain" src="/img/logo/logo.png" alt="Logo" />
+            <img className="w-[8vw] h-[8vw] object-contain" src={assetUrl('/img/logo/logo.png')} alt="Logo" />
           </Link>
           <ul className="flex gap-[10vw] text-[2vh]">
             <li>
@@ -42,7 +43,7 @@ export function Header() {
       {/* Мобильный хедер */}
       <div className="flex items-center justify-between">
         <Link to="/" className="flex-shrink-0">
-          <img className="w-[30vw] h-[30vw] object-contain" src="/img/logo/logo.png" alt="Logo" />
+          <img className="w-[30vw] h-[30vw] object-contain" src={assetUrl('/img/logo/logo.png')} alt="Logo" />
         </Link>
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}

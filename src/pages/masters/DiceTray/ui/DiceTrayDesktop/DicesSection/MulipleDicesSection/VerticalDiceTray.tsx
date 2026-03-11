@@ -22,7 +22,6 @@ interface VerticalDiceTrayProps {
   onDiceCountsChange: (counts: DiceCounts) => void;
   onSingleThrow?: (type: DiceType, colorSet: DiceSetColor) => void;
 
-  // controlled color (lifted state up) [web:310][web:311]
   colorSet: DiceSetColor;
   onColorSetChange: (c: DiceSetColor) => void;
 }

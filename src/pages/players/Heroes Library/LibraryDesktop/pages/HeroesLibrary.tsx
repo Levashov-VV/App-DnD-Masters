@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useHeroes } from '../../Context/HeroesContext';
-import { HeroCard } from '../../components/Mobile/HeroCard';
-import { HeroEmptyState } from '../../components/Mobile/HeroEmptyState';
+import { HeroCard } from '../../components/Desktop/HeroCard';
+import { HeroEmptyState } from '../../components/Desktop/HeroEmptyState';
 
 export function HeroesLibrary() {
   const navigate = useNavigate();

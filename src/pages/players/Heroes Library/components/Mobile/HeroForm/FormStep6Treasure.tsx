@@ -194,7 +194,7 @@ export function FormStep6Treasure({ watch, setValue }: FormStep5InventoryProps) 
 
   return (
     <div className="relative left-[0.5vw] top-[1vh] w-[98vw] flex flex-col gap-[1.5vh] uppercase max-h-[63vh]">
-      <h2 className="text-[2.5vh] font-bold text-amber-100">Инвентарь</h2>
+      <h2 className="text-[2.5vh] font-bold text-amber-100 text-center">Инвентарь</h2>
 
       {/* Секция 1: Расходники */}
       <div

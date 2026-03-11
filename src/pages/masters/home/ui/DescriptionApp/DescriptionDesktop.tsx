@@ -1,16 +1,16 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLayoutEffect, useRef } from 'react';
-import dice20 from '../../../../../../public/img/masters/home/DescriptionApp/dice1d20.svg';
-import dice10 from '../../../../../../public/img/masters/home/DescriptionApp/dice1d10.svg';
-import dice6 from '../../../../../../public/img/masters/home/DescriptionApp/dice1d6.png';
-import shield from '../../../../../../public/img/masters/home/DescriptionApp/Shield.png';
-import gear from '../../../../../../public/img/masters/home/DescriptionApp/gear.svg';
-import bag from '../../../../../../public/img/masters/home/DescriptionApp/bag.png';
-import book from '../../../../../../public/img/masters/home/DescriptionApp/book.png';
-import potionMed from '../../../../../../public/img/masters/home/DescriptionApp/potionMed.png';
-import potionToxic from '../../../../../../public/img/masters/home/DescriptionApp/potionToxic.png';
-import sword from '../../../../../../public/img/masters/home/DescriptionApp/sword.png';
+import dice20 from '/img/masters/home/DescriptionApp/dice1d20.svg';
+import dice10 from '/img/masters/home/DescriptionApp/dice1d10.svg';
+import dice6 from '/img/masters/home/DescriptionApp/dice1d6.png';
+import shield from '/img/masters/home/DescriptionApp/Shield.png';
+import gear from '/img/masters/home/DescriptionApp/gear.svg';
+import bag from '/img/masters/home/DescriptionApp/Bag.png';
+import book from '/img/masters/home/DescriptionApp/book.png';
+import potionMed from '/img/masters/home/DescriptionApp/potionMed.png';
+import potionToxic from '/img/masters/home/DescriptionApp/potionToxic.png';
+import sword from '/img/masters/home/DescriptionApp/Sword.png';
 
 const images = {
   dice20,

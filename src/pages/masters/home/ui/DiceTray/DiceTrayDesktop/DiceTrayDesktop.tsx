@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 export function DiceTrayDesktop() {
   const leftTextRef = useRef<HTMLDivElement>(null);
@@ -147,17 +148,17 @@ export function DiceTrayDesktop() {
               d4-d20
             </div>
             <div className="w-[60vh] relative z-20 bottom-[5vh]">
-              <img src="../../../../../../public/img/masters/home/DiceTray/Tarask.png" />
+              <img src={assetUrl('/img/masters/home/DiceTray/Tarask.png')} />
             </div>
           </div>
           <img
             className="w-[60vw]"
-            src="../../../../../../public/img/masters/home/DiceTray/DiceTray.png"
+            src={assetUrl('/img/masters/home/DiceTray/DiceTray.png')}
             alt="Dice Tray"
           />
           <div className="flex flex-col justify-between w-[18vw]">
             <div className="w-[55vh] relative z-20 bottom-[5vh] right-[8vw]">
-              <img src="../../../../../../public/img/masters/home/DiceTray/Beholder.png" />
+              <img src={assetUrl('/img/masters/home/DiceTray/Beholder.png')} />
             </div>
             <div ref={rightTextRef} className="flex items-center relative bottom-[40vh]">
               Комплексные формулы для подсчётов ваших результатов в игре

@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import type { Consumable } from '../../../../../../../../features/heroes/schemas/heroSchema';
 import { Input } from '../Input';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface ConsumableCardProps {
   consumable: Consumable;
@@ -14,6 +16,8 @@ export function ConsumableCard({
   onUse,
   onDelete,
 }: ConsumableCardProps) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   if (consumable.quantity === 0) return null;
 
   return (
@@ -25,7 +29,7 @@ export function ConsumableCard({
         <div className="w-[15vw]">
           <div className="text-[1.3vh] font-bold text-amber-100">{consumable.name}</div>
           {consumable.description && (
-            <div className="text-[1.2vh] text-amber-100/70 ">{consumable.description}</div>
+            <div className="text-[1.2vh] text-amber-100/70">{consumable.description}</div>
           )}
         </div>
 
@@ -45,7 +49,7 @@ export function ConsumableCard({
               min={0}
               value={consumable.quantity}
               onChange={(e) => onQuantityChange(parseInt(e.target.value) || 0)}
-              className="text-center "
+              className="text-center"
               style={{ paddingLeft: '0.5vw' }}
             />
 
@@ -76,7 +80,7 @@ export function ConsumableCard({
           {/* Удалить */}
           <button
             type="button"
-            onClick={onDelete}
+            onClick={() => setDeleteDialogOpen(true)}
             className="w-[5vh] h-[2.5vh] bg-amber-600 hover:bg-amber-500 flex items-center justify-center transition-colors rounded-4xl"
           >
             <svg
@@ -95,6 +99,20 @@ export function ConsumableCard({
           </button>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        config={{
+          title: 'Удалить расходник',
+          message: `Удалить «${consumable.name}» из инвентаря?`,
+          type: 'error',
+          confirmText: 'Удалить',
+          cancelText: 'Отмена',
+          showCancel: true,
+          onConfirm: onDelete,
+        }}
+        onClose={() => setDeleteDialogOpen(false)}
+      />
     </div>
   );
 }

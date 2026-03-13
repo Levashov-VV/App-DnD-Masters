@@ -34,7 +34,14 @@ export const TextareaWithFontControl = ({
     <div className="w-full">
       <div className="flex items-center justify-between">
         {label && (
-          <label className="relative left-[0.2vw] block text-[2vh] font-medium text-amber-100">
+          <label
+            className="relative left-[0.2vw] block font-medium text-amber-100 whitespace-nowrap overflow-hidden"
+            style={{
+              fontSize: 'clamp(9px, 1.8vh, 14px)',
+              maxWidth: '80%',
+              textOverflow: 'clip',
+            }}
+          >
             {label}
           </label>
         )}

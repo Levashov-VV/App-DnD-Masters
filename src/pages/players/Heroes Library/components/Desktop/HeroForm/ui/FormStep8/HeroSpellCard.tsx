@@ -26,6 +26,7 @@ const DAMAGE_TYPE_LABELS: Record<string, string> = {
   slashing: 'Рубящий',
   thunder: 'Звук',
   varies: 'Разный',
+  variable: 'Выбор',
 };
 
 const CASTING_TIME_LABELS: Record<string, string> = {

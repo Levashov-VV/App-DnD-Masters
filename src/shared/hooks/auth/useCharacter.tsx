@@ -1,4 +1,4 @@
-import charactersData from '@/shared/data/charactersPerson.json'
+import charactersData from '@/shared/data/charactersPerson.json';
 import type { CreatureSide } from '../../../pages/masters/Battlefield/ui/Form/types';
 
 type Character = {

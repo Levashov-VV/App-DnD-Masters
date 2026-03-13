@@ -163,11 +163,16 @@ export function EquipmentSlots({ equipped, onSlotClick, onEdit }: EquipmentSlots
 
   const getSlotLabel = (type: EquipmentSlot): string => {
     switch (type) {
-      case 'armor':      return 'Броня';
-      case 'mainHand':   return 'Сил. рука';
-      case 'offHand':    return 'Слаб. рука';
-      case 'ranged':     return 'Дальний';
-      default:           return '';
+      case 'armor':
+        return 'Броня';
+      case 'mainHand':
+        return 'Сил. рука';
+      case 'offHand':
+        return 'Слаб. рука';
+      case 'ranged':
+        return 'Дальний';
+      default:
+        return '';
     }
   };
 
@@ -274,7 +279,10 @@ export function EquipmentSlots({ equipped, onSlotClick, onEdit }: EquipmentSlots
         className="relative bottom-[5vh] bg-stone-800/60 border-2 border-amber-600 rounded-lg backdrop-blur-sm w-[80vw]"
         style={{ padding: '1.2vw 2vw' }}
       >
-        <div className="flex items-center justify-center gap-[3vw]" style={{ fontSize: 'clamp(9px, 3vw, 13px)' }}>
+        <div
+          className="flex items-center justify-center gap-[3vw]"
+          style={{ fontSize: 'clamp(9px, 3vw, 13px)' }}
+        >
           <div className="flex items-center gap-[1.5vw]">
             <div className="w-[3vw] h-[3vw] bg-green-600 border-2 border-green-400 rounded shadow-sm shadow-green-400/50" />
             <span className="text-amber-100 font-medium">Экипировано</span>
@@ -284,7 +292,10 @@ export function EquipmentSlots({ equipped, onSlotClick, onEdit }: EquipmentSlots
             <span className="text-amber-100 font-medium">Свободно</span>
           </div>
         </div>
-        <div className="text-center text-amber-100/60 italic mt-[0.8vw]" style={{ fontSize: 'clamp(8px, 2.5vw, 11px)' }}>
+        <div
+          className="text-center text-amber-100/60 italic mt-[0.8vw]"
+          style={{ fontSize: 'clamp(8px, 2.5vw, 11px)' }}
+        >
           Нажмите на слот для управления
         </div>
       </div>

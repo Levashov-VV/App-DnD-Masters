@@ -350,7 +350,7 @@ export function FormStep6Treasure({ watch, setValue }: FormStep5InventoryProps) 
         style={{ padding: '0.2vh 0.5vw' }}
         className="relative bottom-[0.8vh] border-2 border-amber-600 bg-stone-800 rounded-lg"
       >
-        <div style={{marginBottom: '1.5vh'}} className="flex justify-between">
+        <div style={{ marginBottom: '1.5vh' }} className="flex justify-between">
           <h3 className="text-[1.8vh] font-bold text-amber-100">Переносимый вес</h3>
           <button
             type="button"

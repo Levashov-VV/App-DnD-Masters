@@ -95,9 +95,7 @@ export function StatsPanel({
           {/* Инициатива */}
           <div className="flex flex-col items-center bg-stone-800 border-2 border-amber-600 rounded-lg">
             <label className="text-[1.4vh] text-amber-100 uppercase">Инициатива</label>
-            <div className="text-[3vh] font-bold text-amber-100">
-              {formatModifier(initiative)}
-            </div>
+            <div className="text-[3vh] font-bold text-amber-100">{formatModifier(initiative)}</div>
           </div>
 
           {/* Скорость */}
@@ -124,9 +122,7 @@ export function StatsPanel({
             style={{ padding: '0.5vh' }}
             className="flex flex-col items-center justify-center bg-stone-800 border-2 border-amber-600 rounded-lg"
           >
-            <label className="text-[1.4vh] text-amber-100 uppercase text-center">
-              Истощение
-            </label>
+            <label className="text-[1.4vh] text-amber-100 uppercase text-center">Истощение</label>
             <div className="flex flex-wrap justify-center gap-x-[3vw]">
               {[1, 2, 3, 4, 5, 6].map((lvl) => {
                 const isActive = lvl <= formExhaustionLevel;
@@ -229,7 +225,7 @@ export function StatsPanel({
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
-              style={{padding: '15vh 1vw 0'}}
+              style={{ padding: '15vh 1vw 0' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed inset-x-0 bottom-0 h-screen bg-stone-900 border-t-4 border-amber-600 shadow-2xl z-[101] flex flex-col"
             >
@@ -292,9 +288,7 @@ export function StatsPanel({
                             <div className="flex  items-center gap-[2vw]">
                               <button
                                 type="button"
-                                onClick={(e) =>
-                                  handleConditionClick(condition, 'toggle', e)
-                                }
+                                onClick={(e) => handleConditionClick(condition, 'toggle', e)}
                                 className={`w-[25vw] h-[4vh] rounded font-bold text-[1.4vh] uppercase transition-colors ${
                                   isActive
                                     ? 'bg-amber-500 hover:bg-amber-400 text-stone-900'
@@ -305,10 +299,8 @@ export function StatsPanel({
                               </button>
                               <button
                                 type="button"
-                                onClick={(e) =>
-                                  handleConditionClick(condition, 'details', e)
-                                }
-                                style={{padding: '1vh 1vw'}}
+                                onClick={(e) => handleConditionClick(condition, 'details', e)}
+                                style={{ padding: '1vh 1vw' }}
                                 className="w-[25vw] h-[4vh] bg-stone-700 hover:bg-stone-600 text-amber-100 rounded font-bold text-[1.4vh] uppercase transition-colors"
                               >
                                 Подробнее →
@@ -341,10 +333,9 @@ export function StatsPanel({
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              style={{ paddingTop: '15vh'}}
+              style={{ paddingTop: '15vh' }}
               className="fixed inset-x-0 bottom-0 h-screen bg-stone-900 border-t-4 border-amber-600 shadow-2xl z-[103] flex flex-col"
             >
-
               {/* back */}
               <div className="flex items-center justify-between">
                 <button
@@ -375,7 +366,7 @@ export function StatsPanel({
                 </h2>
               </div>
 
-              <div style={{paddingLeft: '2vw'}} className="flex-1 overflow-y-auto">
+              <div style={{ paddingLeft: '2vw' }} className="flex-1 overflow-y-auto">
                 <div className="flex flex-col gap-[2vh]">
                   <div>
                     {selectedCondition.description.split('\n').map((line, index) => (
@@ -441,19 +432,15 @@ export function StatsPanel({
                 </div>
               </div>
 
-              <div className="px-[4vw] pb-[2vh]">
+              <div>
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => applyConditionAndClose(selectedCondition.nameEn)}
-                  className="w-full bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold text-[2vh] uppercase transition-colors shadow-lg flex items-center justify-center gap-[2vw] py-[1.2vh]"
+                  className="w-full h-[15vh] bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold text-[2.5vh] uppercase transition-colors shadow-lg flex items-center justify-center gap-[2vw] py-[1.2vh]"
                 >
-                  <svg
-                    className="w-[2.5vh] h-[2.5vh]"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="w-[2.5vh] h-[2.5vh]" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"

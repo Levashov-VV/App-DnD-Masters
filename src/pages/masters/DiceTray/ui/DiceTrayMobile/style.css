@@ -5,7 +5,7 @@
   pointer-events: none;
   display: grid;
   place-items: center;
-  padding-top: 25vh;
+  padding-top: 65vh;
 
   opacity: 0;
   animation: critOverlayFade 2400ms ease-in-out forwards;

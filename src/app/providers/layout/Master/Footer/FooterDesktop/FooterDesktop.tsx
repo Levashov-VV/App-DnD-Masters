@@ -26,13 +26,13 @@ export function FooterDesktop() {
             <Link to="/master">Главная</Link>
           </li>
           <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
-            <Link to="/BattleField">Поле боя</Link>
+            <Link to={'/Master/BattleField'}>Поле боя</Link>
           </li>
           <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
-            <Link to="/DiceTray">Броски кубиков</Link>
+            <Link to={'/Master/DiceTray'}>Броски кубиков</Link>
           </li>
           <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
-            <Link to="/SoundPad">Саундпады</Link>
+            <Link to={'/Master/SoundPad'}>Саундпады</Link>
           </li>
           {/* <li className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
             <Link to="/CloneVoice">Генерация голоса</Link>

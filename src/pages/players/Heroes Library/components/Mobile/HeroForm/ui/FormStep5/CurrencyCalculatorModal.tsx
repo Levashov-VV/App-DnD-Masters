@@ -143,7 +143,7 @@ export function CurrencyCalculatorModal({
                 options={coinTypesArray}
                 value={fromType}
                 onChange={(e) => setFromType(e.target.value as CoinType)}
-                placeholder=''
+                placeholder=""
                 className="bg-stone-900 border-2 border-amber-400 focus:border-none rounded-lg text-[2vh] text-amber-100"
               />
             </div>
@@ -177,7 +177,7 @@ export function CurrencyCalculatorModal({
                 options={coinTypesArray}
                 value={toType}
                 onChange={(e) => setToType(e.target.value as CoinType)}
-                placeholder=''
+                placeholder=""
                 className="bg-stone-900 border-2 border-amber-400 focus:border-none rounded-lg text-[2vh] text-amber-100"
               />
             </div>

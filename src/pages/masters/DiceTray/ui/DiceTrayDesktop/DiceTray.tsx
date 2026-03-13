@@ -4,7 +4,7 @@ import { SelectShot } from './SelectShot/SelectShot';
 import { PhysicsWorld } from './PhysicalWorld/PhysicalWorld';
 import { RollingDice } from './RollingDice/RollingDice';
 import { History } from './History/History';
-import { assetUrl } from '@/shared/utils/assetUrl'; 
+import { assetUrl } from '@/shared/utils/assetUrl';
 
 import type { RollMode, DiceCounts, DiceType, DiceSetColor } from './types/rollTypes';
 import {

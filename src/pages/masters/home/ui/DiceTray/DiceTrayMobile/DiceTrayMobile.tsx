@@ -156,7 +156,7 @@ export function DiceTrayMobile() {
               d4-d20
             </div>
             <div className="w-screen">
-              <img src={assetUrl('img/masters/home/DiceTray/Tarask.png')}/>
+              <img src={assetUrl('img/masters/home/DiceTray/Tarask.png')} />
             </div>
           </div>
         </div>

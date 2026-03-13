@@ -22,7 +22,6 @@ export const Dice = ({ scale = 1, type, colorSet, autoRotate = true, meshRef }: 
   const diceMeshRef = useRef<THREE.Mesh | null>(null);
   const { scene } = useGLTF(DICE_MODEL_URL);
 
-
   useEffect(() => {
     const set = diceSets[colorSet];
     const targetName = set[type];
@@ -53,7 +52,6 @@ export const Dice = ({ scale = 1, type, colorSet, autoRotate = true, meshRef }: 
 
     groupRef.current.add(mesh);
   }, [scene, scale, type, colorSet, meshRef]);
-
 
   useFrame((_, delta) => {
     if (!autoRotate || !groupRef.current) return;

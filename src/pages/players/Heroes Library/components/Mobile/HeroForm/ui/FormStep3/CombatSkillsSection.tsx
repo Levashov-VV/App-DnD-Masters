@@ -231,10 +231,7 @@ function SkillsList({
             <span className="truncate text-amber-400">
               <span className="text-amber-500">Бонус:</span> +{ability.bonus}
             </span>
-            <span
-              className="truncate text-amber-400"
-              title={ability.damage}
-            >
+            <span className="truncate text-amber-400" title={ability.damage}>
               <span className="text-amber-500">Урон:</span> {ability.damage}
             </span>
           </div>

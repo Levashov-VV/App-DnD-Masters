@@ -26,6 +26,7 @@ const DAMAGE_TYPE_LABELS: Record<string, string> = {
   slashing: 'Рубящий',
   thunder: 'Звук',
   varies: 'Разный',
+  variable: 'Выбор',
 };
 
 const CASTING_TIME_LABELS: Record<string, string> = {
@@ -74,7 +75,10 @@ export function HeroSpellCard({
       }`}
     >
       {/* Верхняя строка: название + школа */}
-      <div style={{padding: '0.4vh 0vw'}} className="flex justify-between items-start gap-[0.5vw]">
+      <div
+        style={{ padding: '0.4vh 0vw' }}
+        className="flex justify-between items-start gap-[0.5vw]"
+      >
         <span className="text-[1.2vh] font-bold text-amber-100 leading-tight">{spell.name}</span>
         <div className="flex flex-row gap-[1vw]">
           <span
@@ -136,7 +140,10 @@ export function HeroSpellCard({
       {/* Теги: урон, концентрация, ритуал */}
       {spell.isDamageSpell || spell.isConcentration || spell.isRitual ? (
         <div className="flex flex-col justify-between">
-          <div style={{ margin: '0.3vh 0', padding: '0.3vh 0.3vw' }} className="w-[45%] flex flex-col gap-[0.5vh]">
+          <div
+            style={{ margin: '0.3vh 0', padding: '0.3vh 0.3vw' }}
+            className="w-[45%] flex flex-col gap-[0.5vh]"
+          >
             {spell.isDamageSpell && damageType && (
               <span
                 style={{ padding: '0.1vh 0.3vw' }}

@@ -37,7 +37,9 @@ function HeroFormWrapper({ mode, id }: HeroFormProps) {
   const HeroFormComponent = isMobile ? HeroFormMobile : HeroFormDesktop;
 
   return (
-    <Suspense fallback={<div className='relative top-[40vh] text-[3vh] text-center'>Загрузка формы...</div>}>
+    <Suspense
+      fallback={<div className="relative top-[40vh] text-[3vh] text-center">Загрузка формы...</div>}
+    >
       <HeroFormComponent mode={mode} id={id} />
     </Suspense>
   );

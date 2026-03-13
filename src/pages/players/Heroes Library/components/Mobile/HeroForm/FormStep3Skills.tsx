@@ -126,7 +126,7 @@ export function FormStep3Skills({ watch, setValue }: FormStep3SkillsProps) {
       </div>
 
       {/* ВЛАДЕНИЕ СНАРЯЖЕНИЕМ */}
-      <div style={{marginTop: '2vh'}}>
+      <div style={{ marginTop: '2vh' }}>
         <ProficienciesSection {...proficiencies} />
       </div>
 

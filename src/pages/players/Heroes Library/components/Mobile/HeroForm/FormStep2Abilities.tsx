@@ -190,9 +190,9 @@ export function FormStep2AbilitiesAndSkills({
         </h2>
       </div>
 
-      <div style={{paddingLeft: '1vw'}} className="flex flex-row gap-[5vw]">
+      <div style={{ paddingLeft: '1vw' }} className="flex flex-row gap-[5vw]">
         {/* Бонус владения */}
-        <div className="w-[25vw] h-[9.5vh] border-2 border-amber-600 bg-stone-800 rounded-lg">
+        <div className="w-[25vw] h-[9.5vh] flex flex-col items-center justify-center border-2 border-amber-600 bg-stone-800 rounded-lg">
           <h3 className="text-center text-[1.4vh] font-bold text-amber-100">БОНУС ВЛАДЕНИЯ</h3>
           <div className="text-center text-[2.5vh] font-bold text-amber-100">
             +{proficiencyBonus}
@@ -268,7 +268,9 @@ export function FormStep2AbilitiesAndSkills({
                     </span>
                   </div>
 
-                  <span className="relative bottom-[0.5vh] text-center text-[1vh] text-amber-100">МОДИФ.</span>
+                  <span className="relative bottom-[0.5vh] text-center text-[1vh] text-amber-100">
+                    МОДИФ.
+                  </span>
                 </div>
 
                 <div className="flex flex-col items-center">
@@ -380,7 +382,7 @@ export function FormStep2AbilitiesAndSkills({
       </div>
 
       {/* Секция языков */}
-      <div style={{ margin: '0 0.5vh' }} className='relative bottom-[1.5vh]'>
+      <div style={{ margin: '0 0.5vh' }} className="relative bottom-[1.5vh]">
         <div className="flex items-center justify-between">
           <h3 className="text-[1.8vh] font-bold text-amber-100">ЯЗЫКИ</h3>
 
@@ -492,7 +494,7 @@ export function FormStep2AbilitiesAndSkills({
               {displayLanguages.map((language) => (
                 <div
                   key={language}
-                  style={{padding: '0 0.5vw'}}
+                  style={{ padding: '0 0.5vw' }}
                   className="max-w-[35vw] h-[3vh] flex items-center justify-center gap-[0.3vw] bg-amber-600 text-stone-900 rounded text-[1.3vh] font-bold"
                 >
                   <span>{language}</span>

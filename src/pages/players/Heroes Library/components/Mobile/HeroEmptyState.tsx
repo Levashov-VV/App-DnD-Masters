@@ -25,7 +25,7 @@ export function HeroEmptyState({ onCreateHero }: HeroEmptyStateProps) {
         Ваша библиотека героев пуста
       </h2>
 
-      <p className="w-[25vw] text-amber-100 text-center">
+      <p className="w-[80vw] text-amber-100 text-center">
         Создайте своего первого персонажа для D&D приключений. Все герои будут сохранены локально в
         вашем браузере.
       </p>

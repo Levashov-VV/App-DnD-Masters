@@ -266,9 +266,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
         <form onSubmit={handleSubmit(onSubmit, onValidationError)}>
           <div className="grid grid-cols-5 gap-[2vw]">
             <div className="col-span-4">
-              <div className="bg-neutral-700/70 rounded-2xl h-[65vh]">
-                {renderStep()}
-              </div>
+              <div className="bg-neutral-700/70 rounded-2xl h-[65vh]">{renderStep()}</div>
               <div className="flex justify-between">
                 <button
                   type="button"

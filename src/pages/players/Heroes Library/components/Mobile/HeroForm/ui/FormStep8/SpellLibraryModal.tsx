@@ -111,8 +111,16 @@ export function SpellLibraryModal({
   };
 
   const cantrips = useWatch({ control, name: 'cantrips' as any, defaultValue: [] }) as HeroSpell[];
-  const preparedSpells = useWatch({ control, name: 'preparedSpells' as any, defaultValue: [] }) as HeroSpell[];
-  const knownSpells = useWatch({ control, name: 'knownSpells' as any, defaultValue: [] }) as HeroSpell[];
+  const preparedSpells = useWatch({
+    control,
+    name: 'preparedSpells' as any,
+    defaultValue: [],
+  }) as HeroSpell[];
+  const knownSpells = useWatch({
+    control,
+    name: 'knownSpells' as any,
+    defaultValue: [],
+  }) as HeroSpell[];
 
   const { spells, availableSchools, availableDamageTypes } = useSpellLibrary({
     characterClass: selectedFilterClass || characterClass,
@@ -130,11 +138,15 @@ export function SpellLibraryModal({
     return spells.filter((s) => s.level > 0);
   }, [spells, mode]);
 
-  const addedIds = useMemo(() => new Set([
-    ...cantrips.map((s) => s.id),
-    ...preparedSpells.map((s) => s.id),
-    ...knownSpells.map((s) => s.id),
-  ]), [cantrips, preparedSpells, knownSpells]);
+  const addedIds = useMemo(
+    () =>
+      new Set([
+        ...cantrips.map((s) => s.id),
+        ...preparedSpells.map((s) => s.id),
+        ...knownSpells.map((s) => s.id),
+      ]),
+    [cantrips, preparedSpells, knownSpells]
+  );
 
   const handleSpellSelect = (spell: SpellEntry) => {
     setSelectedSpell(spell);
@@ -155,11 +167,23 @@ export function SpellLibraryModal({
   const handleRemove = (target: 'cantrip' | 'prepared' | 'known') => {
     if (!selectedSpell) return;
     if (target === 'cantrip')
-      setValue('cantrips' as any, cantrips.filter((s) => s.id !== selectedSpell.id), { shouldDirty: true });
+      setValue(
+        'cantrips' as any,
+        cantrips.filter((s) => s.id !== selectedSpell.id),
+        { shouldDirty: true }
+      );
     if (target === 'prepared')
-      setValue('preparedSpells' as any, preparedSpells.filter((s) => s.id !== selectedSpell.id), { shouldDirty: true });
+      setValue(
+        'preparedSpells' as any,
+        preparedSpells.filter((s) => s.id !== selectedSpell.id),
+        { shouldDirty: true }
+      );
     if (target === 'known')
-      setValue('knownSpells' as any, knownSpells.filter((s) => s.id !== selectedSpell.id), { shouldDirty: true });
+      setValue(
+        'knownSpells' as any,
+        knownSpells.filter((s) => s.id !== selectedSpell.id),
+        { shouldDirty: true }
+      );
   };
 
   const resetFilters = () => {
@@ -174,9 +198,12 @@ export function SpellLibraryModal({
 
   const getTitle = () => {
     switch (mode) {
-      case 'cantrips': return 'Библиотека заговоров';
-      case 'spells': return 'Библиотека заклинаний';
-      default: return 'Полная библиотека';
+      case 'cantrips':
+        return 'Библиотека заговоров';
+      case 'spells':
+        return 'Библиотека заклинаний';
+      default:
+        return 'Полная библиотека';
     }
   };
 
@@ -197,7 +224,9 @@ export function SpellLibraryModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose();
+          }}
         >
           <motion.div
             className="flex flex-col w-full bg-stone-900 border-t-4 border-x-4 border-amber-600 rounded-t-2xl overflow-hidden"
@@ -207,9 +236,11 @@ export function SpellLibraryModal({
             exit={{ y: '100%' }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
           >
-
             {/* ── Шапка ── */}
-            <div style={{ padding: '2vh 1.5vw' }} className="flex items-center gap-2 bg-stone-800 border-b-2 border-amber-600 shrink-0">
+            <div
+              style={{ padding: '2vh 1.5vw' }}
+              className="flex items-center gap-2 bg-stone-800 border-b-2 border-amber-600 shrink-0"
+            >
               <span className="text-[1.8vh] font-bold text-amber-100 uppercase tracking-wide truncate flex-1 min-w-0">
                 {getTitle()}
               </span>
@@ -221,23 +252,26 @@ export function SpellLibraryModal({
                 ✕
               </button>
             </div>
-              <div style={{ padding: '2vh 1.5vw' }} className="flex justify-center gap-[5vw] shrink-0">
-                {STEPS.map(({ step: s, label }) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => goTo(s)}
-                    style={{padding: '0.4vh 2vw'}}
-                    className={`text-[1.4vh] font-bold rounded-lg border-2 transition-colors ${
-                      step === s
-                        ? 'bg-amber-600 border-amber-500 text-stone-900'
-                        : 'bg-stone-900 border-amber-600/30 text-amber-100/50'
-                    }`}
-                  >
-                    {s === 2 ? `${filteredSpells.length} ${label}` : label}
-                  </button>
-                ))}
-              </div>
+            <div
+              style={{ padding: '2vh 1.5vw' }}
+              className="flex justify-center gap-[5vw] shrink-0"
+            >
+              {STEPS.map(({ step: s, label }) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => goTo(s)}
+                  style={{ padding: '0.4vh 2vw' }}
+                  className={`text-[1.4vh] font-bold rounded-lg border-2 transition-colors ${
+                    step === s
+                      ? 'bg-amber-600 border-amber-500 text-stone-900'
+                      : 'bg-stone-900 border-amber-600/30 text-amber-100/50'
+                  }`}
+                >
+                  {s === 2 ? `${filteredSpells.length} ${label}` : label}
+                </button>
+              ))}
+            </div>
 
             {/* Контент */}
             <div className="flex-1 overflow-hidden relative">
@@ -252,14 +286,20 @@ export function SpellLibraryModal({
                   transition={{ duration: 0.22, ease: 'easeInOut' }}
                   className="absolute inset-0 flex flex-col overflow-hidden"
                 >
-
                   {/* ФИЛЬТРЫ */}
                   {step === 1 && (
-                    <div style={{ margin: '2vh 1.5vw' }} className="flex-1 overflow-y-auto flex flex-col gap-4">
-
+                    <div
+                      style={{ margin: '2vh 1.5vw' }}
+                      className="flex-1 overflow-y-auto flex flex-col gap-4"
+                    >
                       {/* Поиск */}
                       <div>
-                        <label style={{marginBottom: '1vh'}} className="text-[1.2vh] text-amber-100/60 uppercase block">Поиск</label>
+                        <label
+                          style={{ marginBottom: '1vh' }}
+                          className="text-[1.2vh] text-amber-100/60 uppercase block"
+                        >
+                          Поиск
+                        </label>
                         <input
                           type="text"
                           value={searchQuery}
@@ -271,12 +311,19 @@ export function SpellLibraryModal({
 
                       {/* Класс */}
                       <div>
-                        <label style={{marginBottom: '1vh'}} className="text-[1.2vh] text-amber-100/60 uppercase block mb-1">Класс</label>
+                        <label
+                          style={{ marginBottom: '1vh' }}
+                          className="text-[1.2vh] text-amber-100/60 uppercase block mb-1"
+                        >
+                          Класс
+                        </label>
                         <Select
                           options={['Все классы', ...DND_CLASSES]}
                           value={selectedFilterClass || 'Все классы'}
                           onChange={(e) =>
-                            setSelectedFilterClass(e.target.value === 'Все классы' ? null : e.target.value)
+                            setSelectedFilterClass(
+                              e.target.value === 'Все классы' ? null : e.target.value
+                            )
                           }
                           placeholder="Выберите класс"
                           className="w-full"
@@ -285,11 +332,19 @@ export function SpellLibraryModal({
 
                       {/* Мой класс / Все */}
                       <div>
-                        <label style={{marginBottom: '1vh'}} className="text-[1.2vh] text-amber-100/60 uppercase block mb-1">Показать</label>
+                        <label
+                          style={{ marginBottom: '1vh' }}
+                          className="text-[1.2vh] text-amber-100/60 uppercase block mb-1"
+                        >
+                          Показать
+                        </label>
                         <div className="flex gap-2">
                           <button
                             type="button"
-                            onClick={() => { setShowAll(false); setSelectedFilterClass(null); }}
+                            onClick={() => {
+                              setShowAll(false);
+                              setSelectedFilterClass(null);
+                            }}
                             className={`flex-1 text-sm font-bold rounded-lg border-2 transition-colors ${
                               !showAll && !selectedFilterClass
                                 ? 'bg-amber-600 border-amber-500 text-stone-900'
@@ -300,7 +355,10 @@ export function SpellLibraryModal({
                           </button>
                           <button
                             type="button"
-                            onClick={() => { setShowAll(true); setSelectedFilterClass(null); }}
+                            onClick={() => {
+                              setShowAll(true);
+                              setSelectedFilterClass(null);
+                            }}
                             className={`flex-1 text-[1.2vh] font-bold rounded-lg border-2 transition-colors ${
                               showAll
                                 ? 'bg-amber-600 border-amber-500 text-stone-900'
@@ -314,7 +372,12 @@ export function SpellLibraryModal({
 
                       {/* Уровень */}
                       <div>
-                        <label style={{marginBottom: '1vh'}} className="text-[1.2vh] text-amber-100/60 uppercase block">Уровень</label>
+                        <label
+                          style={{ marginBottom: '1vh' }}
+                          className="text-[1.2vh] text-amber-100/60 uppercase block"
+                        >
+                          Уровень
+                        </label>
                         <div className="flex flex-wrap gap-[2vw]">
                           {[null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((lvl) => (
                             <button
@@ -335,13 +398,18 @@ export function SpellLibraryModal({
 
                       {/* Школа */}
                       <div>
-                        <label style={{marginBottom: '1vh'}} className="text-[1.2vh] text-amber-100/60 uppercase block">Школа</label>
+                        <label
+                          style={{ marginBottom: '1vh' }}
+                          className="text-[1.2vh] text-amber-100/60 uppercase block"
+                        >
+                          Школа
+                        </label>
                         <div className="flex flex-wrap gap-2">
                           {[null, ...availableSchools].map((school) => (
                             <button
                               key={school ?? 'all'}
                               type="button"
-                              style={{padding: '1vh 2vw'}}
+                              style={{ padding: '1vh 2vw' }}
                               onClick={() => setFilterSchool(school ?? null)}
                               className={` text-[1.2vh] font-bold rounded-lg border-2 transition-colors ${
                                 filterSchool === (school ?? null)
@@ -357,14 +425,19 @@ export function SpellLibraryModal({
 
                       {/* Тип урона */}
                       <div>
-                        <label style={{marginBottom: '1vh'}} className="text-xs text-amber-100/60 uppercase block">Тип урона</label>
+                        <label
+                          style={{ marginBottom: '1vh' }}
+                          className="text-xs text-amber-100/60 uppercase block"
+                        >
+                          Тип урона
+                        </label>
                         <div className="flex flex-wrap gap-2">
                           {[null, ...availableDamageTypes].map((dt) => (
                             <button
                               key={dt ?? 'all'}
                               type="button"
                               onClick={() => setFilterDamageType(dt ?? null)}
-                              style={{padding: '1vh 2vw'}}
+                              style={{ padding: '1vh 2vw' }}
                               className={`text-[1.2vh] font-bold rounded-lg border-2 transition-colors ${
                                 filterDamageType === (dt ?? null)
                                   ? 'bg-amber-600 border-amber-500 text-stone-900'
@@ -379,12 +452,16 @@ export function SpellLibraryModal({
 
                       {/* Концентрация / Ритуал */}
                       <div>
-                        <label className="text-[1.2vh] text-amber-100/60 uppercase block mb-1">Особые</label>
+                        <label className="text-[1.2vh] text-amber-100/60 uppercase block mb-1">
+                          Особые
+                        </label>
                         <div className="flex gap-2">
                           <button
                             type="button"
-                            style={{padding: '1vh 2vw'}}
-                            onClick={() => setFilterConcentration(filterConcentration === true ? null : true)}
+                            style={{ padding: '1vh 2vw' }}
+                            onClick={() =>
+                              setFilterConcentration(filterConcentration === true ? null : true)
+                            }
                             className={`flex-1 text-[1.2vh] font-bold rounded-lg border-2 transition-colors ${
                               filterConcentration === true
                                 ? 'bg-blue-700 border-blue-500 text-white'
@@ -396,7 +473,7 @@ export function SpellLibraryModal({
                           <button
                             type="button"
                             onClick={() => setFilterRitual(filterRitual === true ? null : true)}
-                            style={{padding: '1vh 2vw'}}
+                            style={{ padding: '1vh 2vw' }}
                             className={`flex-1 text-xs font-bold rounded-lg border-2 transition-colors ${
                               filterRitual === true
                                 ? 'bg-green-700 border-green-500 text-white'
@@ -412,7 +489,7 @@ export function SpellLibraryModal({
                       <button
                         type="button"
                         onClick={resetFilters}
-                        style={{padding: '1vh 2vw'}}
+                        style={{ padding: '1vh 2vw' }}
                         className="w-full text-[1.2vh] font-bold border-2 border-red-700/50 text-red-400/70 rounded-lg transition-colors active:border-red-600 active:text-red-300"
                       >
                         Сбросить фильтры
@@ -422,7 +499,7 @@ export function SpellLibraryModal({
                       <button
                         type="button"
                         onClick={() => goTo(2)}
-                        style={{padding: '1vh 2vw'}}
+                        style={{ padding: '1vh 2vw' }}
                         className="w-full bg-amber-600 active:bg-amber-500 text-stone-900 font-bold rounded-xl text-[1.2vh] transition-colors"
                       >
                         Показать заклинания ({filteredSpells.length}) →
@@ -432,7 +509,10 @@ export function SpellLibraryModal({
 
                   {/* ШАГ 2 — СПИСОК */}
                   {step === 2 && (
-                    <div style={{padding: '2vh 1.5vw'}} className="flex-1 overflow-y-auto flex flex-col gap-2">
+                    <div
+                      style={{ padding: '2vh 1.5vw' }}
+                      className="flex-1 overflow-y-auto flex flex-col gap-2"
+                    >
                       {filteredSpells.length === 0 ? (
                         <div className="flex items-center justify-center h-full text-sm text-amber-100/40">
                           Заклинания не найдены
@@ -446,7 +526,7 @@ export function SpellLibraryModal({
                               key={spell.id}
                               type="button"
                               onClick={() => handleSpellSelect(spell)}
-                              style={{padding: '1vh 2vw'}}
+                              style={{ padding: '1vh 2vw' }}
                               className={`w-full text-left rounded-xl border-2 transition-all ${
                                 isSelected
                                   ? 'border-amber-400 bg-amber-900/30'
@@ -455,11 +535,14 @@ export function SpellLibraryModal({
                             >
                               <div className="flex justify-between items-center gap-2">
                                 <div className="flex items-center gap-2 min-w-0">
-                                  <span style={{padding: '0.2vh 0.4vw'}} className={`text-[1.6vh] font-bold rounded border-2 shrink-0 ${
-                                    spell.level === 0
-                                      ? 'border-indigo-500 text-indigo-300'
-                                      : 'border-amber-600/60 text-amber-400/80'
-                                  }`}>
+                                  <span
+                                    style={{ padding: '0.2vh 0.4vw' }}
+                                    className={`text-[1.6vh] font-bold rounded border-2 shrink-0 ${
+                                      spell.level === 0
+                                        ? 'border-indigo-500 text-indigo-300'
+                                        : 'border-amber-600/60 text-amber-400/80'
+                                    }`}
+                                  >
                                     {spell.level === 0 ? 'Загов.' : `${spell.level} ур.`}
                                   </span>
                                   <span className="text-[1.6vh] font-bold text-amber-100 truncate">
@@ -468,10 +551,17 @@ export function SpellLibraryModal({
                                 </div>
                                 <div className="flex items-center gap-1.5 shrink-0">
                                   {spell.isConcentration && (
-                                    <span className="text-[1.6vh] text-blue-400" title="Концентрация">К</span>
+                                    <span
+                                      className="text-[1.6vh] text-blue-400"
+                                      title="Концентрация"
+                                    >
+                                      К
+                                    </span>
                                   )}
                                   {spell.isRitual && (
-                                    <span className="text-[1.6vh] text-green-400" title="Ритуал">Р</span>
+                                    <span className="text-[1.6vh] text-green-400" title="Ритуал">
+                                      Р
+                                    </span>
                                   )}
                                   {spell.isDamageSpell && (
                                     <span className="text-[1.6vh] text-red-400">⚔</span>
@@ -493,7 +583,10 @@ export function SpellLibraryModal({
 
                   {/* ШАГ 3 — ДЕТАЛИ */}
                   {step === 3 && (
-                    <div style={{padding: '1vh 1.6vw'}} className="flex-1 overflow-y-auto flex flex-col gap-4">
+                    <div
+                      style={{ padding: '1vh 1.6vw' }}
+                      className="flex-1 overflow-y-auto flex flex-col gap-4"
+                    >
                       {!selectedSpell ? (
                         <div className="flex items-center justify-center h-full text-[1.6vh] text-amber-100/30 text-center">
                           Выберите заклинание из списка
@@ -506,12 +599,17 @@ export function SpellLibraryModal({
                               <h2 className="text-[2vh] font-bold text-amber-100 uppercase leading-tight">
                                 {selectedSpell.name}
                               </h2>
-                              <span style={{padding: '1vh 1.6vw'}} className={`shrink-0 text-[1.4vh] font-bold rounded-lg border-2 ${
-                                selectedSpell.level === 0
-                                  ? 'border-indigo-500 text-indigo-300'
-                                  : 'border-amber-500 text-amber-300'
-                              }`}>
-                                {selectedSpell.level === 0 ? 'Заговор' : `${selectedSpell.level} уровень`}
+                              <span
+                                style={{ padding: '1vh 1.6vw' }}
+                                className={`shrink-0 text-[1.4vh] font-bold rounded-lg border-2 ${
+                                  selectedSpell.level === 0
+                                    ? 'border-indigo-500 text-indigo-300'
+                                    : 'border-amber-500 text-amber-300'
+                                }`}
+                              >
+                                {selectedSpell.level === 0
+                                  ? 'Заговор'
+                                  : `${selectedSpell.level} уровень`}
                               </span>
                             </div>
                             <p className="text-[1.4vh] text-amber-100/50 italic ">
@@ -520,10 +618,16 @@ export function SpellLibraryModal({
                           </div>
 
                           {/* Характеристики */}
-                          <div style={{padding: '1vh 1.6vw'}} className="bg-stone-800 border-2 border-amber-600/40 rounded-xl">
+                          <div
+                            style={{ padding: '1vh 1.6vw' }}
+                            className="bg-stone-800 border-2 border-amber-600/40 rounded-xl"
+                          >
                             <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                               {[
-                                ['Школа', SCHOOL_LABELS[selectedSpell.school] ?? selectedSpell.school],
+                                [
+                                  'Школа',
+                                  SCHOOL_LABELS[selectedSpell.school] ?? selectedSpell.school,
+                                ],
                                 ['Время', castingTime],
                                 ['Дистанция', selectedSpell.range],
                                 ['Длительность', selectedSpell.duration],
@@ -533,14 +637,18 @@ export function SpellLibraryModal({
                                     selectedSpell.components.verbal && 'В',
                                     selectedSpell.components.somatic && 'С',
                                     selectedSpell.components.material && 'М',
-                                  ].filter(Boolean).join(', ') || '—',
+                                  ]
+                                    .filter(Boolean)
+                                    .join(', ') || '—',
                                 ],
                               ].map(([label, value]) => (
                                 <div key={label}>
                                   <span className="text-[1.2vh] text-amber-100/50 uppercase block">
                                     {label}
                                   </span>
-                                  <span className="text-[1.4vh] text-amber-100 font-bold">{value}</span>
+                                  <span className="text-[1.4vh] text-amber-100 font-bold">
+                                    {value}
+                                  </span>
                                 </div>
                               ))}
                             </div>
@@ -560,7 +668,8 @@ export function SpellLibraryModal({
                               {selectedSpell.isDamageSpell && selectedSpell.damage && (
                                 <span className="text-[1.4vh] bg-red-900/50 border-2 border-red-600/60 text-red-300 rounded-md">
                                   {selectedSpell.damage.dice}{' '}
-                                  {DAMAGE_TYPE_LABELS[selectedSpell.damage.type] ?? selectedSpell.damage.type}
+                                  {DAMAGE_TYPE_LABELS[selectedSpell.damage.type] ??
+                                    selectedSpell.damage.type}
                                 </span>
                               )}
                             </div>
@@ -663,11 +772,9 @@ export function SpellLibraryModal({
                       )}
                     </div>
                   )}
-
                 </motion.div>
               </AnimatePresence>
             </div>
-
           </motion.div>
         </motion.div>
       )}

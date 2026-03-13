@@ -78,7 +78,9 @@ export function FormStep4TeamAndCampaignInfo({
   return (
     <>
       <div className="relative left-[0.5vw] top-[1vh] w-[98vw] flex flex-col gap-[1vh] uppercase max-h-[63vh]">
-        <h2 className="text-[2.5vh] text-center font-bold text-amber-100">Информация о кампании и команде</h2>
+        <h2 className="text-[2.5vh] text-center font-bold text-amber-100">
+          Информация о кампании и команде
+        </h2>
 
         {/* Секция команды */}
         <div className="border-2 border-amber-600 bg-stone-800 rounded-lg">

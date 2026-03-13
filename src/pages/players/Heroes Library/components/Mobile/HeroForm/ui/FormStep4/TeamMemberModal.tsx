@@ -198,7 +198,7 @@ export function TeamMemberModal({ member, onSave, onClose }: TeamMemberModalProp
 
           {/* Информация */}
           <div style={{ marginRight: '1vw' }} className="flex-1 flex flex-col gap-[2vh]">
-            <div  className="flex items-center gap-[1vw] ">
+            <div className="flex items-center gap-[1vw] ">
               <div className="relative">
                 <div className="w-[20vw] h-[20vw] rounded-full border-2 border-amber-600 bg-stone-800 overflow-hidden flex items-center justify-center">
                   {displayAvatar ? (

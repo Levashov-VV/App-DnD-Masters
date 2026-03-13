@@ -56,7 +56,7 @@ export function AbilityScoresGuideModal({ isOpen, onClose }: AbilityScoresGuideM
   return (
     <div
       style={{ padding: '0.5vw' }}
-      className="fixed top-[13vh] inset-0 z-150 flex items-center justify-center"
+      className="fixed top-[16vh] inset-0 z-150 flex items-center justify-center"
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />

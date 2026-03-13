@@ -9,7 +9,11 @@ export const HeaderMobile = () => {
     <header className="w-screen fixed top-0 left-0 z-200 bg-neutral-900/95">
       <div className="flex items-center justify-between">
         <Link to="/" className="flex-shrink-0">
-          <img className="w-[30vw] h-[30vw] object-contain" src={assetUrl('/img/logo/logo.png')} alt="Logo" />
+          <img
+            className="w-[30vw] h-[30vw] object-contain"
+            src={assetUrl('/img/logo/logo.png')}
+            alt="Logo"
+          />
         </Link>
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}

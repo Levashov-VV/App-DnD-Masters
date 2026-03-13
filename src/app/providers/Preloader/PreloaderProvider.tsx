@@ -14,26 +14,26 @@ export function PreloaderProvider() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
-  const images = [assetUrl('/img/logo/logo.png'), assetUrl('/img/logo/dice.png')];
-  let loadedCount = 0;
+    const images = [assetUrl('/img/logo/logo.png'), assetUrl('/img/logo/dice.png')];
+    let loadedCount = 0;
 
-  images.forEach((src) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      loadedCount++;
-      if (loadedCount === images.length) {
-        setImagesLoaded(true);
-      }
-    };
-    img.onerror = () => {
-      loadedCount++;
-      if (loadedCount === images.length) {
-        setImagesLoaded(true);
-      }
-    };
-  });
-}, []);
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === images.length) {
+          setImagesLoaded(true);
+        }
+      };
+      img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === images.length) {
+          setImagesLoaded(true);
+        }
+      };
+    });
+  }, []);
   useLayoutEffect(() => {
     if (!imagesLoaded) return;
 

@@ -12,6 +12,9 @@ import Person from '/img/players/DescriptionApp/Person.png';
 import Hero from '/img/players/DescriptionApp/Hero.png';
 import Dragon from '/img/players/DescriptionApp/Dragon.jpg';
 
+
+gsap.registerPlugin(ScrollTrigger);
+
 const images = {
   dice20,
   dice10,
@@ -26,8 +29,6 @@ const images = {
 } as const;
 
 export function DescriptionAppMobile() {
-  gsap.registerPlugin(ScrollTrigger);
-
   const containerRef = useRef<HTMLDivElement>(null);
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
@@ -56,6 +57,10 @@ export function DescriptionAppMobile() {
   const number4Ref = useRef<HTMLSpanElement>(null);
   const number5Ref = useRef<HTMLSpanElement>(null);
 
+  const handleImageLoad = () => {
+    ScrollTrigger.refresh();
+  };
+
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const container = containerRef.current;
@@ -64,7 +69,7 @@ export function DescriptionAppMobile() {
       const section3 = section3Ref.current;
 
       if (!container) return;
-      // Время приключений
+
       if (adventureTextRef.current && section1) {
         gsap.fromTo(
           adventureTextRef.current,
@@ -83,7 +88,6 @@ export function DescriptionAppMobile() {
         );
       }
 
-      // Начни
       if (heroTextRef.current && section1) {
         gsap.fromTo(
           heroTextRef.current,
@@ -102,7 +106,6 @@ export function DescriptionAppMobile() {
         );
       }
 
-      // Книга
       if (bookRef.current && section1) {
         gsap.fromTo(
           bookRef.current,
@@ -122,15 +125,10 @@ export function DescriptionAppMobile() {
         );
       }
 
-      // Блок "От первого персонажа"
       if (personBlockRef.current && section1) {
         gsap.fromTo(
           personBlockRef.current,
-          {
-            scale: 0.8,
-            x: -80,
-            opacity: 0,
-          },
+          { scale: 0.8, x: -80, opacity: 0 },
           {
             scale: 1,
             opacity: 1,
@@ -146,15 +144,10 @@ export function DescriptionAppMobile() {
         );
       }
 
-      // Блок "До легендарного героя"
       if (heroBlockRef.current && section1) {
         gsap.fromTo(
           heroBlockRef.current,
-          {
-            scale: 0.8,
-            x: 80,
-            opacity: 0,
-          },
+          { scale: 0.8, x: 80, opacity: 0 },
           {
             scale: 1,
             opacity: 1,
@@ -169,7 +162,7 @@ export function DescriptionAppMobile() {
           }
         );
       }
-      // Заголовок
+
       if (tableTextRef.current && section2) {
         gsap.fromTo(
           tableTextRef.current,
@@ -186,7 +179,7 @@ export function DescriptionAppMobile() {
             },
           }
         );
-        // ЛЕГЕНДЫ
+
         if (legendsTextRef.current) {
           gsap.fromTo(
             legendsTextRef.current,
@@ -204,7 +197,7 @@ export function DescriptionAppMobile() {
           );
         }
       }
-      // Щит
+
       if (shieldRef.current && section2) {
         gsap.fromTo(
           shieldRef.current,
@@ -218,15 +211,14 @@ export function DescriptionAppMobile() {
             ease: 'back.out(1.3)',
             scrollTrigger: {
               trigger: shieldRef.current,
-              start: 'top 80%',
-              end: 'top 30%',
+              start: 'top 95%',
+              end: 'top 20%',
               scrub: 5,
             },
           }
         );
       }
 
-      // Меч
       if (swordRef.current && section2) {
         gsap.fromTo(
           swordRef.current,
@@ -247,7 +239,6 @@ export function DescriptionAppMobile() {
         );
       }
 
-      // МАГИЮ
       if (magicTextRef.current) {
         gsap.fromTo(
           magicTextRef.current,
@@ -265,26 +256,16 @@ export function DescriptionAppMobile() {
           }
         );
       }
-      // ЧИСЛА
+
       if (section2) {
         const numbers = [number1Ref, number2Ref, number3Ref, number4Ref, number5Ref];
-
         numbers.forEach((numRef, index) => {
           if (numRef.current) {
-            const timeline = gsap.timeline({
-              repeat: -1,
-              repeatDelay: 1,
-            });
-
+            const timeline = gsap.timeline({ repeat: -1, repeatDelay: 1 });
             timeline
               .fromTo(
                 numRef.current,
-                {
-                  opacity: 0,
-                  scale: 0.5,
-                  x: 100,
-                  filter: 'blur(8px)',
-                },
+                { opacity: 0, scale: 0.5, x: 100, filter: 'blur(8px)' },
                 {
                   opacity: 1,
                   scale: 1.5,
@@ -304,7 +285,7 @@ export function DescriptionAppMobile() {
           }
         });
       }
-      // Заголовок
+
       if (airTextRef.current) {
         gsap.fromTo(
           airTextRef.current,
@@ -321,16 +302,11 @@ export function DescriptionAppMobile() {
           }
         );
       }
-      // Dice 20
+
       if (dice20Ref.current && section3) {
         gsap.fromTo(
           dice20Ref.current,
-          {
-            y: -180,
-            x: -15,
-            rotation: 0,
-            scale: 0.8,
-          },
+          { y: -180, x: -15, rotation: 0, scale: 0.8 },
           {
             y: 0,
             x: 0,
@@ -346,16 +322,11 @@ export function DescriptionAppMobile() {
           }
         );
       }
-      // Dice 10
+
       if (dice10Ref.current && section3) {
         gsap.fromTo(
           dice10Ref.current,
-          {
-            y: -180,
-            x: 0,
-            rotation: 0,
-            scale: 0.7,
-          },
+          { y: -180, x: 0, rotation: 0, scale: 0.7 },
           {
             y: 30,
             rotation: 270,
@@ -370,16 +341,11 @@ export function DescriptionAppMobile() {
           }
         );
       }
-      //Dice 6
+
       if (dice6Ref.current && section3) {
         gsap.fromTo(
           dice6Ref.current,
-          {
-            y: -160,
-            x: 0,
-            rotation: 0,
-            scale: 0.8,
-          },
+          { y: -160, x: 0, rotation: 0, scale: 0.8 },
           {
             y: 100,
             x: 0,
@@ -407,7 +373,7 @@ export function DescriptionAppMobile() {
           },
         });
       }
-      // КРИТЫ
+
       if (critsTextRef.current) {
         gsap.fromTo(
           critsTextRef.current,
@@ -427,7 +393,14 @@ export function DescriptionAppMobile() {
       }
     }, containerRef);
 
-    return () => ctx.revert();
+    const timeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(timeout);
+    };
   }, []);
 
   return (
@@ -435,7 +408,12 @@ export function DescriptionAppMobile() {
       <div ref={containerRef} className="relative w-full overflow-x-hidden">
         <div ref={section1Ref} className="relative flex flex-col justify-center items-center">
           <div>
-            <img className="w-[100vw] h-[50vh] opacity-70" src={images.Adventure} alt="Adventure" />
+            <img
+              className="w-[100vw] h-[50vh] opacity-70"
+              src={images.Adventure}
+              alt="Adventure"
+              onLoad={handleImageLoad}
+            />
             <div>
               <span
                 ref={adventureTextRef}
@@ -457,6 +435,7 @@ export function DescriptionAppMobile() {
               className="w-[70vh] object-contain pointer-events-none"
               src={images.book}
               alt="book"
+              onLoad={handleImageLoad}
             />
           </div>
           <div className="relative top-[2vh] flex flex-row text-[2vh] text-center text-amber-100 leading-snug">
@@ -466,6 +445,7 @@ export function DescriptionAppMobile() {
                 className="h-[30vh] object-contain pointer-events-none"
                 src={images.Person}
                 alt="Person"
+                onLoad={handleImageLoad}
               />
             </div>
             <div ref={heroBlockRef}>
@@ -474,6 +454,7 @@ export function DescriptionAppMobile() {
                 className="h-[30vh] object-contain pointer-events-none"
                 src={images.Hero}
                 alt="Hero"
+                onLoad={handleImageLoad}
               />
             </div>
           </div>
@@ -496,6 +477,7 @@ export function DescriptionAppMobile() {
               className="w-[70vh] object-contain pointer-events-none"
               src={images.Dragon}
               alt="Dragon"
+              onLoad={handleImageLoad}
             />
           </div>
           <div>
@@ -534,47 +516,17 @@ export function DescriptionAppMobile() {
             Превратите цифры в{' '}
             <span
               ref={magicTextRef}
-              className="inline-block ref={magicTextRef} text-[6vw] font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent"
+              className="inline-block text-[6vw] font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent"
             >
               МАГИЮ
             </span>
           </h3>
           <div className="relative top-[10vh] w-screen pointer-events-none">
-            <span
-              ref={number1Ref}
-              className="absolute text-[8vw] font-bold text-purple-400/70 left-[10vw] bottom-[2vh]"
-              style={{ fontFamily: 'monospace' }}
-            >
-              20
-            </span>
-            <span
-              ref={number2Ref}
-              className="absolute text-[6vw] font-bold text-pink-400/70 right-[15vw] bottom-[2vh]"
-              style={{ fontFamily: 'monospace' }}
-            >
-              +5
-            </span>
-            <span
-              ref={number3Ref}
-              className="absolute text-[7vw] font-bold text-cyan-400/70 left-[20vw] top-[5vh]"
-              style={{ fontFamily: 'monospace' }}
-            >
-              18
-            </span>
-            <span
-              ref={number4Ref}
-              className="absolute text-[5vw] font-bold text-amber-400/70 right-[20vw] top-[5vh]"
-              style={{ fontFamily: 'monospace' }}
-            >
-              1d12
-            </span>
-            <span
-              ref={number5Ref}
-              className="absolute text-[6vw] font-bold text-emerald-400/70 left-[50%] bottom-[-2vh] -translate-x-1/2"
-              style={{ fontFamily: 'monospace' }}
-            >
-              2
-            </span>
+            <span ref={number1Ref} className="absolute text-[8vw] font-bold text-purple-400/70 left-[10vw] bottom-[2vh]" style={{ fontFamily: 'monospace' }}>20</span>
+            <span ref={number2Ref} className="absolute text-[6vw] font-bold text-pink-400/70 right-[15vw] bottom-[2vh]" style={{ fontFamily: 'monospace' }}>+5</span>
+            <span ref={number3Ref} className="absolute text-[7vw] font-bold text-cyan-400/70 left-[20vw] top-[5vh]" style={{ fontFamily: 'monospace' }}>18</span>
+            <span ref={number4Ref} className="absolute text-[5vw] font-bold text-amber-400/70 right-[20vw] top-[5vh]" style={{ fontFamily: 'monospace' }}>1d12</span>
+            <span ref={number5Ref} className="absolute text-[6vw] font-bold text-emerald-400/70 left-[50%] bottom-[-2vh] -translate-x-1/2" style={{ fontFamily: 'monospace' }}>2</span>
           </div>
         </div>
 
@@ -583,13 +535,9 @@ export function DescriptionAppMobile() {
           <div className="relative bottom-[5vh] w-full">
             <div>
               <h3 className="text-[5.5vw] text-center text-amber-100">Судьба вашего героя</h3>
-
-              <h3 className="text-[5vw] text-center text-amber-100 ">
+              <h3 className="text-[5vw] text-center text-amber-100">
                 в{' '}
-                <span
-                  ref={airTextRef}
-                  className="inline-block text-[6.5vw] font-bold text-cyan-400"
-                >
+                <span ref={airTextRef} className="inline-block text-[6.5vw] font-bold text-cyan-400">
                   ВОЗДУХЕ
                 </span>
               </h3>
@@ -623,7 +571,6 @@ export function DescriptionAppMobile() {
               Один бросок
               <br /> изменит всё навсегда
             </h3>
-
             <h3 className="text-[6vw] w-[100vw] text-amber-100">
               Готовы ли вы к эпическим{' '}
               <span

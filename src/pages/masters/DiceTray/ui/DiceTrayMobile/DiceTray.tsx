@@ -277,12 +277,12 @@ export function DiceTrayMobile() {
       </PhysicsWorld>
 
       {/* Левая панель */}
-      <div className="absolute top-[13vh] flex flex-col z-100 w-[92.5vw]">
+      <div className="absolute top-[18vh] flex flex-col z-100 w-[92.5vw]">
         <SelectShot rollMode={rollMode} onChangeRollMode={setRollMode} />
       </div>
 
       {/* Правая панель */}
-      <div className="relative bottom-[17vh] flex flex-col items-center z-100">
+      <div className="relative bottom-[10vh] flex flex-col items-center z-100">
         <DicesSection
           rollMode={rollMode}
           diceCounts={diceCounts}
@@ -295,7 +295,7 @@ export function DiceTrayMobile() {
       </div>
 
       {/* Tray */}
-      <div className="relative bottom-[19vh] z-30 pointer-events-none">
+      <div className="relative bottom-[10vh] z-30 pointer-events-none">
         <img
           className="w-screen h-[50vh] pointer-events-none object-cover"
           src={assetUrl('/img/masters/home/DiceTray/DiceTray.png')}

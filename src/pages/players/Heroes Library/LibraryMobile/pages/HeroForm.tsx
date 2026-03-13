@@ -151,9 +151,18 @@ export default function HeroForm({ mode }: HeroFormProps) {
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  const handleNext = () => { nextStep(); scrollTop(); };
-  const handlePrev = () => { prevStep(); scrollTop(); };
-  const handleGoToStep = (step: number) => { goToStep(step); scrollTop(); };
+  const handleNext = () => {
+    nextStep();
+    scrollTop();
+  };
+  const handlePrev = () => {
+    prevStep();
+    scrollTop();
+  };
+  const handleGoToStep = (step: number) => {
+    goToStep(step);
+    scrollTop();
+  };
 
   const onSubmit = (data: HeroFormData) => {
     const heroData = { ...data, avatar: avatarRef.current };
@@ -167,8 +176,8 @@ export default function HeroForm({ mode }: HeroFormProps) {
   };
 
   const onValidationError = (validationErrors: typeof errors) => {
-    console.error('❌ Поля с ошибками:', Object.keys(validationErrors));
-    console.error('❌ Детали:', JSON.stringify(validationErrors, null, 2));
+    console.error('Поля с ошибками:', Object.keys(validationErrors));
+    console.error('Детали:', JSON.stringify(validationErrors, null, 2));
   };
 
   const renderStep = () => {
@@ -246,7 +255,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
   return (
     <div
       style={{ marginBottom: '50vh' }}
-      className="relative top-[15vh] flex flex-col items-center h-screen"
+      className="relative top-[18vh] flex flex-col items-center h-screen"
     >
       <div className="w-[98vw]">
         <header className="flex flex-row gap-[20vw]">
@@ -274,13 +283,8 @@ export default function HeroForm({ mode }: HeroFormProps) {
           <FormStepper currentStep={currentStep} onStepClick={handleGoToStep} />
         </div>
 
-        <form
-          style={{ marginTop: '2vw' }}
-          onSubmit={handleSubmit(onSubmit, onValidationError)}
-        >
-          <div className="bg-neutral-700/70 rounded-2xl h-[80vh]">
-            {renderStep()}
-          </div>
+        <form style={{ marginTop: '2vw' }} onSubmit={handleSubmit(onSubmit, onValidationError)}>
+          <div className="bg-neutral-700/70 rounded-2xl h-[80vh]">{renderStep()}</div>
 
           {isLastStep && (
             <div className="relative top-[6vh] flex justify-end">
@@ -294,7 +298,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
           )}
         </form>
 
-        <div style={{marginTop: '2vh'}} className="flex justify-between">
+        <div style={{ marginTop: '2vh' }} className="flex justify-between">
           <button
             type="button"
             onClick={handlePrev}

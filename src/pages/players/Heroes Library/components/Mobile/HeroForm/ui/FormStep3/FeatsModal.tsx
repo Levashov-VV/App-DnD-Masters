@@ -69,13 +69,10 @@ export function FeatsModal({
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed top-[14vh] inset-x-0 bottom-0 h-screen bg-stone-900 border-t-4 border-amber-600 shadow-2xl z-[101] flex flex-col uppercase"
             >
-
               {/* header */}
-              <div style={{padding: '0 0.5vw'}}>
+              <div style={{ padding: '0 0.5vw' }}>
                 <div className="flex items-center justify-between">
-                  <h2 className="text-[3vh] font-bold text-amber-100 uppercase">
-                    Выбор черты
-                  </h2>
+                  <h2 className="text-[3vh] font-bold text-amber-100 uppercase">Выбор черты</h2>
                   <button
                     type="button"
                     onClick={() => setIsFeatsOpen(false)}
@@ -104,7 +101,7 @@ export function FeatsModal({
                 )}
 
                 {/* поиск */}
-                <div style={{marginBottom: '1vh'}} className="relative">
+                <div style={{ marginBottom: '1vh' }} className="relative">
                   <input
                     type="text"
                     value={searchQuery}
@@ -136,7 +133,7 @@ export function FeatsModal({
                       key={type}
                       type="button"
                       onClick={() => setSelectedFeatType(type)}
-                      style={{padding: '0.4vh 0.8vw'}}
+                      style={{ padding: '0.4vh 0.8vw' }}
                       className={`rounded-lg text-[1.5vh] font-bold uppercase whitespace-nowrap transition-colors  ${
                         selectedFeatType === type
                           ? 'bg-amber-600 text-stone-900'
@@ -149,9 +146,7 @@ export function FeatsModal({
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <p className="text-[1.7vh] text-amber-500">
-                    Найдено: {filteredFeats.length}
-                  </p>
+                  <p className="text-[1.7vh] text-amber-500">Найдено: {filteredFeats.length}</p>
                   {searchQuery && (
                     <button
                       type="button"
@@ -168,7 +163,7 @@ export function FeatsModal({
               </div>
 
               {/* список черт */}
-              <div style={{padding: '0 1vw '}} className="flex-1 overflow-y-auto">
+              <div style={{ padding: '0 1vw ' }} className="flex-1 overflow-y-auto">
                 <div className="flex flex-col gap-[2vh]">
                   {filteredFeats.length > 0 ? (
                     filteredFeats.map((feat, index) => {
@@ -200,7 +195,7 @@ export function FeatsModal({
                               <button
                                 type="button"
                                 onClick={(e) => handleFeatClick(feat, 'toggle', e)}
-                                style={{ padding: "0.4vh 2vw"}}
+                                style={{ padding: '0.4vh 2vw' }}
                                 className={`rounded font-bold text-[1.4vh] uppercase transition-colors ${
                                   isActive
                                     ? 'bg-amber-500 hover:bg-amber-400 text-stone-900'
@@ -212,7 +207,7 @@ export function FeatsModal({
                               <button
                                 type="button"
                                 onClick={(e) => handleFeatClick(feat, 'details', e)}
-                                style={{ padding: "0.4vh 2vw"}}
+                                style={{ padding: '0.4vh 2vw' }}
                                 className="bg-stone-700 hover:bg-stone-600 text-amber-100 rounded font-bold text-[1.4vh] uppercase transition-colors"
                               >
                                 Подробнее →
@@ -258,9 +253,8 @@ export function FeatsModal({
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed top-[14vh] inset-x-0 bottom-0 bg-stone-900 border-t-4 border-amber-600 shadow-2xl z-[103] flex flex-col uppercase"
             >
-
               {/* назад */}
-              <div style={{padding: '0.5vh 1vw '}}>
+              <div style={{ padding: '0.5vh 1vw ' }}>
                 <button
                   type="button"
                   onClick={goBackToFeatsList}
@@ -290,7 +284,7 @@ export function FeatsModal({
               </div>
 
               {/* контент */}
-              <div style={{padding: '0.5vh 1vw'}} className="flex-1 overflow-y-auto">
+              <div style={{ padding: '0.5vh 1vw' }} className="flex-1 overflow-y-auto">
                 <div className="flex flex-col gap-[1.5vh]">
                   {selectedFeat.description?.split('\n').map((line, index) => (
                     <motion.div
@@ -310,7 +304,10 @@ export function FeatsModal({
 
                 {/* статус черты */}
                 <div className=" bg-stone-800 rounded-lg border-2 border-amber-600">
-                  <h4 style={{padding: '0.5vh 1vw'}} className="text-[2vh] font-bold text-amber-100 uppercase">
+                  <h4
+                    style={{ padding: '0.5vh 1vw' }}
+                    className="text-[2vh] font-bold text-amber-100 uppercase"
+                  >
                     Статус черты
                   </h4>
                   <div className="flex items-center gap-[2vw] text-[2vh] font-bold">
@@ -358,11 +355,7 @@ export function FeatsModal({
                   onClick={() => applyFeatAndClose(selectedFeat.nameEn)}
                   className="w-full bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold text-[2vh] uppercase transition-colors shadow-lg flex items-center justify-center gap-[2vw]"
                 >
-                  <svg
-                    className="w-[2.5vh] h-[2.5vh]"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="w-[2.5vh] h-[2.5vh]" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"

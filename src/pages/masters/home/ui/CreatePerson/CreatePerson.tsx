@@ -90,10 +90,7 @@ export function CreatePerson() {
             </div>
           </div>
           <div className="relative bottom-[10vh] w-[25vw]">
-            <img
-              src="{assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')}"
-              alt="Kalashtar"
-            />
+            <img src="{assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')}" alt="Kalashtar" />
           </div>
         </div>
       </article>

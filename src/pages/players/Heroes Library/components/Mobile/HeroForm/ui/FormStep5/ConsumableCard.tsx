@@ -29,7 +29,10 @@ export function ConsumableCard({
           )}
         </div>
 
-        <div style={{ padding: '0.5vw' }} className="w-[25vw] flex flex-col items-center justify-center gap-[1vw]">
+        <div
+          style={{ padding: '0.5vw' }}
+          className="w-[25vw] flex flex-col items-center justify-center gap-[1vw]"
+        >
           {/* Количество */}
           <div className="flex items-center justify-center gap-[0.1vw]">
             <button
@@ -57,13 +60,13 @@ export function ConsumableCard({
               +
             </button>
           </div>
-          <div className='flex flex-row gap-[3vw]'>
+          <div className="flex flex-row gap-[3vw]">
             {/* Использовать */}
             <button
               type="button"
               onClick={onUse}
               disabled={consumable.quantity === 0}
-              style={{padding: '0.1vh 0.8vw'}}
+              style={{ padding: '0.1vh 0.8vw' }}
               className={`rounded font-bold transition-colors text-[1vh] ${
                 consumable.quantity > 0
                   ? 'bg-amber-600 hover:bg-amber-500 text-black'

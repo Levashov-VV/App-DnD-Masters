@@ -22,9 +22,12 @@ const UserSelect = ({ index, arrayName }: UserItemProps) => {
       <option value="" disabled>
         Выберите расу
       </option>
+      <option value="Aarakocra">Ааракокра</option>
       <option value="Aasimar">Аасимар</option>
       <option value="Goliaf">Голиаф</option>
       <option value="Grung">Грунг</option>
+      <option value="Gnome">Гном</option>
+      <option value="Goblin">Гоблин</option>
       <option value="Dwarf">Дварф</option>
       <option value="DragonBorn">Драконорождённый</option>
       <option value="Leonin">Леонин</option>
@@ -32,15 +35,21 @@ const UserSelect = ({ index, arrayName }: UserItemProps) => {
       <option value="DragonBorn">Драконорождённый</option>
       <option value="Genasi">Дженази</option>
       <option value="Kalashtar">Калаштар</option>
+      <option value="Kenku">Кенку</option>
+      <option value="Kobold">Кобольд</option>
       <option value="Centaur">Кентавр</option>
       <option value="Minotaur">Минотавр</option>
       <option value="Orc">Орк</option>
       <option value="Halfling">Полурослик</option>
       <option value="Tabaxi">Табакси</option>
       <option value="Tiffling">Тиффлинг</option>
+      <option value="Triton">Тритон</option>
       <option value="Human">Человек</option>
       <option value="Shifter">Шифтер</option>
+      <option value="Firbolg">Фирболг</option>
       <option value="Elf">Эльф</option>
+      <option value="Yuan-ti">Юань-ти</option>
+      <option value="Lizard-man">Ящеролюд</option>
     </select>
   );
 };
@@ -57,8 +66,18 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
       <option value="" disabled>
         Выберите врага
       </option>
+      <option value="Bat">Летучая мышь</option>
       <option value="Bandit">Бандит</option>
       <option value="Beholder">Бехолдер</option>
+      <option value="Cultist">Культист</option>
+      <option value="Gargoyle">Гаргулья</option>
+      <option value="Ghoul">Гуль/Вурдалак</option>
+      <option value="Harpy">Гарпия</option>
+      <option value="Lich">Лич</option>
+      <option value="Orc">Орк</option>
+      <option value="Owlbear">Совомедведь</option>
+      <option value="Red Wizard">Красный волшебник</option>
+      <option value="Wolf">Волк</option>
       <option value="Goblin">Гоблин</option>
       <option value="Zombie">Зомби</option>
       <option value="Dragon">Дракон</option>
@@ -74,6 +93,8 @@ const EnemiesSelect = ({ index, arrayName }: UserItemProps) => {
     </select>
   );
 };
+
+
 export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
   const { control, register, setValue, getValues } = useFormContext<BattleFormData>();
   const { data: characters } = useCharacter();
@@ -89,6 +110,13 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
   const character = hasRace
     ? characters?.find((c) => c.side === side && c.name === raceKey)
     : undefined;
+
+  console.log('total characters:', characters?.length);
+  console.log('raceKey:', JSON.stringify(raceKey), 'side:', side);
+  console.log(
+    'all names for this side:',
+    characters?.filter((c) => c.side === side).map((c) => c.name)
+  );
 
   useEffect(() => {
     if (!character || !item) return;
@@ -125,7 +153,12 @@ export const UserItem: React.FC<UserItemProps> = ({ index, arrayName }) => {
 
   return (
     <li className="flex items-center gap-[1vw]">
-      <img className="w-[2.5vw] h-[2.5vw] object-contain" src={logoForForm} alt={item.name} />
+      <img
+        className="w-[2.5vw] h-[2.5vw] object-contain"
+        src={logoForForm}
+        alt={item.name}
+        loading="lazy"
+      />
       <input
         className="w-[7.5vw] text-[1.6vh]"
         {...register(`${arrayName}.${index}.name` as Path<BattleFormData>)}

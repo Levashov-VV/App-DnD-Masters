@@ -42,9 +42,11 @@ export function StatsPanel({
   const passivePerception = 10 + wisModifier + (hasPerceptionProficiency ? proficiencyBonus : 0);
 
   const toggleCondition = (conditionName: string) => {
+    console.log('toggleCondition called with:', conditionName, 'current conditions:', conditions);
     const newConditions = activeConditions.has(conditionName)
       ? conditions.filter((c) => c !== conditionName)
       : [...conditions, conditionName];
+    console.log('newConditions:', newConditions);
     setValue('conditions', newConditions, { shouldDirty: true });
   };
 
@@ -64,9 +66,9 @@ export function StatsPanel({
   };
 
   const applyConditionAndClose = (conditionName: string) => {
+    console.log('applyConditionAndClose called with:', conditionName);
     toggleCondition(conditionName);
-    setSelectedCondition(null);
-    setIsConditionsOpen(false);
+    goBackToList();
   };
 
   const goBackToList = () => {

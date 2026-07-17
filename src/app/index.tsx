@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 function App() {
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-  });
+    useEffect(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    });
   if (loading) return <PreloaderProvider />;
 
   return (

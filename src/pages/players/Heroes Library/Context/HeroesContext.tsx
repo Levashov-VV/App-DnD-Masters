@@ -11,6 +11,9 @@ interface HeroesContextType {
   deleteHero: (id: string) => void;
   getHero: (id: string) => Hero | undefined;
   clearAllHeroes: () => void;
+  importHeroes: (heroes: Hero[]) => void;
+  replaceAllHeroes: (heroes: Hero[]) => void;
+  mergeHeroes: (toAdd: Hero[], toUpdate: Hero[]) => void;
 }
 
 const HeroesContext = createContext<HeroesContextType | undefined>(undefined);
@@ -69,6 +72,22 @@ export function HeroesProvider({ children }: { children: React.ReactNode }) {
     setHeroes([]);
   }, [setHeroes]);
 
+  const replaceAllHeroes = useCallback(
+    (newHeroes: Hero[]) => {
+      setHeroes(newHeroes);
+    },
+    [setHeroes]
+  );
+
+  const mergeHeroes = useCallback(
+    (toAdd: Hero[], toUpdate: Hero[]) => {
+      const updateMap = new Map(toUpdate.map((h) => [h.id, h]));
+      const merged = heroesArray.map((h) => updateMap.get(h.id) ?? h);
+      setHeroes([...merged, ...toAdd]);
+    },
+    [heroesArray, setHeroes]
+  );
+
   return (
     <HeroesContext.Provider
       value={{
@@ -78,6 +97,9 @@ export function HeroesProvider({ children }: { children: React.ReactNode }) {
         deleteHero,
         getHero,
         clearAllHeroes,
+        importHeroes: replaceAllHeroes,
+        replaceAllHeroes,
+        mergeHeroes,
       }}
     >
       {children}

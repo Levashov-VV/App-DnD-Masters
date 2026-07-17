@@ -434,7 +434,6 @@ export function FormStep5Inventory({ watch, setValue }: FormStep5InventoryProps)
                             <div className="max-w-[5vw] text-[1.2vh] font-bold text-amber-500">
                               {item.name}
                             </div>
-                            
                           </div>
                           {item.type && (
                             <div className="text-[1vh] text-amber-100/60">{item.type}</div>

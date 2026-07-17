@@ -72,7 +72,7 @@ export function CloneVoice() {
             </div>
           </div>
           <div className="relative bottom-[20vh] w-[25vw]">
-            <img src={assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')} alt="Kalashtar" />
+            <img src={assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')} alt="Kalashtar" loading="lazy" />
           </div>
         </div>
       </article>

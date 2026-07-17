@@ -20,11 +20,11 @@ interface PhysicsWorldProps {
 export const PhysicsWorld = ({
   children,
   trayCenter = [0, 0, 0],
-  traySize = { width: 14, depth: 10 },
-  wallHeight = 3.0,
+  traySize = { width: 16, depth: 10 },
+  wallHeight = 3.5,
   wallThickness = 0.8,
   floorY = -0.2,
-  debug = true,
+  debug = false,
   cornerCut = 1.8,
   overlap = 0.06,
 }: PhysicsWorldProps) => {
@@ -91,10 +91,10 @@ export const PhysicsWorld = ({
             <CuboidCollider position={[xRightCenter, wallY, cz]} args={[halfT, halfH, hzMainZ]} />
             {(
               [
-                { sx: 1, sz: 1, rotY: Math.PI / 4 },
-                { sx: 1, sz: -1, rotY: -Math.PI / 4 },
+                { sx: 1.5, sz: 1, rotY: Math.PI / 4 },
+                { sx: 1.5, sz: -0.5, rotY: -Math.PI / 4 },
                 { sx: -1, sz: 1, rotY: -Math.PI / 4 },
-                { sx: -1, sz: -1, rotY: Math.PI / 4 },
+                { sx: -1.5, sz: -0.5, rotY: Math.PI / 4 },
               ] as const
             ).map((c, i) => (
               <CuboidCollider

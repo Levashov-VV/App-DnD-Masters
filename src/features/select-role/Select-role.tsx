@@ -20,6 +20,8 @@ export function SelectRole() {
               className="selectRole desktop-selectRole"
               src={assetUrl('img/Select-role/Master.png')}
               alt="Master"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
           <LazyMotion features={domAnimation} strict>
@@ -39,6 +41,8 @@ export function SelectRole() {
               className="selectRole desktop-selectRole"
               src={assetUrl('img/Select-role/Players.png')}
               alt="Player"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
           <LazyMotion features={domAnimation} strict>
@@ -64,6 +68,8 @@ export function SelectRole() {
             className="selectRole mobile-selectRole"
             src={assetUrl('img/Select-role/Master.png')}
             alt="Master"
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
         <LazyMotion features={domAnimation} strict>
@@ -82,6 +88,8 @@ export function SelectRole() {
             className="selectRole mobile-selectRole"
             src={assetUrl('img/Select-role/Players.png')}
             alt="Player"
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
         <LazyMotion features={domAnimation} strict>

@@ -147,6 +147,8 @@ export function DiceTrayMobile() {
             className="h-[50vh] object-cover"
             src={assetUrl('img/masters/home/DiceTray/DiceTray.png')}
             alt="Dice Tray"
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
         <div className="flex justify-center">
@@ -156,7 +158,11 @@ export function DiceTrayMobile() {
               d4-d20
             </div>
             <div className="w-screen">
-              <img src={assetUrl('img/masters/home/DiceTray/Tarask.png')} />
+              <img
+                src={assetUrl('img/masters/home/DiceTray/Tarask.png')}
+                loading="eager"
+                fetchPriority="high"
+              />
             </div>
           </div>
         </div>
@@ -166,7 +172,11 @@ export function DiceTrayMobile() {
               Комплексные формулы для подсчётов ваших результатов в игре
             </div>
             <div className="w-screen relative right-[2vw]">
-              <img src={assetUrl('img/masters/home/DiceTray/Beholder.png')} />
+              <img
+                src={assetUrl('img/masters/home/DiceTray/Beholder.png')}
+                loading="eager"
+                fetchPriority="high"
+              />
             </div>
           </div>
         </div>

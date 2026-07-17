@@ -215,7 +215,7 @@ export function FormStep4TeamAndCampaignInfo({
           </div>
         </div>
 
-        <div className="flex gap-[2vw]">
+        <div className="grid grid-cols-2 gap-[2vw]">
           <div className="h-[20.5vh] border-2 border-amber-600 bg-stone-800 rounded-lg">
             <TextareaWithFontControl
               label="Дополнительные особенности персонажа"
@@ -223,7 +223,7 @@ export function FormStep4TeamAndCampaignInfo({
               onChange={(e) => setAdditionalFeatures(e.target.value)}
               placeholder="Введите дополнительные особенности персонажа..."
               style={{ paddingLeft: '0.2vw' }}
-              className="border-2 border-amber-600 h-[11vh]"
+              className="border-2 border-amber-600 h-[17vh]"
               defaultFontSize={14}
               minFontSize={10}
               maxFontSize={24}
@@ -237,7 +237,7 @@ export function FormStep4TeamAndCampaignInfo({
               onChange={(e) => setCampaignGoals(e.target.value)}
               placeholder="Опишите какие цели и задачи стоят за вашей командой..."
               style={{ paddingLeft: '0.2vw' }}
-              className="border-2 border-amber-600 h-[11vh]"
+              className="border-2 border-amber-600 h-[17vh]"
               defaultFontSize={14}
               minFontSize={10}
               maxFontSize={24}

@@ -103,6 +103,7 @@ export function SubmitSection() {
                 src={customMapImage}
                 alt="Своя карта"
                 className="w-[20vw] object-cover rounded-xl border-neutral-700"
+                loading="lazy"
               />
             </div>
           )}
@@ -113,6 +114,7 @@ export function SubmitSection() {
                 src={mapImage}
                 alt="Карта"
                 className="w-[20vw] object-cover rounded-xl border-neutral-700"
+                loading="lazy"
               />
             </div>
           )}

@@ -20,6 +20,8 @@ export function GameImage({ src, fallback, ...props }: GameImageProps) {
         if (fallback) (e.currentTarget as HTMLImageElement).src = fallback;
       }}
       {...props}
+      loading="eager"
+      fetchPriority="high"
     />
   );
 }

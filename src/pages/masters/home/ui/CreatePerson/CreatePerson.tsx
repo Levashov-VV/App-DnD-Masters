@@ -86,11 +86,12 @@ export function CreatePerson() {
                 className="w-[25vw] relative bottom-[5vh] left-[6vw]"
                 src="{assetUrl('/img/masters/home/CreatePerson/Box.png')}"
                 alt="box"
+                loading="lazy"
               />
             </div>
           </div>
           <div className="relative bottom-[10vh] w-[25vw]">
-            <img src="{assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')}" alt="Kalashtar" />
+            <img src="{assetUrl('/img/masters/home/CreatePerson/Kalashtar.png')}" alt="Kalashtar" loading="lazy"/>
           </div>
         </div>
       </article>

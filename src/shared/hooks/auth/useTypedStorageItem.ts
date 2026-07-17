@@ -25,7 +25,6 @@ export function useTypedStorageItem<
     (callback: () => void) => {
       if (!isClient) return noop;
 
-      // cross-tab (срабатывает только из другой вкладки)
       const storageHandler = (e: StorageEvent) => {
         if (e.key === key || e.key === null) callback();
       };

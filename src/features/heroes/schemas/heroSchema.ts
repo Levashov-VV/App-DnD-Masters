@@ -131,225 +131,245 @@ export const inventorySchema = z.object({
     .default({ current: 0, max: 0 }),
 });
 
-export const heroSchema = z.object({
-  // Основная информация
-  name: z.string().min(1, 'Имя обязательно').max(50, 'Слишком длинное имя'),
-  race: z.string().min(1, 'Выберите расу'),
-  class: z.string().min(1, 'Выберите класс'),
-  subclass: z.string().optional().default(''),
-  level: z.number().min(1, 'Минимальный уровень 1').max(20, 'Максимальный уровень 20'),
-  experience: z.number().min(0, 'Опыт не может быть отрицательным').optional().default(0),
-  background: z.string().min(1, 'Выберите предысторию'),
-  alignment: z.string().min(1, 'Выберите мировоззрение'),
-  size: z.string().min(1, 'Выберите размер'),
-  conditions: z.preprocess(
-    (val) => (typeof val === 'string' ? [] : val),
-    z.array(z.string()).default([])
-  ),
-  avatar: z.string().optional().default(''),
-
-  // Характеристики
-  abilityScores: z.object({
-    strength: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
-    dexterity: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
-    constitution: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
-    intelligence: z.number().min(1, 'Мін. 1').max(30, 'Макс. 30'),
-    wisdom: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
-    charisma: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
-  }),
-
-  // Хиты
-  hitPoints: z.object({
-    current: z.number().min(0, 'Минимум 0'),
-    max: z.number().min(1, 'Минимум 1'),
-    temporary: z.number().optional().default(0),
-  }),
-
-  // Кости хитов
-  hitDice: z.object({
-    total: z.number().min(0, 'Минимум 0'),
-    spent: z.number().min(0, 'Минимум 0'),
-    type: z.string(),
-  }),
-
-  // Спасброски от смерти
-  deathSaves: z.object({
-    successes: z.number().min(0).max(3),
-    failures: z.number().min(0).max(3),
-  }),
-
-  // Боевые характеристики
-  armorClass: z.number().min(0, 'КД не может быть меньше 0').max(30, 'КД не может быть больше 30'),
-  initiative: z.number(),
-  speed: z.number().min(0, 'Скорость не может быть отрицательной'),
-  proficiencyBonus: z.number().min(2, 'Минимум 2').max(6, 'Максимум 6'),
-  inspiration: z.boolean().optional().default(false),
-  spellcastingAbility: z
-    .enum(['none', 'intelligence', 'wisdom', 'charisma'])
-    .optional()
-    .default('none'),
-
-  // Навыки и языки
-  skills: z.array(z.string()).default([]),
-  savingThrows: z.array(z.string()).default([]),
-  languages: z.array(z.string()).default([]),
-
-  // Владение
-  weaponProficiencies: z.array(z.string()).optional().default([]),
-  armorProficiencies: z.array(z.string()).optional().default([]),
-  toolProficiencies: z.array(z.string()).optional().default([]),
-
-  // Умения
-  classFeatures: z.string().optional().default(''),
-  raceFeatures: z.string().optional().default(''),
-
-  // Боевые способности (заклинания + снаряжение)
-  combatAbilities: z.array(combatAbilitySchema).optional().default([]),
-
-  // Черты персонажа
-  feats: z.array(featSchema).optional().default([]),
-
-  // Истощение
-  exhaustionLevel: z.number().min(0).max(6).default(0),
-
-  // Снаряжение
-  equipment: z.object({
-    weapons: z
-      .array(
-        z.object({
-          name: z.string(),
-          damage: z.string(),
-        })
-      )
-      .default([]),
-    armor: z.string().default(''),
-    items: z
-      .array(
-        z.object({
-          name: z.string(),
-        })
-      )
-      .default([]),
-  }),
-
-  // Полноценный инвентарь
-  inventory: inventorySchema.default({
-    equipped: [],
-    inventory: [],
-    consumables: [],
-    treasures: '',
-    magicItems: { maxSlots: 3, items: [] },
-    currency: { copper: 0, silver: 0, gold: 0, electrum: 0, platinum: 0 },
-    carryCapacity: { current: 0, max: 0 },
-  }),
-
-  // Личность
-  personality: z.object({
-    traits: z.string().default(''),
-    ideals: z.string().default(''),
-    bonds: z.string().default(''),
-    flaws: z.string().default(''),
-  }),
-
-  // История и внешность
-  backstory: z.string().optional().default(''),
-  appearance: z.string().optional().default(''),
-  additionalFeatures: z.string().optional().default(''),
-  campaignGoals: z.string().optional().default(''),
-
-  // Члены команды
-  teamMembers: z.array(teamMemberSchema).optional().default([]),
-
-  notes: z
-    .object({
-      plotNotes: z.string().optional().default(''),
-      npcNotes: z.string().optional().default(''),
-      locationNotes: z.string().optional().default(''),
-      questNotes: z.string().optional().default(''),
-      secretNotes: z.string().optional().default(''),
-      combatNotes: z.string().optional().default(''),
-      contactNotes: z.string().optional().default(''),
-      rumorNotes: z.string().optional().default(''),
-      miscNotes: z.string().optional().default(''),
-    })
-    .optional()
-    .default({
-      plotNotes: '',
-      npcNotes: '',
-      locationNotes: '',
-      questNotes: '',
-      secretNotes: '',
-      combatNotes: '',
-      contactNotes: '',
-      rumorNotes: '',
-      miscNotes: '',
-    }),
-
-  spellSlots: z
-    .object({
-      level1: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level2: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level3: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level4: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level5: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level6: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level7: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level8: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-      level9: z
-        .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
-        .default({ max: 0, used: 0 }),
-    })
-    .optional()
-    .default({
-      level1: { max: 0, used: 0 },
-      level2: { max: 0, used: 0 },
-      level3: { max: 0, used: 0 },
-      level4: { max: 0, used: 0 },
-      level5: { max: 0, used: 0 },
-      level6: { max: 0, used: 0 },
-      level7: { max: 0, used: 0 },
-      level8: { max: 0, used: 0 },
-      level9: { max: 0, used: 0 },
-    }),
-
-  restFlags: z
-    .object({
-      arcaneRecoveryUsed: z.boolean().default(false),
-      naturalRecoveryUsed: z.boolean().default(false),
-    })
-    .default({
-      arcaneRecoveryUsed: false,
-      naturalRecoveryUsed: false,
-    }),
-
-  // Заклинания персонажа
-  cantrips: z.array(heroSpellSchema).default([]),
-  // Заговоры
-
-  preparedSpells: z.array(heroSpellSchema).default([]),
-  //Подготовленные
-
-  knownSpells: z.array(heroSpellSchema).default([]),
-  // Все известные заклинания
-
-  recommendedPreparedCount: z.number().min(0).default(0),
+const classEntrySchema = z.object({
+  className: z.string().min(1, 'Название класса обязательно'),
+  subclass: z.string().default(''),
+  level: z.number().min(1).max(20),
 });
+
+export const heroSchema = z
+  .object({
+    // Основная информация
+    name: z.string().min(1, 'Имя обязательно').max(50, 'Слишком длинное имя'),
+    race: z.string().min(1, 'Выберите расу'),
+    classes: z.array(classEntrySchema).default([]),
+    level: z.number().min(1, 'Минимальный уровень 1').max(20, 'Максимальный уровень 20'),
+    experience: z.number().min(0, 'Опыт не может быть отрицательным').optional().default(0),
+    background: z.string().min(1, 'Выберите предысторию'),
+    alignment: z.string().min(1, 'Выберите мировоззрение'),
+    size: z.string().min(1, 'Выберите размер'),
+    conditions: z.preprocess(
+      (val) => (typeof val === 'string' ? [] : val),
+      z.array(z.string()).default([])
+    ),
+    avatar: z.string().optional().default(''),
+
+    // Характеристики
+    abilityScores: z.object({
+      strength: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
+      dexterity: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
+      constitution: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
+      intelligence: z.number().min(1, 'Мін. 1').max(30, 'Макс. 30'),
+      wisdom: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
+      charisma: z.number().min(1, 'Мин. 1').max(30, 'Макс. 30'),
+    }),
+
+    // Хиты
+    hitPoints: z.object({
+      current: z.number().min(0, 'Минимум 0'),
+      max: z.number().min(1, 'Минимум 1'),
+      temporary: z.number().optional().default(0),
+    }),
+
+    // Кости хитов
+    hitDice: z.object({
+      total: z.number().min(0, 'Минимум 0'),
+      spent: z.number().min(0, 'Минимум 0'),
+      type: z.string(),
+    }),
+
+    // Спасброски от смерти
+    deathSaves: z.object({
+      successes: z.number().min(0).max(3),
+      failures: z.number().min(0).max(3),
+    }),
+
+    // Боевые характеристики
+    armorClass: z
+      .number()
+      .min(0, 'КЗ не может быть меньше 0')
+      .max(30, 'КЗ не может быть больше 30'),
+    initiative: z.number(),
+    speed: z.number().min(0, 'Скорость не может быть отрицательной'),
+    proficiencyBonus: z.number().min(2, 'Минимум 2').max(6, 'Максимум 6'),
+    inspiration: z.boolean().optional().default(false),
+    spellcastingAbility: z
+      .enum(['none', 'intelligence', 'wisdom', 'charisma'])
+      .optional()
+      .default('none'),
+
+    // Навыки и языки
+    skills: z.array(z.string()).default([]),
+    skillOverrides: z.record(z.string(), z.number()).default({}),
+    savingThrows: z.array(z.string()).default([]),
+    languages: z.array(z.string()).default([]),
+
+    // Владение
+    weaponProficiencies: z.array(z.string()).optional().default([]),
+    armorProficiencies: z.array(z.string()).optional().default([]),
+    toolProficiencies: z.array(z.string()).optional().default([]),
+
+    // Умения
+    classFeatures: z.string().optional().default(''),
+    raceFeatures: z.string().optional().default(''),
+
+    // Боевые способности (заклинания + снаряжение)
+    combatAbilities: z.array(combatAbilitySchema).optional().default([]),
+
+    // Черты персонажа
+    feats: z.array(featSchema).optional().default([]),
+
+    // Истощение
+    exhaustionLevel: z.number().min(0).max(6).default(0),
+
+    // Снаряжение
+    equipment: z.object({
+      weapons: z
+        .array(
+          z.object({
+            name: z.string(),
+            damage: z.string(),
+          })
+        )
+        .default([]),
+      armor: z.string().default(''),
+      items: z
+        .array(
+          z.object({
+            name: z.string(),
+          })
+        )
+        .default([]),
+    }),
+
+    // Полноценный инвентарь
+    inventory: inventorySchema.default({
+      equipped: [],
+      inventory: [],
+      consumables: [],
+      treasures: '',
+      magicItems: { maxSlots: 3, items: [] },
+      currency: { copper: 0, silver: 0, gold: 0, electrum: 0, platinum: 0 },
+      carryCapacity: { current: 0, max: 0 },
+    }),
+
+    // Личность
+    personality: z.object({
+      traits: z.string().default(''),
+      ideals: z.string().default(''),
+      bonds: z.string().default(''),
+      flaws: z.string().default(''),
+    }),
+
+    // История и внешность
+    backstory: z.string().optional().default(''),
+    appearance: z.string().optional().default(''),
+    additionalFeatures: z.string().optional().default(''),
+    campaignGoals: z.string().optional().default(''),
+
+    // Члены команды
+    teamMembers: z.array(teamMemberSchema).optional().default([]),
+
+    notes: z
+      .object({
+        plotNotes: z.string().optional().default(''),
+        npcNotes: z.string().optional().default(''),
+        locationNotes: z.string().optional().default(''),
+        questNotes: z.string().optional().default(''),
+        secretNotes: z.string().optional().default(''),
+        combatNotes: z.string().optional().default(''),
+        contactNotes: z.string().optional().default(''),
+        rumorNotes: z.string().optional().default(''),
+        miscNotes: z.string().optional().default(''),
+      })
+      .optional()
+      .default({
+        plotNotes: '',
+        npcNotes: '',
+        locationNotes: '',
+        questNotes: '',
+        secretNotes: '',
+        combatNotes: '',
+        contactNotes: '',
+        rumorNotes: '',
+        miscNotes: '',
+      }),
+
+    spellSlots: z
+      .object({
+        level1: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level2: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level3: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level4: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level5: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level6: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level7: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level8: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+        level9: z
+          .object({ max: z.number().min(0).default(0), used: z.number().min(0).default(0) })
+          .default({ max: 0, used: 0 }),
+      })
+      .optional()
+      .default({
+        level1: { max: 0, used: 0 },
+        level2: { max: 0, used: 0 },
+        level3: { max: 0, used: 0 },
+        level4: { max: 0, used: 0 },
+        level5: { max: 0, used: 0 },
+        level6: { max: 0, used: 0 },
+        level7: { max: 0, used: 0 },
+        level8: { max: 0, used: 0 },
+        level9: { max: 0, used: 0 },
+      }),
+
+    restFlags: z
+      .object({
+        arcaneRecoveryUsed: z.boolean().default(false),
+        naturalRecoveryUsed: z.boolean().default(false),
+      })
+      .default({
+        arcaneRecoveryUsed: false,
+        naturalRecoveryUsed: false,
+      }),
+
+    // Заклинания персонажа
+    cantrips: z.array(heroSpellSchema).default([]),
+    // Заговоры
+
+    preparedSpells: z.array(heroSpellSchema).default([]),
+    //Подготовленные
+
+    knownSpells: z.array(heroSpellSchema).default([]),
+    // Все известные заклинания
+
+    recommendedPreparedCount: z.number().min(0).default(0),
+  })
+  .superRefine((data, ctx) => {
+    const classLevelSum = data.classes.reduce((sum, c) => sum + (c.level || 0), 0);
+    if (data.classes.length > 0 && classLevelSum !== data.level) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Сумма уровней классов (${classLevelSum}) должна равняться общему уровню персонажа (${data.level})`,
+        path: ['classes'],
+      });
+    }
+  });
 
 // ЭКСПОРТ ТИПОВ
 export type HeroFormData = z.infer<typeof heroSchema>;

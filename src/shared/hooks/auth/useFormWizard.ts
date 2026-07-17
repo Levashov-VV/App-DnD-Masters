@@ -27,7 +27,7 @@ export function useFormWizard() {
   };
 
   const goToStep = (step: number) => {
-    if (step >= 1 && step <= FORM_STEPS.length) {
+    if (step >= 1 && step <= FORM_STEPS.length ) {
       setCurrentStep(step);
     }
   };

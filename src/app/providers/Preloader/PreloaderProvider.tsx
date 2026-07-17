@@ -73,6 +73,7 @@ export function PreloaderProvider() {
           className="w-[400px] h-[400px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
           src={assetUrl('/img/logo/logo.png')}
           alt="logo"
+          loading="eager" fetchPriority="high"
         />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-0">
           <svg
@@ -92,6 +93,7 @@ export function PreloaderProvider() {
           ref={diceRef}
           alt="dice"
           src={assetUrl('/img/logo/dice.png')}
+          loading="eager" fetchPriority="high"
         />
       </div>
     </>

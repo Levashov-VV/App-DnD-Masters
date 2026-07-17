@@ -5,6 +5,7 @@ import type {
   UseFormWatch,
   UseFormSetValue,
   UseFormGetValues,
+  Control,
 } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../features/heroes/schemas/heroSchema';
 import { Input } from '../HeroForm/ui/Input';
@@ -15,18 +16,16 @@ import { SquareInput } from '../HeroForm/ui/SquareInput';
 import { StatsPanel } from './ui/StatsPanel';
 import { ArmorClassShield } from '../HeroForm/ui/Shield';
 import { ExperienceInfoModal } from '../../../components/Mobile/HeroForm/ui/FormStep1/ExperienceInfoModal';
+import { ClassModal, type ClassEntry } from './ui/FormStep1/ClassModal';
+import { SubClassModal } from './ui/FormStep1/SubClassModal';
 import { ConfirmDialog } from '../../../components/Mobile/HeroForm/ui/FormStep5/ConfirmDialog';
 import type { ConfirmDialogConfig } from '../../../components/Mobile/HeroForm/ui/FormStep5/ConfirmDialog';
 import { getAbilityModifier } from '../../../../../../features/heroes/constants/dndData';
 import {
   DND_RACES,
-  DND_CLASSES,
   DND_SIZES,
   DND_BACKGROUNDS,
   DND_ALIGNMENTS,
-  CLASS_HIT_DICE,
-  getSubclassesForClass,
-  hasSubclasses,
   EXPERIENCE_TABLE,
 } from '../../../../../../features/heroes/constants/dndData';
 import raceData from '../../../../../../../public/data/charactersPerson.json';
@@ -38,16 +37,24 @@ interface FormStep1BasicProps {
   watch: UseFormWatch<HeroFormData>;
   setValue: UseFormSetValue<HeroFormData>;
   getValues: UseFormGetValues<HeroFormData>;
-  avatarRef: React.MutableRefObject<string>;
+  control: Control<HeroFormData>;
 }
 
 const RACE_NAME_MAPPING: Record<string, string> = {
+  Ааракокра: 'Aarakocra',
+  Гном: 'Gnome',
+  Гоблин: 'Goblin',
+  Кенку: 'Kenku',
+  Кобольд: 'Kobold',
+  Людоящер: 'Lizard-man',
+  Тритон: 'Triton',
+  Фирболг: 'Firbolg',
+  'Юань-ти': 'Yuan-ti',
   Человек: 'Human',
   Эльф: 'Elf',
   Дварф: 'Dwarf',
   Полурослик: 'Halfling',
   Драконорожденный: 'DragonBorn',
-  Гном: 'Gnome',
   Полуэльф: 'Elf',
   Полуорк: 'Orc',
   Орк: 'Orc',
@@ -69,40 +76,32 @@ export function FormStep1Basic({
   errors,
   watch,
   setValue,
-  avatarRef,
+  getValues,
+  control,
 }: FormStep1BasicProps) {
   const selectedRace = watch('race');
-  const selectedClass = watch('class');
+  const classesWatch = watch('classes') || [];
   const constitution = watch('abilityScores.constitution') || 10;
   const level = watch('level', 1);
   const formDeathSaveSuccesses = watch('deathSaves.successes') || 0;
   const formDeathSaveFailures = watch('deathSaves.failures') || 0;
   const formHitDiceType = watch('hitDice.type') || 'd8';
-  const armorClass = watch('armorClass') ?? 10;
-  const inspiration = watch('inspiration') ?? false;
   const experience = watch('experience') ?? 0;
   const exhaustionLevel = watch('exhaustionLevel') ?? 0;
   const conditions = watch('conditions') ?? [];
+  const localAvatar = watch('avatar');
 
-  const [localAvatar, setLocalAvatar] = useState<string>(() => avatarRef.current);
   const [raceImages, setRaceImages] = useState<{ figure: string; logo: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const isInitialized = useRef(false);
-
-  const [availableSubclasses, setAvailableSubclasses] = useState<string[]>(() => {
-    const cls = watch('class');
-    return cls && hasSubclasses(cls) ? getSubclassesForClass(cls) : [];
-  });
-  const [isSubclassDisabled, setIsSubclassDisabled] = useState<boolean>(() => {
-    const cls = watch('class');
-    return !(cls && hasSubclasses(cls));
-  });
+  const lastAutoAvatarRef = useRef<string>('');
 
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
   const [displayLevel, setDisplayLevel] = useState(1);
   const [displayHitDice, setDisplayHitDice] = useState('d8');
   const [displayDeathSaveSuccesses, setDisplayDeathSaveSuccesses] = useState(0);
   const [displayDeathSaveFailures, setDisplayDeathSaveFailures] = useState(0);
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
+  const [isSubclassModalOpen, setIsSubclassModalOpen] = useState(false);
 
   const [deathModalOpen, setDeathModalOpen] = useState(false);
   const [deathModalConfig] = useState<ConfirmDialogConfig>({
@@ -126,46 +125,32 @@ export function FormStep1Basic({
 
   const updateRaceImages = useCallback(
     (race: string) => {
+      const currentAvatar = getValues('avatar');
+      const isAutoAvatar = !currentAvatar || currentAvatar === lastAutoAvatarRef.current;
+
       if (race && race.trim() !== '') {
         const englishRaceName = RACE_NAME_MAPPING[race];
         if (englishRaceName) {
           const raceInfo = raceData.find((r) => r.name === englishRaceName && r.side === 'allies');
           if (raceInfo) {
             setRaceImages({ figure: raceInfo.img, logo: raceInfo.logo });
-            if (!localAvatar) avatarRef.current = raceInfo.logo;
+            if (isAutoAvatar) {
+              setValue('avatar', raceInfo.logo, { shouldDirty: false });
+              lastAutoAvatarRef.current = raceInfo.logo;
+            }
             return;
           }
         }
       }
+
       setRaceImages(null);
-      if (!localAvatar) avatarRef.current = '';
+      if (isAutoAvatar) {
+        setValue('avatar', '', { shouldDirty: false });
+        lastAutoAvatarRef.current = '';
+      }
     },
-    [localAvatar, avatarRef]
+    [getValues, setValue]
   );
-
-  useEffect(() => {
-    if (selectedClass && selectedClass.trim() !== '' && hasSubclasses(selectedClass)) {
-      const subclasses = getSubclassesForClass(selectedClass);
-      setAvailableSubclasses(subclasses);
-      setIsSubclassDisabled(false);
-    } else {
-      setAvailableSubclasses([]);
-      setIsSubclassDisabled(true);
-    }
-  }, [selectedClass]);
-
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true;
-      return;
-    }
-    if (selectedClass && CLASS_HIT_DICE[selectedClass]) {
-      const hitDieType = CLASS_HIT_DICE[selectedClass];
-      setValue('hitDice.type', hitDieType, { shouldDirty: true });
-      setValue('hitDice.total', level, { shouldDirty: true });
-      setDisplayHitDice(hitDieType);
-    }
-  }, [selectedClass, level, setValue]);
 
   useEffect(() => {
     if (displayDeathSaveSuccesses >= 3) {
@@ -190,24 +175,41 @@ export function FormStep1Basic({
     updateRaceImages(newRace);
   };
 
-  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newClass = e.target.value;
-    setValue('class', newClass, { shouldValidate: true, shouldDirty: true });
-    setValue('subclass', '', { shouldDirty: true });
-    if (newClass && newClass.trim() !== '' && hasSubclasses(newClass)) {
-      const subclasses = getSubclassesForClass(newClass);
-      setAvailableSubclasses(subclasses);
-      setIsSubclassDisabled(false);
+  const handleToggleClass = (className: string) => {
+    const exists = classesWatch.some((c) => c.className === className);
+    const currentSum = classesWatch.reduce((sum, c) => sum + (c.level || 0), 0);
+
+    if (!exists) {
+      const remaining = Math.max(0, level - currentSum);
+      const startingLevel = remaining > 0 ? 1 : 0;
+      const updated = [...classesWatch, { className, subclass: '', level: startingLevel }];
+      setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
     } else {
-      setAvailableSubclasses([]);
-      setIsSubclassDisabled(true);
+      const updated = classesWatch.filter((c) => c.className !== className);
+      setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
     }
-    if (newClass && CLASS_HIT_DICE[newClass]) {
-      const hitDieType = CLASS_HIT_DICE[newClass];
-      setValue('hitDice.type', hitDieType, { shouldDirty: true });
-      setValue('hitDice.total', level, { shouldDirty: true });
-      setDisplayHitDice(hitDieType);
+  };
+
+  // Возвращает true при успехе, false при ошибке (превышен бюджет уровней)
+  const handleClassLevelChange = (className: string, newLevel: number): boolean => {
+    const otherClassesSum = classesWatch
+      .filter((c) => c.className !== className)
+      .reduce((sum, c) => sum + (c.level || 0), 0);
+
+    if (otherClassesSum + newLevel > level) {
+      return false;
     }
+
+    const updated = classesWatch.map((c) =>
+      c.className === className ? { ...c, level: Math.max(0, newLevel) } : c
+    );
+    setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
+    return true;
+  };
+
+  const handleClassSubclassChange = (className: string, subclass: string) => {
+    const updated = classesWatch.map((c) => (c.className === className ? { ...c, subclass } : c));
+    setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -216,21 +218,21 @@ export function FormStep1Basic({
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result as string;
-        avatarRef.current = base64;
-        setLocalAvatar(base64);
+        setValue('avatar', base64, { shouldDirty: true });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveCustomAvatar = () => {
-    avatarRef.current = raceImages?.logo || '';
-    setLocalAvatar('');
+    const fallback = raceImages?.logo || '';
+    setValue('avatar', fallback, { shouldDirty: true });
+    lastAutoAvatarRef.current = fallback;
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const displayAvatar = localAvatar || raceImages?.logo;
-  const hasCustomAvatar = !!localAvatar;
+  const hasCustomAvatar = !!localAvatar && localAvatar !== raceImages?.logo;
 
   const handleDeathSaveSuccess = (index: number) => {
     const newSuccesses = displayDeathSaveSuccesses === index + 1 ? index : index + 1;
@@ -397,20 +399,26 @@ export function FormStep1Basic({
               error={errors.race?.message}
             />
 
-            <Select
-              label="Класс"
-              options={DND_CLASSES}
-              placeholder="Выберите класс..."
-              {...register('class')}
-              value={watch('class')}
-              onChange={handleClassChange}
-              error={errors.class?.message}
-            />
+            <div className="flex flex-col">
+              <label className="text-[1.1vh] font-medium text-amber-100">Классы</label>
+              <button
+                type="button"
+                onClick={() => setIsClassModalOpen(true)}
+                className="w-full h-[2.9vh] bg-neutral-900/80 rounded-lg border-2 border-amber-600/50 hover:border-amber-500 px-[0.5vw] flex items-center transition-all overflow-hidden"
+              >
+                <span className="block w-full truncate whitespace-nowrap text-left text-amber-100 text-[1.6vh]">
+                  {classesWatch.length > 0
+                    ? classesWatch.map((c) => c.className).join(', ')
+                    : 'Выбрать классы...'}
+                </span>
+              </button>
+            </div>
             <SelectOrInput
               label="Предыстория"
               options={DND_BACKGROUNDS}
               placeholder="Введите свою предысторию..."
               {...register('background')}
+              value={watch('background')}
               error={errors.background?.message}
             />
             <Select
@@ -421,18 +429,25 @@ export function FormStep1Basic({
               value={watch('size')}
               error={errors.size?.message}
             />
-            <div>
-              <SelectOrInput
-                label="Подкласс"
-                placeholder="Выберите подкласс..."
-                options={availableSubclasses}
-                {...register('subclass')}
-                error={errors.subclass?.message}
-                disabled={isSubclassDisabled}
-              />
-              {isSubclassDisabled && (
-                <p className="text-[1.2vh] text-amber-100/60">Сначала выберите класс</p>
-              )}
+            <div className="flex flex-col">
+              <label className="text-[1.1vh] font-medium text-amber-100">Подклассы</label>
+              <button
+                type="button"
+                onClick={() => setIsSubclassModalOpen(true)}
+                disabled={classesWatch.length === 0}
+                className="w-full h-[2.9vh] bg-neutral-900/80 rounded-lg border-2 border-amber-600/50 hover:border-amber-500 disabled:opacity-50 disabled:cursor-not-allowed px-[0.5vw] flex items-center transition-all overflow-hidden"
+              >
+                <span className="block w-full truncate whitespace-nowrap text-left text-amber-100 text-[1.6vh]">
+                  {classesWatch.length > 0
+                    ? classesWatch
+                        .map(
+                          (c) =>
+                            `${c.className} (ур. ${c.level}${c.subclass ? `, ${c.subclass}` : ''})`
+                        )
+                        .join(' · ')
+                    : 'Сначала выберите классы'}
+                </span>
+              </button>
             </div>
             <Select
               label="Мировоззрение"
@@ -508,115 +523,111 @@ export function FormStep1Basic({
       </div>
       <div style={{ marginTop: '1vh' }} className="flex flex-col gap-[1vw]">
         <div className="flex flex-row items-start">
-          <ArmorClassShield
-            register={register}
-            fieldName="armorClass"
-            errors={errors}
-            armorClass={armorClass}
-            inspiration={inspiration}
-          />
+          <ArmorClassShield control={control} fieldName="armorClass" errors={errors} />
           <div className="h-[21vh] w-[70vw] border-2 border-amber-600 text-amber-100">
-            <div className="flex flex-row gap-[5vw] text-[1.8vh]">
-              <h2 className="relative left-[3.8vw] w-[8vw] font-bold">Хиты</h2>
-              <h3 className="relative left-[13vw] w-[10vw] font-bold">Кости хитов</h3>
-              <h3 className="relative left-[16vw] w-[25vw] text-center text-[1.4vh] font-bold">
-                Спасброски от смерти
-              </h3>
-            </div>
-            <div className="relative left-[0.2vw] flex flex-row gap-[8.5vw] items-start">
-              <div className="w-[15vw] flex flex-row items-center gap-[5vw]">
-                <div className="w-[20vw] flex flex-col">
-                  <Input
-                    style={{ paddingLeft: '0.2vw' }}
-                    label="Текущий"
-                    type="number"
-                    min={0}
-                    {...register('hitPoints.current', { valueAsNumber: true })}
-                    error={errors.hitPoints?.current?.message}
-                  />
-                  <Input
-                    label="Временные"
-                    style={{ paddingLeft: '0.2vw' }}
-                    type="number"
-                    min={0}
-                    {...register('hitPoints.temporary', { valueAsNumber: true })}
-                  />
-                  <Input
-                    label="Макс"
-                    style={{ paddingLeft: '0.2vw' }}
-                    type="number"
-                    min={1}
-                    placeholder={`Рек: ${suggestedMaxHP}`}
-                    {...register('hitPoints.max', { valueAsNumber: true })}
-                    error={errors.hitPoints?.max?.message}
-                  />
+            <div className="flex flex-row gap-[10vw] text-[1.8vh]">
+              <div className="flex flex-col gap-8">
+                <div>
+                  <h2 className="relative left-[3.8vw] w-[8vw] font-bold">Хиты</h2>
+                </div>
+                <div className="w-[15vw] flex flex-row items-center gap-[5vw]">
+                  <div className="relative left-[1vw] bottom-[3vh] w-[20vw] flex flex-col">
+                    <Input
+                      style={{ paddingLeft: '0.2vw' }}
+                      label="Текущий"
+                      type="number"
+                      min={0}
+                      {...register('hitPoints.current', { valueAsNumber: true })}
+                      error={errors.hitPoints?.current?.message}
+                    />
+                    <Input
+                      label="Временные"
+                      style={{ paddingLeft: '0.2vw' }}
+                      type="number"
+                      min={0}
+                      {...register('hitPoints.temporary', { valueAsNumber: true })}
+                    />
+                    <Input
+                      label="Макс"
+                      style={{ paddingLeft: '0.2vw' }}
+                      type="number"
+                      min={1}
+                      placeholder={`Рек: ${suggestedMaxHP}`}
+                      {...register('hitPoints.max', { valueAsNumber: true })}
+                      error={errors.hitPoints?.max?.message}
+                    />
+                  </div>
                 </div>
               </div>
-
-              <div className="absolute bottom-[-0.2vh] left-[22vw] border-2 border-amber-600 h-[20.6vh]" />
-
-              <div className="flex flex-col">
-                <label className="text-[1.4vh] text-center">Потрачено</label>
-                <Input
-                  type="number"
-                  style={{ paddingLeft: '0.2vw' }}
-                  min={0}
-                  max={20}
-                  {...register('hitDice.spent', { valueAsNumber: true })}
-                />
+              <div className="flex flex-col gap-2">
+                <h3 className=" relative left-[2vw] text-center w-[10vw] font-bold">Кости хитов</h3>
                 <div className="flex flex-col">
-                  <label className="text-[2vh] text-center">Кость</label>
-                  <div className="text-[2vh] font-bold text-center">{displayHitDice}</div>
-                  <input type="hidden" {...register('hitDice.type')} />
-                  <input type="hidden" {...register('hitDice.total')} value={level} />
+                  <label className="text-[1.4vh] text-center">Потрачено</label>
+                  <Input
+                    type="number"
+                    style={{ paddingLeft: '0.2vw' }}
+                    min={0}
+                    max={20}
+                    {...register('hitDice.spent', { valueAsNumber: true })}
+                  />
+                  <div className="flex flex-col">
+                    <label className="text-[2vh] text-center">Кость</label>
+                    <div className="text-[2vh] font-bold text-center">{displayHitDice}</div>
+                    <input type="hidden" {...register('hitDice.type')} />
+                    <input type="hidden" {...register('hitDice.total')} value={level} />
+                  </div>
                 </div>
               </div>
-
-              <div className="absolute bottom-[-0.2vh] left-[42vw] border-2 border-amber-600 h-[20.6vh]" />
-
-              <div className="relative right-[5vw] flex flex-col gap-[2vh]">
+              <div className="relative right-[4vw] flex flex-col gap-2">
                 <div>
-                  <label className="text-[1.6vh] text-center block">Успехи</label>
-                  <div className="flex gap-[1vw]">
-                    {[0, 1, 2].map((index) => (
-                      <button
-                        key={`success-${index}`}
-                        type="button"
-                        onClick={() => handleDeathSaveSuccess(index)}
-                        className={`w-[3vh] h-[3vh] rounded-full border-2 transition-all ${
-                          displayDeathSaveSuccesses > index
-                            ? 'bg-green-500 border-green-400'
-                            : 'bg-stone-800 border-green-600 hover:border-green-400'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <input
-                    type="hidden"
-                    {...register('deathSaves.successes', { valueAsNumber: true })}
-                  />
+                  <h3 className="relative right-[5vw] w-[25vw] text-[1.4vh] text-center  font-bold">
+                    Спасброски от смерти
+                  </h3>
                 </div>
-
-                <div>
-                  <label className="text-[1.6vh] text-center block">Провалы</label>
-                  <div className="flex gap-[1vw]">
-                    {[0, 1, 2].map((index) => (
-                      <button
-                        key={`failure-${index}`}
-                        type="button"
-                        onClick={() => handleDeathSaveFailure(index)}
-                        className={`w-[3vh] h-[3vh] rounded-full border-2 transition-all ${
-                          displayDeathSaveFailures > index
-                            ? 'bg-red-500 border-red-400'
-                            : 'bg-stone-800 border-red-600 hover:border-red-400'
-                        }`}
-                      />
-                    ))}
+                <div className="relative right-[5vw] flex flex-col gap-[2vh]">
+                  <div>
+                    <label className="text-[1.6vh] text-center block">Успехи</label>
+                    <div className="flex justify-center gap-[1vw]">
+                      {[0, 1, 2].map((index) => (
+                        <button
+                          key={`success-${index}`}
+                          type="button"
+                          onClick={() => handleDeathSaveSuccess(index)}
+                          className={`w-[3vh] h-[3vh] rounded-full border-2 transition-all ${
+                            displayDeathSaveSuccesses > index
+                              ? 'bg-green-500 border-green-400'
+                              : 'bg-stone-800 border-green-600 hover:border-green-400'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <input
+                      type="hidden"
+                      {...register('deathSaves.successes', { valueAsNumber: true })}
+                    />
                   </div>
-                  <input
-                    type="hidden"
-                    {...register('deathSaves.failures', { valueAsNumber: true })}
-                  />
+
+                  <div>
+                    <label className="text-[1.6vh] text-center block">Провалы</label>
+                    <div className="flex justify-center gap-[1vw]">
+                      {[0, 1, 2].map((index) => (
+                        <button
+                          key={`failure-${index}`}
+                          type="button"
+                          onClick={() => handleDeathSaveFailure(index)}
+                          className={`w-[3vh] h-[3vh] rounded-full border-2 transition-all ${
+                            displayDeathSaveFailures > index
+                              ? 'bg-red-500 border-red-400'
+                              : 'bg-stone-800 border-red-600 hover:border-red-400'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <input
+                      type="hidden"
+                      {...register('deathSaves.failures', { valueAsNumber: true })}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -634,7 +645,21 @@ export function FormStep1Basic({
       </div>
 
       <ExperienceInfoModal isOpen={isExpModalOpen} onClose={() => setIsExpModalOpen(false)} />
+      <ClassModal
+        isOpen={isClassModalOpen}
+        onClose={() => setIsClassModalOpen(false)}
+        classes={classesWatch}
+        onToggleClass={handleToggleClass}
+      />
 
+      <SubClassModal
+        isOpen={isSubclassModalOpen}
+        onClose={() => setIsSubclassModalOpen(false)}
+        classes={classesWatch}
+        totalLevel={level}
+        onChangeLevel={handleClassLevelChange}
+        onChangeSubclass={handleClassSubclassChange}
+      />
       <ConfirmDialog
         isOpen={deathModalOpen}
         config={{

@@ -74,8 +74,7 @@ export function FormStep8Spells({
   const proficiencyBonus = getProficiencyBonus(level);
   const abilityScores = watch('abilityScores');
   const spellcastingAbility = watch('spellcastingAbility') || 'none';
-  const characterClass = watch('class') || '';
-  const subclass = watch('subclass') || '';
+  const classesWatch = watch('classes') || [];
   const arcaneRecoveryUsed = watch('restFlags.arcaneRecoveryUsed' as any) || false;
   const naturalRecoveryUsed = watch('restFlags.naturalRecoveryUsed' as any) || false;
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
@@ -136,8 +135,7 @@ export function FormStep8Spells({
   });
 
   const shortRestContext = getShortRestContext(
-    characterClass,
-    subclass,
+    classesWatch,
     level,
     slots,
     arcaneRecoveryUsed,
@@ -151,6 +149,8 @@ export function FormStep8Spells({
     const newUsed = realIndex < slot.used ? slot.used - 1 : realIndex + 1;
     setValue(`spellSlots.${levelKey}.used` as any, newUsed, { shouldDirty: true });
   };
+
+  const primaryClassName = classesWatch[0]?.className ?? '';
 
   const handleLongRest = () => {
     SPELL_LEVEL_KEYS.forEach((key) => {
@@ -451,7 +451,7 @@ export function FormStep8Spells({
       <SpellLibraryModal
         isOpen={isLibraryOpen}
         onClose={closeLibrary}
-        characterClass={characterClass}
+        characterClass={primaryClassName}
         control={control}
         setValue={setValue}
         mode={libraryMode}

@@ -4,15 +4,12 @@ import { Routes, Route } from 'react-router-dom';
 import App from '../../../app/index';
 import { SelectRole } from '../../../features/select-role/Select-role';
 import { DashboardMaster } from '../../../pages/masters/home/ui/Dashboard';
-import { SoundPad } from '../../../pages/masters/SoundPad/ui/SoundPad';
-import { SoundPadScenePage } from '../../../pages/masters/SoundPad/ui/SoundPadPage/SPPage';
-import { BattleField } from '../../../pages/masters/Battlefield/ui/Battlefield';
-import { DiceTray } from '../../../pages/masters/DiceTray/ui/DiceTray';
 import { DashboardPlayer } from '../../../pages/players/home/ui/Dashboard';
 import { CloneVoice } from '@/pages/masters/home/ui/CloneVoice/CloneVoice';
 import { HeroLibrary } from '../../../pages/players/Heroes Library/Library';
 import { lazy, Suspense } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { PreloaderProvider } from '../Preloader/PreloaderProvider';
 const HeroFormMobile = lazy(
   () =>
     import('../../../pages/players/Heroes Library/LibraryMobile/pages/HeroForm') as Promise<{
@@ -36,39 +33,52 @@ function HeroFormWrapper({ mode, id }: HeroFormProps) {
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const HeroFormComponent = isMobile ? HeroFormMobile : HeroFormDesktop;
 
-  return (
-    <Suspense
-      fallback={<div className="relative top-[40vh] text-[3vh] text-center">Загрузка формы...</div>}
-    >
-      <HeroFormComponent mode={mode} id={id} />
-    </Suspense>
-  );
+  return <HeroFormComponent mode={mode} id={id} />;
 }
+
+const DiceTray = lazy(() =>
+  import('../../../pages/masters/DiceTray/ui/DiceTray').then((m) => ({ default: m.DiceTray }))
+);
+const BattleField = lazy(() =>
+  import('../../../pages/masters/Battlefield/ui/Battlefield').then((m) => ({
+    default: m.BattleField,
+  }))
+);
+const SoundPad = lazy(() =>
+  import('../../../pages/masters/SoundPad/ui/SoundPad').then((m) => ({ default: m.SoundPad }))
+);
+const SoundPadScenePage = lazy(() =>
+  import('../../../pages/masters/SoundPad/ui/SoundPadPage/SPPage').then((m) => ({
+    default: m.SoundPadScenePage,
+  }))
+);
+
+const PageLoader = () => <PreloaderProvider />;
 
 export function Routing() {
   return (
-    <Routes>
-      <Route index element={<App />} />
-      <Route path="select-role" element={<SelectRole />} />
+      <Routes>
+        <Route index element={<App />} />
+        <Route path="select-role" element={<SelectRole />} />
 
-      {/* Master */}
-      <Route element={<LayoutMaster />}>
-        <Route path="master" element={<DashboardMaster />} />
-        <Route path="master/soundpad" element={<SoundPad />} />
-        <Route path="master/soundpad/:sceneSlug" element={<SoundPadScenePage />} />
-        <Route path="master/battlefield" element={<BattleField />} />
-        <Route path="master/diceTray" element={<DiceTray />} />
-        <Route path="master/cloneVoice" element={<CloneVoice />} />
-      </Route>
+        {/* Master */}
+        <Route element={<LayoutMaster />}>
+          <Route path="master" element={<DashboardMaster />} />
+          <Route path="master/soundpad" element={<SoundPad />} />
+          <Route path="master/soundpad/:sceneSlug" element={<SoundPadScenePage />} />
+          <Route path="master/battlefield" element={<BattleField />} />
+          <Route path="master/diceTray" element={<DiceTray />} />
+          <Route path="master/cloneVoice" element={<CloneVoice />} />
+        </Route>
 
-      {/* Player */}
-      <Route element={<LayoutPlayer />}>
-        <Route path="player" element={<DashboardPlayer />} />
-        <Route path="player/heroes" element={<HeroLibrary />} />
-        <Route path="player/heroes/create" element={<HeroFormWrapper mode="create" />} />
-        <Route path="player/heroes/:id/edit" element={<HeroFormWrapper mode="edit" />} />
-        <Route path="player/diceTray" element={<DiceTray />} />
-      </Route>
-    </Routes>
+        {/* Player */}
+        <Route element={<LayoutPlayer />}>
+          <Route path="player" element={<DashboardPlayer />} />
+          <Route path="player/heroes" element={<HeroLibrary />} />
+          <Route path="player/heroes/create" element={<HeroFormWrapper mode="create" />} />
+          <Route path="player/heroes/:id/edit" element={<HeroFormWrapper mode="edit" />} />
+          <Route path="player/diceTray" element={<DiceTray />} />
+        </Route>
+      </Routes>
   );
 }

@@ -617,17 +617,23 @@ export function DescriptionAppDesktop() {
           className="absolute z-10 pointer-events-none w-[12vw] h-[12vw] object-contain"
           src={images.dice10}
           alt="dice10"
+          loading="eager"
+          fetchPriority="high"
         />
         <img
           ref={dice20Ref}
           className="absolute z-10 pointer-events-none w-[12vw] h-[12vw] object-contain"
           src={images.dice20}
           alt="dice20"
+          loading="eager"
+          fetchPriority="high"
         />
         <img
           className="z-10 pointer-events-none w-[12vw] h-[12vw] object-contain relative left-[45vw] bottom-[25vh]"
           src={images.shield}
           alt="shield"
+          loading="eager"
+          fetchPriority="high"
         />
 
         <div className="w-screen h-screen flex flex-col items-center justify-center ml-[20%] relative z-20">
@@ -672,6 +678,8 @@ export function DescriptionAppDesktop() {
             className="absolute z-10 pointer-events-none w-[6vw] h-[6vw] object-contain"
             src={images.dice6}
             alt="dice6"
+            loading="eager"
+            fetchPriority="high"
           />
           <img
             ref={gearUpRef}
@@ -683,6 +691,8 @@ export function DescriptionAppDesktop() {
             }}
             src={images.gear}
             alt="gear"
+            loading="eager"
+            fetchPriority="high"
           />
           <img
             ref={gearDownRef}
@@ -694,24 +704,32 @@ export function DescriptionAppDesktop() {
             }}
             src={images.gear}
             alt="gear"
+            loading="eager"
+            fetchPriority="high"
           />
           <img
             className="absolute z-10 pointer-events-none w-[35vw] h-[35vw] object-contain left-[70vw] bottom-[38vh]"
             ref={bagRef}
             src={images.bag}
             alt="bag"
+            loading="eager"
+            fetchPriority="high"
           />
           <img
             className="absolute z-10 pointer-events-none w-[10vw] h-[10vw] object-contain left-[90vw] bottom-[63vh]"
             ref={potionMedRef}
             src={images.potionMed}
             alt="potion"
+            loading="eager"
+            fetchPriority="high"
           />
           <img
             className="absolute z-10 pointer-events-none w-[10vw] h-[10vw] object-contain left-[90vw] bottom-[63vh]"
             ref={potionToxicRef}
             src={images.potionToxic}
             alt="potion"
+            loading="eager"
+            fetchPriority="high"
           />
           <h3 className="text-[4.5vw]">
             <span
@@ -750,6 +768,8 @@ export function DescriptionAppDesktop() {
             className="absolute z-10 w-[35vw] h-[35vw] object-contain left-[27vw] bottom-[40vh]"
             src={images.book}
             alt="book"
+            loading="eager"
+            fetchPriority="high"
           />
           <h3 className="text-[4.5vw] z-20">
             <span ref={gameTextRef}>
@@ -775,6 +795,8 @@ export function DescriptionAppDesktop() {
               ref={swordRef}
               src={images.sword}
               alt="sword"
+              loading="eager"
+              fetchPriority="high"
             />
           </h3>
         </div>

@@ -166,6 +166,8 @@ export default function Battlefield() {
                   className="w-[40vw] z-0 object-contain"
                   src={assetUrl('/img/masters/Battlefield/Map/Dungeon.jpg')}
                   alt="Dungeon"
+                  loading="eager"
+                  fetchPriority="high"
                 />
               </div>
             </div>
@@ -177,6 +179,8 @@ export default function Battlefield() {
                 className="w-[40vw] z-0"
                 src={assetUrl('/img/masters/Battlefield/Map/CitySquare.jpg')}
                 alt="CitySquare"
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
             <div className="w-[40vw] h-[25vh] relative">

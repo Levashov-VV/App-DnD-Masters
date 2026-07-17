@@ -12,6 +12,8 @@ export interface ConfirmDialogConfig {
   showCancel?: boolean;
   onConfirm?: (value?: string) => void;
   onCancel?: () => void;
+  extraButtonText?: string;
+  onExtra?: () => void;
 }
 
 interface ConfirmDialogProps {
@@ -49,6 +51,10 @@ export function ConfirmDialog({ isOpen, config, onClose }: ConfirmDialogProps) {
     onClose(true);
   };
 
+  const handleExtra = () => {
+    config.onExtra?.();
+    onClose(true);
+  };
   const handleCancel = () => {
     config.onCancel?.();
     onClose(false);
@@ -57,16 +63,29 @@ export function ConfirmDialog({ isOpen, config, onClose }: ConfirmDialogProps) {
   const getTypeStyles = () => {
     switch (type) {
       case 'error':
-        return { Bg: 'bg-red-600', border: 'border-red-600', confirmBg: 'bg-red-600 hover:bg-red-500' };
+        return {
+          Bg: 'bg-red-600',
+          border: 'border-red-600',
+          confirmBg: 'bg-red-600 hover:bg-red-500',
+        };
       case 'alert':
-        return { Bg: 'bg-amber-600', border: 'border-amber-600', confirmBg: 'bg-amber-600 hover:bg-amber-500' };
+        return {
+          Bg: 'bg-amber-600',
+          border: 'border-amber-600',
+          confirmBg: 'bg-amber-600 hover:bg-amber-500',
+        };
       default:
-        return { Bg: 'bg-amber-600', border: 'border-amber-600', confirmBg: 'bg-amber-600 hover:bg-amber-500' };
+        return {
+          Bg: 'bg-amber-600',
+          border: 'border-amber-600',
+          confirmBg: 'bg-amber-600 hover:bg-amber-500',
+        };
     }
   };
 
   const styles = getTypeStyles();
-  const showCancelButton = showCancel !== undefined ? showCancel : type === 'confirm' || type === 'prompt';
+  const showCancelButton =
+    showCancel !== undefined ? showCancel : type === 'confirm' || type === 'prompt';
 
   return (
     <div
@@ -109,29 +128,47 @@ export function ConfirmDialog({ isOpen, config, onClose }: ConfirmDialogProps) {
         </div>
 
         {/* Кнопки */}
-        <div
-          style={{ marginBottom: '1vh' }}
-          className={`flex ${showCancelButton ? 'justify-center gap-[1vw]' : 'justify-center'}`}
-        >
-          {showCancelButton && (
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="bg-gray-700 hover:bg-gray-600 text-white w-[8vw] h-[4vh] rounded-lg font-bold transition-colors text-[1.6vh]"
+        {(() => {
+          const buttonCount = (showCancelButton ? 1 : 0) + (config.onExtra ? 1 : 0) + 1;
+          const buttonWidth = buttonCount === 3 ? 'w-[24vw]' : 'w-[25vw]';
+
+          return (
+            <div
+              style={{ marginBottom: '1vh' }}
+              className="flex flex-wrap justify-center gap-[1vw]"
             >
-              {cancelText}
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={handleConfirm}
-            disabled={type === 'prompt' && !inputValue.trim()}
-            className={`${styles.confirmBg} text-amber-100 w-[8vw] h-[4vh] rounded-lg font-bold transition-colors text-[1.6vh] disabled:opacity-40 disabled:cursor-not-allowed`}
-            autoFocus={type !== 'prompt'}
-          >
-            {confirmText}
-          </button>
-        </div>
+              {showCancelButton && (
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className={`${buttonWidth} bg-gray-700 hover:bg-gray-600 text-white h-[4vh] rounded-lg font-bold transition-colors text-[1.6vh]`}
+                >
+                  {cancelText}
+                </button>
+              )}
+
+              {config.onExtra && (
+                <button
+                  type="button"
+                  onClick={handleExtra}
+                  className={`${buttonWidth} bg-red-700/80 hover:bg-red-600 text-white h-[4vh] rounded-lg font-bold transition-colors text-[1.6vh]`}
+                >
+                  {config.extraButtonText}
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleConfirm}
+                disabled={type === 'prompt' && !inputValue.trim()}
+                className={`${styles.confirmBg} text-amber-100 ${buttonWidth} h-[4vh] rounded-lg font-bold transition-colors text-[1.6vh] disabled:opacity-40 disabled:cursor-not-allowed`}
+                autoFocus={type !== 'prompt'}
+              >
+                {confirmText}
+              </button>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

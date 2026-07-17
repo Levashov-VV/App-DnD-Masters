@@ -22,6 +22,12 @@ export interface ShortRestContext {
   message?: string;
 }
 
+export interface ClassEntry {
+  className: string;
+  subclass: string;
+  level: number;
+}
+
 const SLOT_LABELS: Record<string, string> = {
   level1: 'Уровень 1',
   level2: 'Уровень 2',
@@ -30,18 +36,10 @@ const SLOT_LABELS: Record<string, string> = {
   level5: 'Уровень 5',
 };
 
-export function getShortRestContext(
-  characterClass: string,
-  subclass: string,
-  level: number,
-  spellSlots: Record<string, { max: number; used: number }>,
-  arcaneRecoveryUsed: boolean,
-  naturalRecoveryUsed: boolean
-): ShortRestContext {
-  const recoveryLimit = Math.ceil(level / 2);
-
-  // Потраченные ячейки только 1-5 уровня
-  const availableSlots: SpellSlotAvailable[] = ['level1', 'level2', 'level3', 'level4', 'level5']
+function buildAvailableSlots(
+  spellSlots: Record<string, { max: number; used: number }>
+): SpellSlotAvailable[] {
+  return ['level1', 'level2', 'level3', 'level4', 'level5']
     .filter((key) => {
       const slot = spellSlots[key];
       return slot && slot.used > 0;
@@ -53,14 +51,26 @@ export function getShortRestContext(
       spent: spellSlots[key].used,
       max: spellSlots[key].max,
     }));
+}
 
-  // КОЛДУН
-  if (characterClass === 'Колдун') {
+export function getShortRestContext(
+  classes: ClassEntry[],
+  characterLevel: number,
+  spellSlots: Record<string, { max: number; used: number }>,
+  arcaneRecoveryUsed: boolean,
+  naturalRecoveryUsed: boolean
+): ShortRestContext {
+  const availableSlots = buildAvailableSlots(spellSlots);
+
+  const warlock = classes.find((c) => c.className === 'Колдун');
+  if (warlock) {
+    const recoveryLimit = Math.ceil(warlock.level / 2);
     return { type: 'warlock-auto', recoveryLimit, availableSlots };
   }
 
-  // ВОЛШЕБНИК
-  if (characterClass === 'Волшебник') {
+  const wizard = classes.find((c) => c.className === 'Волшебник');
+  if (wizard) {
+    const recoveryLimit = Math.ceil(wizard.level / 2);
     if (arcaneRecoveryUsed) {
       return {
         type: 'already-used',
@@ -73,9 +83,10 @@ export function getShortRestContext(
     return { type: 'wizard-manual', recoveryLimit, availableSlots };
   }
 
-  // ДРУИД
-  if (characterClass === 'Друид') {
-    if (subclass !== 'Круг земли') {
+  const druid = classes.find((c) => c.className === 'Друид');
+  if (druid) {
+    const recoveryLimit = Math.ceil(druid.level / 2);
+    if (druid.subclass !== 'Круг земли') {
       return {
         type: 'druid-no-subclass',
         recoveryLimit,
@@ -84,12 +95,12 @@ export function getShortRestContext(
           'Восстановление ячеек заклинаний на коротком отдыхе доступно только друидам Круга земли.',
       };
     }
-    if (level < 6) {
+    if (druid.level < 6) {
       return {
         type: 'druid-level-locked',
         recoveryLimit,
         availableSlots,
-        message: `Естественное восстановление откроется на 6-м уровне. Сейчас у вас ${level}-й уровень.`,
+        message: `Естественное восстановление откроется на 6-м уровне друида. Сейчас у вас ${druid.level}-й уровень в этом классе.`,
       };
     }
     if (naturalRecoveryUsed) {
@@ -104,7 +115,8 @@ export function getShortRestContext(
     return { type: 'druid-land-manual', recoveryLimit, availableSlots };
   }
 
-  // ВСЕ ОСТАЛЬНЫЕ
+  // Ни один класс не даёт восстановления ячеек на коротком отдыхе
+  const recoveryLimit = Math.ceil(characterLevel / 2);
   return {
     type: 'none',
     recoveryLimit,

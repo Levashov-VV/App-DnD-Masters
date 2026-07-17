@@ -15,7 +15,7 @@ export function DiceColorSelector({ onColorChange }: { onColorChange: (c: DiceSe
   const [selected, setSelected] = useState<DiceSetColor>('blue');
 
   return (
-    <div className="flex flex-col gap-[1vh] w-full h-[6vh]">
+    <div className="flex flex-col gap-[1vh] h-[6vh]">
       <span className="text-[1.6vh] text-slate-200">Цвет набора</span>
       <div className="flex flex-wrap gap-[0.4vw]">
         {COLORS.map((c) => (

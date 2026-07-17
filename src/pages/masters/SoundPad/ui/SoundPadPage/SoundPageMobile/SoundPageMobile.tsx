@@ -92,6 +92,8 @@ export const SoundPageMobile: React.FC = () => {
               src={`https://cdn.jsdelivr.net/gh/Levashov-VV/DnD-Audio@main/${scene.cover}`}
               alt={name}
               className="w-[80vw] h-[20vh] object-cover"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>

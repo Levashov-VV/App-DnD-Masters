@@ -10,12 +10,20 @@ interface TeamMemberCardProps {
 }
 
 const RACE_NAME_MAPPING: Record<string, string> = {
+  Ааракокра: 'Aarakocra',
+  Гном: 'Gnome',
+  Гоблин: 'Goblin',
+  Кенку: 'Kenku',
+  Кобольд: 'Kobold',
+  Людоящер: 'Lizard-man',
+  Тритон: 'Triton',
+  Фирболг: 'Firbolg',
+  'Юань-ти': 'Yuan-ti',
   Человек: 'Human',
   Эльф: 'Elf',
   Дварф: 'Dwarf',
   Полурослик: 'Halfling',
   Драконорожденный: 'DragonBorn',
-  Гном: 'Gnome',
   Полуэльф: 'Elf',
   Полуорк: 'Orc',
   Орк: 'Orc',

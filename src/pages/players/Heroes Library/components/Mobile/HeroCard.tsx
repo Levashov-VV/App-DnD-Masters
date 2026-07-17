@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Hero } from '../../types/hero';
 import { useHeroes } from '../../Context/HeroesContext';
 import { GameImage } from '@/components/GameImage';
+import { useGenerateCharacterPdf } from '../Character Sheet PDF/Usegeneratecharacterpdf';
 
 interface HeroCardProps {
   hero: Hero;
@@ -12,6 +13,7 @@ export function HeroCard({ hero }: HeroCardProps) {
   const navigate = useNavigate();
   const { deleteHero } = useHeroes();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { generateFilled, isGenerating } = useGenerateCharacterPdf();
 
   const handleEdit = () => {
     navigate(`/player/heroes/${hero.id}/edit`);
@@ -55,7 +57,7 @@ export function HeroCard({ hero }: HeroCardProps) {
 
           <div className="text-amber-100 text-[1.6vh]">
             <div>
-              {hero.race} • {hero.class}
+              {hero.race} • {hero.classes.map((c) => c.className).join(', ')}
             </div>
             <div className="flex items-center gap-2">
               <span className="text-amber-100">
@@ -72,6 +74,26 @@ export function HeroCard({ hero }: HeroCardProps) {
               className="flex-1 bg-amber-600 hover:bg-amber-500 text-amber-100 rounded-lg transition-colors text-[1.6vh] font-medium"
             >
               Редактировать
+            </button>
+            <button
+              onClick={() => generateFilled(hero)}
+              disabled={isGenerating}
+              title="Скачать PDF"
+              className="w-[3vh] h-[3vh] bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-amber-100 rounded-lg transition-colors flex items-center justify-center"
+            >
+              <svg
+                className="w-[2vh] h-[2vh]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"
+                />
+              </svg>
             </button>
             <button
               onClick={() => setShowDeleteModal(true)}

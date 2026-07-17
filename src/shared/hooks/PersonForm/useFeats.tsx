@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import type { HeroFormData } from '../../../features/heroes/schemas/heroSchema';
 import type { Feat } from '../../../features/heroes/constants/dndData';
+import { DND_FEATS } from '../../../features/heroes/constants/dndData';
 
 export function useFeats(
   setValue: UseFormSetValue<HeroFormData>,
@@ -16,17 +17,24 @@ export function useFeats(
   const [selectedFeatType, setSelectedFeatType] = useState<string>('all');
 
   useEffect(() => {
-    setActiveFeats(new Set(formFeats.map((feat) => feat.name)));
+    // activeFeats хранит nameEn — сверяемся с DND_FEATS по русскому имени, сохранённому в форме
+    const activeNameEns = formFeats
+      .map((feat) => DND_FEATS.find((f) => f.name === feat.name)?.nameEn)
+      .filter((v): v is string => Boolean(v));
+    setActiveFeats(new Set(activeNameEns));
   }, [JSON.stringify(formFeats)]);
 
   const updateFeats = (newSet: Set<string>) => {
     setActiveFeats(newSet);
-    const featsArray = Array.from(newSet).map((featName) => ({
-      name: featName,
-      description: '',
-      source: '',
-      prerequisite: '',
-    }));
+    const featsArray = Array.from(newSet).map((featNameEn) => {
+      const featData = DND_FEATS.find((f) => f.nameEn === featNameEn);
+      return {
+        name: featData?.name ?? featNameEn,
+        description: featData?.description ?? '',
+        source: '',
+        prerequisite: '',
+      };
+    });
     setValue('feats', featsArray, { shouldDirty: true });
   };
 

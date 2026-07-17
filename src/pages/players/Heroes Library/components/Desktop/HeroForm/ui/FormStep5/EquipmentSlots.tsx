@@ -228,6 +228,7 @@ export function EquipmentSlots({ equipped, onSlotClick, onEdit }: EquipmentSlots
           alt="Силуэт персонажа"
           className="absolute inset-0 w-full h-full object-contain select-none"
           draggable={false}
+          loading='lazy'
         />
 
         {slotAreas.map((area) => {
@@ -290,6 +291,7 @@ export function EquipmentSlots({ equipped, onSlotClick, onEdit }: EquipmentSlots
                       : 'none',
                     transition: 'filter 0.3s ease',
                   }}
+                  loading='lazy'
                 />
               )}
 

@@ -1,9 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 import type { HeroFormData } from '../../../../../features/heroes/schemas/heroSchema';
 import { heroSchema } from '../../../../../features/heroes/schemas/heroSchema';
 import { useHeroes } from '../../Context/HeroesContext';
@@ -17,7 +16,9 @@ import { FormStep5Inventory } from '../../components/Desktop/HeroForm/FormStep5E
 import { FormStep6Treasure } from '../../components/Desktop/HeroForm/FormStep6Treasure';
 import { FormStep7Notes } from '../../components/Desktop/HeroForm/FormStep7Notes';
 import { FormStep8Spells } from '../../components/Desktop/HeroForm/FormStep8Spells';
+import { ConfirmDialog } from '../../components/Desktop/HeroForm/ui/FormStep5/ConfirmDialog';
 import { getProficiencyBonus } from '../../../../../features/heroes/constants/dndData';
+import { useGenerateCharacterPdf } from '../../components/Character Sheet PDF/Usegeneratecharacterpdf';
 
 interface HeroFormProps {
   mode: 'create' | 'edit';
@@ -28,24 +29,30 @@ export default function HeroForm({ mode }: HeroFormProps) {
   const { id } = useParams();
   const { addHero, updateHero, getHero } = useHeroes();
   const { currentStep, nextStep, prevStep, goToStep, isFirstStep, isLastStep } = useFormWizard();
+  const heroToEdit = mode === 'edit' && id ? getHero(id) : undefined;
+  const {
+    generateFilled,
+    previewFilled,
+    isGenerating,
+    error: pdfError,
+  } = useGenerateCharacterPdf();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     watch,
     setValue,
     getValues,
     control,
-    reset,
   } = useForm<HeroFormData>({
     resolver: zodResolver(heroSchema) as Resolver<HeroFormData>,
     mode: 'onChange',
+    values: heroToEdit,
     defaultValues: {
       name: '',
       race: '',
-      class: '',
-      subclass: '',
+      classes: [],
       size: '',
       level: 1,
       experience: 0,
@@ -69,6 +76,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
       proficiencyBonus: 2,
       inspiration: false,
       skills: [],
+      skillOverrides: {},
       savingThrows: [],
       languages: [],
       weaponProficiencies: [],
@@ -126,19 +134,67 @@ export default function HeroForm({ mode }: HeroFormProps) {
     },
   });
 
-  const avatarRef = useRef<string>('');
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const pendingNavigationRef = useRef<(() => void) | null>(null);
+  const allowNavigationRef = useRef(false);
+  const isDirtyRef = useRef(false);
+  const hasPushedGuardRef = useRef(false);
 
   useEffect(() => {
-    if (mode === 'edit' && id) {
-      const hero = getHero(id);
-      if (hero) {
-        avatarRef.current = hero.avatar || '';
-        reset(hero);
-      } else {
-        navigate('/player/heroes');
-      }
+    isDirtyRef.current = isDirty;
+  }, [isDirty]);
+
+  useEffect(() => {
+    if (isDirty && !hasPushedGuardRef.current && !allowNavigationRef.current) {
+      window.history.pushState({ __formGuard: true }, '', window.location.href);
+      hasPushedGuardRef.current = true;
     }
-  }, [mode, id, getHero, reset, navigate]);
+  }, [isDirty]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty && !allowNavigationRef.current) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (allowNavigationRef.current) return;
+      if (!isDirtyRef.current) return;
+
+      window.history.pushState({ __formGuard: true }, '', window.location.href);
+
+      pendingNavigationRef.current = () => {
+        allowNavigationRef.current = true;
+        window.history.go(-2);
+      };
+
+      setShowLeaveConfirm(true);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const attemptLeave = (targetPath: string) => {
+    if (isDirty) {
+      pendingNavigationRef.current = () => navigate(targetPath);
+      setShowLeaveConfirm(true);
+    } else {
+      navigate(targetPath);
+    }
+  };
+
+  useEffect(() => {
+    if (mode === 'edit' && id && !getHero(id)) {
+      navigate('/player/heroes');
+    }
+  }, [mode, id, getHero, navigate]);
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
@@ -149,16 +205,33 @@ export default function HeroForm({ mode }: HeroFormProps) {
     return () => subscription.unsubscribe();
   }, [watch, setValue]);
 
-  // ✅ onSubmit — чистый, без JSX внутри
   const onSubmit = (data: HeroFormData) => {
-    const heroData = { ...data, avatar: avatarRef.current };
+    const heroData = { ...data, avatar: data.avatar };
     try {
+      allowNavigationRef.current = true;
       if (mode === 'create') addHero(heroData);
       else if (mode === 'edit' && id) updateHero(id, heroData);
-      navigate('/player/heroes');
+      navigate('/player/heroes', { replace: true });
     } catch (error) {
       console.error('Ошибка сохранения героя:', error);
+      allowNavigationRef.current = false;
     }
+  };
+
+  const handleStay = () => {
+    setShowLeaveConfirm(false);
+    pendingNavigationRef.current = null;
+  };
+
+  const handleDiscardAndLeave = () => {
+    setShowLeaveConfirm(false);
+    allowNavigationRef.current = true;
+    pendingNavigationRef.current?.();
+  };
+
+  const handleSaveAndLeave = () => {
+    setShowLeaveConfirm(false);
+    handleSubmit(onSubmit, onValidationError)();
   };
 
   const onValidationError = (validationErrors: typeof errors) => {
@@ -176,7 +249,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
             watch={watch}
             setValue={setValue}
             getValues={getValues}
-            avatarRef={avatarRef}
+            control={control}
           />
         );
       case 2:
@@ -244,7 +317,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
         <header className="flex flex-row gap-[30vw]">
           <button
             type="button"
-            onClick={() => navigate('/player/heroes')}
+            onClick={() => attemptLeave('/player/heroes')}
             className="flex items-center gap-[1vw] text-gray-400 hover:text-white transition-colors text-[1.6vh]"
           >
             <svg className="w-[1vw] h-[1vw]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,11 +335,29 @@ export default function HeroForm({ mode }: HeroFormProps) {
           </h1>
         </header>
 
-        {/* ✅ onError передан вторым аргументом — отдельно от onSubmit */}
         <form onSubmit={handleSubmit(onSubmit, onValidationError)}>
           <div className="grid grid-cols-5 gap-[2vw]">
             <div className="col-span-4">
               <div className="bg-neutral-700/70 rounded-2xl h-[65vh]">{renderStep()}</div>
+              <div className="position absolute bottom-[52vh] right-[5vw]">
+                {pdfError && <span className="text-red-400 text-[1.4vh]">{pdfError}</span>}
+                <button
+                  type="button"
+                  onClick={() => generateFilled(getValues())}
+                  disabled={isGenerating}
+                  className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white rounded-lg text-[2vh] w-[12vw] transition-colors"
+                >
+                  {isGenerating ? 'Формируем PDF…' : 'Скачать PDF файл'}
+                </button>
+              </div>
+              {/* <button
+                type="button"
+                onClick={() => previewFilled(getValues())}
+                disabled={isGenerating}
+                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg text-[1.6vh] px-[1vw] py-[0.5vh] transition-colors"
+              >
+                👁️ Просмотр
+              </button> */}
               <div className="flex justify-between">
                 <button
                   type="button"
@@ -286,6 +377,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
 
                 {!isLastStep ? (
                   <button
+                    key="next-btn"
                     type="button"
                     onClick={nextStep}
                     className="relative top-[2vh] z-10 bg-amber-600 text-neutral-900 text-[1.6vh] shadow-amber-500/50 scale-105 hover:bg-amber-500 hover:scale-105 rounded-lg w-[8vw] h-[4vh]"
@@ -294,6 +386,7 @@ export default function HeroForm({ mode }: HeroFormProps) {
                   </button>
                 ) : (
                   <button
+                    key="submit-btn"
                     type="submit"
                     className="relative top-[2vh] z-10 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[1.6vh] transition-colors w-[8vw] h-[4vh]"
                   >
@@ -308,6 +401,22 @@ export default function HeroForm({ mode }: HeroFormProps) {
           </div>
         </form>
       </div>
+      <ConfirmDialog
+        isOpen={showLeaveConfirm}
+        config={{
+          title: 'Несохранённые изменения',
+          message: 'У вас есть несохранённые изменения.\nЧто сделать перед выходом?',
+          type: 'confirm',
+          confirmText: 'Сохранить и выйти',
+          cancelText: 'Остаться',
+          showCancel: true,
+          extraButtonText: 'Выйти без сохранения',
+          onConfirm: handleSaveAndLeave,
+          onCancel: handleStay,
+          onExtra: handleDiscardAndLeave,
+        }}
+        onClose={() => setShowLeaveConfirm(false)}
+      />
     </div>
   );
 }

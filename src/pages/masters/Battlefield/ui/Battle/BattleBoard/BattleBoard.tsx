@@ -170,6 +170,8 @@ export function BattleBoard({
           src={mapImage}
           className="absolute inset-0 w-full h-full object-cover z-10"
           alt="Battle map"
+          loading="eager"
+          fetchPriority="high"
         />
         <GridOverlay gridWidth={gridWidth} gridHeight={gridHeight} />
         {tokens.map((token) => (

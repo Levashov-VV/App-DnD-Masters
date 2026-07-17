@@ -93,6 +93,8 @@ export const SoundPageDesktop: React.FC = () => {
               src={`https://cdn.jsdelivr.net/gh/Levashov-VV/DnD-Audio@main/${scene.cover}`}
               alt={name}
               className="w-[25vw] h-[50vh]"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>

@@ -147,7 +147,7 @@ export const SoundPadsMobile = () => {
           Погрузись в приключение с помощью Саундпадов
         </div>
         <div ref={imageRef} className="relative right-[2vw] w-[60vw] drop-shadow-2xl">
-          <img src={SoundPad} alt="SoundPad" className="w-full h-auto object-contain" />
+          <img src={SoundPad} alt="SoundPad" className="w-full h-auto object-contain" loading="eager" fetchPriority="high" />
         </div>
         <div className="flex flex-row gap-[20vw] items-start">
           <div

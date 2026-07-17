@@ -130,6 +130,7 @@ export function BattleMapSection() {
               src={customImage || selectedMap.img}
               alt={customImage ? 'Загруженная карта' : selectedMap.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              loading="lazy"
             />
             {customImage && (
               <button

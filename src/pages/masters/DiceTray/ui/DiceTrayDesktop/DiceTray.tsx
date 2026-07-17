@@ -278,18 +278,18 @@ export function DiceTrayDesktop() {
       {rollMode === 'single' && overlay && (
         <div
           key={overlayKey}
-          className={`critOverlay ${
+          className={`critOverlays ${
             overlay.kind === 'hit'
-              ? 'critOverlay--hit'
+              ? 'critOverlays--hit'
               : overlay.kind === 'miss'
-                ? 'critOverlay--miss'
-                : 'critOverlay--value'
+                ? 'critOverlays--miss'
+                : 'critOverlays--value'
           }`}
         >
-          <div className="critOverlay__fog" />
+          <div className="critOverlays__fog" />
           <div
-            className={`critOverlay__label ${
-              overlay.kind === 'value' ? 'critOverlay__label--value' : 'critOverlay__label--crit'
+            className={`critOverlays__label ${
+              overlay.kind === 'value' ? 'critOverlays__label--value' : 'critOverlays__label--crit'
             }`}
           >
             {overlay.text}
@@ -303,6 +303,8 @@ export function DiceTrayDesktop() {
           className="w-[50vw] pointer-events-none"
           src={assetUrl('img/masters/home/DiceTray/DiceTray.png')}
           alt="dice tray"
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
 
@@ -340,7 +342,7 @@ export function DiceTrayDesktop() {
           >
             {rollResult === 0 ? '—' : rollResult}
           </div>
-          <div className="text-[1.8vh] font-medium text-slate-300 mt-1 tracking-wide">
+          <div className="text-[1.8vh] font-medium text-slate-300 tracking-wide">
             {rollResult === 0 ? 'Нет калибровки' : 'Выпало!'}
           </div>
         </div>

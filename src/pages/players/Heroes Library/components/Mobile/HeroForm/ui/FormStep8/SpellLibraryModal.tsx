@@ -689,7 +689,7 @@ export function SpellLibraryModal({
                               {selectedSpell.description}
                             </p>
                             {selectedSpell.atHigherLevels && (
-                              <div className="bg-stone-800/60 border border-amber-600/20 rounded-xl">
+                              <div className="bg-stone-800/60 border-amber-600/20 rounded-xl">
                                 <p className="text-[1.2vh] text-amber-400/80 font-bold uppercase mb-1">
                                   На высших уровнях:
                                 </p>

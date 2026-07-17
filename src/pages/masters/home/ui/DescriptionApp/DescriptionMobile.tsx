@@ -12,7 +12,6 @@ import Person from '/img/players/DescriptionApp/Person.png';
 import Hero from '/img/players/DescriptionApp/Hero.png';
 import Dragon from '/img/players/DescriptionApp/Dragon.jpg';
 
-
 gsap.registerPlugin(ScrollTrigger);
 
 const images = {
@@ -413,6 +412,7 @@ export function DescriptionAppMobile() {
               src={images.Adventure}
               alt="Adventure"
               onLoad={handleImageLoad}
+              loading="eager" fetchPriority="high"
             />
             <div>
               <span
@@ -436,6 +436,7 @@ export function DescriptionAppMobile() {
               src={images.book}
               alt="book"
               onLoad={handleImageLoad}
+              loading="eager" fetchPriority="high"
             />
           </div>
           <div className="relative top-[2vh] flex flex-row text-[2vh] text-center text-amber-100 leading-snug">
@@ -446,6 +447,7 @@ export function DescriptionAppMobile() {
                 src={images.Person}
                 alt="Person"
                 onLoad={handleImageLoad}
+                loading="eager" fetchPriority="high"
               />
             </div>
             <div ref={heroBlockRef}>
@@ -455,6 +457,7 @@ export function DescriptionAppMobile() {
                 src={images.Hero}
                 alt="Hero"
                 onLoad={handleImageLoad}
+                loading="eager" fetchPriority="high"
               />
             </div>
           </div>
@@ -478,6 +481,7 @@ export function DescriptionAppMobile() {
               src={images.Dragon}
               alt="Dragon"
               onLoad={handleImageLoad}
+              loading="eager" fetchPriority="high"
             />
           </div>
           <div>
@@ -500,6 +504,7 @@ export function DescriptionAppMobile() {
                 className="w-[50vw] object-contain pointer-events-none"
                 src={images.shield}
                 alt="shield"
+                loading="eager" fetchPriority="high"
               />
             </div>
             <div>
@@ -508,6 +513,7 @@ export function DescriptionAppMobile() {
                 className="w-[50vw] object-contain pointer-events-none right-[8vw]"
                 src={images.sword}
                 alt="sword"
+                loading="eager" fetchPriority="high"
               />
             </div>
           </div>
@@ -522,11 +528,41 @@ export function DescriptionAppMobile() {
             </span>
           </h3>
           <div className="relative top-[10vh] w-screen pointer-events-none">
-            <span ref={number1Ref} className="absolute text-[8vw] font-bold text-purple-400/70 left-[10vw] bottom-[2vh]" style={{ fontFamily: 'monospace' }}>20</span>
-            <span ref={number2Ref} className="absolute text-[6vw] font-bold text-pink-400/70 right-[15vw] bottom-[2vh]" style={{ fontFamily: 'monospace' }}>+5</span>
-            <span ref={number3Ref} className="absolute text-[7vw] font-bold text-cyan-400/70 left-[20vw] top-[5vh]" style={{ fontFamily: 'monospace' }}>18</span>
-            <span ref={number4Ref} className="absolute text-[5vw] font-bold text-amber-400/70 right-[20vw] top-[5vh]" style={{ fontFamily: 'monospace' }}>1d12</span>
-            <span ref={number5Ref} className="absolute text-[6vw] font-bold text-emerald-400/70 left-[50%] bottom-[-2vh] -translate-x-1/2" style={{ fontFamily: 'monospace' }}>2</span>
+            <span
+              ref={number1Ref}
+              className="absolute text-[8vw] font-bold text-purple-400/70 left-[10vw] bottom-[2vh]"
+              style={{ fontFamily: 'monospace' }}
+            >
+              20
+            </span>
+            <span
+              ref={number2Ref}
+              className="absolute text-[6vw] font-bold text-pink-400/70 right-[15vw] bottom-[2vh]"
+              style={{ fontFamily: 'monospace' }}
+            >
+              +5
+            </span>
+            <span
+              ref={number3Ref}
+              className="absolute text-[7vw] font-bold text-cyan-400/70 left-[20vw] top-[5vh]"
+              style={{ fontFamily: 'monospace' }}
+            >
+              18
+            </span>
+            <span
+              ref={number4Ref}
+              className="absolute text-[5vw] font-bold text-amber-400/70 right-[20vw] top-[5vh]"
+              style={{ fontFamily: 'monospace' }}
+            >
+              1d12
+            </span>
+            <span
+              ref={number5Ref}
+              className="absolute text-[6vw] font-bold text-emerald-400/70 left-[50%] bottom-[-2vh] -translate-x-1/2"
+              style={{ fontFamily: 'monospace' }}
+            >
+              2
+            </span>
           </div>
         </div>
 
@@ -537,7 +573,10 @@ export function DescriptionAppMobile() {
               <h3 className="text-[5.5vw] text-center text-amber-100">Судьба вашего героя</h3>
               <h3 className="text-[5vw] text-center text-amber-100">
                 в{' '}
-                <span ref={airTextRef} className="inline-block text-[6.5vw] font-bold text-cyan-400">
+                <span
+                  ref={airTextRef}
+                  className="inline-block text-[6.5vw] font-bold text-cyan-400"
+                >
                   ВОЗДУХЕ
                 </span>
               </h3>
@@ -550,18 +589,21 @@ export function DescriptionAppMobile() {
               className="absolute w-[28vw] h-[28vw] object-contain pointer-events-none left-[5vw] top-[3vh]"
               src={images.dice20}
               alt="dice20"
+              loading="eager" fetchPriority="high"
             />
             <img
               ref={dice10Ref}
               className="absolute w-[24vw] h-[24vw] object-contain pointer-events-none left-[38vw] top-[5vh]"
               src={images.dice10}
               alt="dice10"
+              loading="eager" fetchPriority="high"
             />
             <img
               ref={dice6Ref}
               className="absolute w-[22vw] h-[22vw] object-contain pointer-events-none right-[5vw] top-[4vh]"
               src={images.dice6}
               alt="dice6"
+              loading="eager" fetchPriority="high"
             />
           </div>
 

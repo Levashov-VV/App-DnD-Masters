@@ -231,14 +231,14 @@ export function StatsPanel({
             >
               {/* header */}
               <div>
-                <div className="flex items-center justify-between">
+                <div className="relative top-[1vh] w-[98vw] flex items-center justify-between">
                   <h2 className="text-[3vh] font-bold text-amber-100 uppercase">
                     СОСТОЯНИЯ ПЕРСОНАЖА
                   </h2>
                   <button
                     type="button"
                     onClick={() => setIsConditionsOpen(false)}
-                    className="w-[4vh] h-[4vh] bg-amber-600 hover:bg-amber-500 rounded-full flex items-center justify-center transition-colors"
+                    className="relative top-[0.5vh] right-[2vw] w-[4vh] h-[4vh] bg-amber-600 hover:bg-amber-500 rounded-full flex items-center justify-center transition-colors"
                   >
                     <svg
                       className="w-[2.5vh] h-[2.5vh] text-white"
@@ -264,8 +264,8 @@ export function StatsPanel({
               </div>
 
               {/* list */}
-              <div className="relative top-[5vh] overflow-y-auto flex-1">
-                <div className="flex flex-col gap-[2vh]">
+              <div className="overflow-y-auto flex-1">
+                <div className=" w-[98vw] flex flex-col gap-[2vh]">
                   {DND_CONDITIONS.map((condition, index) => {
                     const isActive = activeConditions.has(condition.nameEn);
                     return (
@@ -280,9 +280,9 @@ export function StatsPanel({
                             : 'border-amber-600 bg-stone-800'
                         }`}
                       >
-                        <div className="flex flex-col gap-[1vh]">
+                        <div className="w-[95vw] flex flex-col gap-[1vh]">
                           <div className="flex flex-row items-center justify-between gap-[2vw]">
-                            <h3 className="text-[2.2vh] font-bold text-amber-100 uppercase">
+                            <h3 className="relative left-1 text-[2.2vh] font-bold text-amber-100 uppercase">
                               {condition.name}
                             </h3>
                             <div className="flex  items-center gap-[2vw]">
@@ -341,7 +341,7 @@ export function StatsPanel({
                 <button
                   type="button"
                   onClick={goBackToList}
-                  className="flex items-center gap-[2vw] text-amber-400 hover:text-amber-300 transition-colors"
+                  className="relative top-[0.5vh] flex items-center gap-[2vw] text-amber-400 hover:text-amber-300 transition-colors"
                 >
                   <svg
                     className="w-[2.5vh] h-[2.5vh]"

@@ -13,12 +13,12 @@ export function validateHeroesArray(value: unknown): Hero[] {
       'id' in item &&
       'name' in item &&
       'race' in item &&
-      'class' in item &&
+      'classes' in item &&
       'level' in item &&
       typeof item.id === 'string' &&
       typeof item.name === 'string' &&
       typeof item.race === 'string' &&
-      typeof item.class === 'string' &&
+      Array.isArray((item as { classes: unknown }).classes) &&
       typeof item.level === 'number'
     );
   });

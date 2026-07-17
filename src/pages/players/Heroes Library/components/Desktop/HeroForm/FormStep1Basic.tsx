@@ -5,7 +5,9 @@ import type {
   UseFormWatch,
   UseFormSetValue,
   UseFormGetValues,
+  Control,
 } from 'react-hook-form';
+import {useWatch} from 'react-hook-form'
 import type { HeroFormData } from '../../../../../../features/heroes/schemas/heroSchema';
 import { Input } from '../HeroForm/ui/Input';
 import { CircularInput } from '../HeroForm/ui/CircularInputProps';
@@ -15,18 +17,16 @@ import { SquareInput } from '../HeroForm/ui/SquareInput';
 import { StatsPanel } from './ui/StatsPanel';
 import { ArmorClassShield } from '../HeroForm/ui/Shield';
 import { ExperienceInfoModal } from '../../../components/Desktop/HeroForm/ui/FormStep1/ExperienceInfoModal';
+import { ClassModal } from './ui/FormStep1/ClassModal';
+import { SubClassModal } from './ui/FormStep1/SubClassModal';
 import { ConfirmDialog } from '../../../components/Desktop/HeroForm/ui/FormStep5/ConfirmDialog';
 import type { ConfirmDialogConfig } from '../../../components/Desktop/HeroForm/ui/FormStep5/ConfirmDialog';
 import { getAbilityModifier } from '../../../../../../features/heroes/constants/dndData';
 import {
   DND_RACES,
-  DND_CLASSES,
   DND_SIZES,
   DND_BACKGROUNDS,
   DND_ALIGNMENTS,
-  CLASS_HIT_DICE,
-  getSubclassesForClass,
-  hasSubclasses,
   EXPERIENCE_TABLE,
 } from '../../../../../../features/heroes/constants/dndData';
 import raceData from '../../../../../../../public/data/charactersPerson.json';
@@ -38,16 +38,24 @@ interface FormStep1BasicProps {
   watch: UseFormWatch<HeroFormData>;
   setValue: UseFormSetValue<HeroFormData>;
   getValues: UseFormGetValues<HeroFormData>;
-  avatarRef: React.MutableRefObject<string>;
+  control: Control<HeroFormData>;
 }
 
 const RACE_NAME_MAPPING: Record<string, string> = {
+  Ааракокра: 'Aarakocra',
+  Гном: 'Gnome',
+  Гоблин: 'Goblin',
+  Кенку: 'Kenku',
+  Кобольд: 'Kobold',
+  Людоящер: 'Lizard-man',
+  Тритон: 'Triton',
+  Фирболг: 'Firbolg',
+  'Юань-ти': 'Yuan-ti',
   Человек: 'Human',
   Эльф: 'Elf',
   Дварф: 'Dwarf',
   Полурослик: 'Halfling',
   Драконорожденный: 'DragonBorn',
-  Гном: 'Gnome',
   Полуэльф: 'Elf',
   Полуорк: 'Orc',
   Орк: 'Orc',
@@ -69,42 +77,35 @@ export function FormStep1Basic({
   errors,
   watch,
   setValue,
-  avatarRef,
+  getValues,
+  control,
 }: FormStep1BasicProps) {
   const selectedRace = watch('race');
-  const selectedClass = watch('class');
   const constitution = watch('abilityScores.constitution') || 10;
   const level = watch('level', 1);
   const formDeathSaveSuccesses = watch('deathSaves.successes') || 0;
   const formDeathSaveFailures = watch('deathSaves.failures') || 0;
   const formHitDiceType = watch('hitDice.type') || 'd8';
-  const armorClass = watch('armorClass') ?? 10;
-  const inspiration = watch('inspiration') ?? false;
+
   const experience = watch('experience') ?? 0;
   const exhaustionLevel = watch('exhaustionLevel') ?? 0;
-  const conditions = watch('conditions') ?? [];
+  const conditions = useWatch({ control, name: 'conditions' }) ?? [];
+  const localAvatar = watch('avatar');
+  const classesWatch = watch('classes') || [];
 
-  const [localAvatar, setLocalAvatar] = useState<string>(() => avatarRef.current);
   const [raceImages, setRaceImages] = useState<{ figure: string; logo: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const isInitialized = useRef(false);
-
-  const [availableSubclasses, setAvailableSubclasses] = useState<string[]>(() => {
-    const cls = watch('class');
-    return cls && hasSubclasses(cls) ? getSubclassesForClass(cls) : [];
-  });
-  const [isSubclassDisabled, setIsSubclassDisabled] = useState<boolean>(() => {
-    const cls = watch('class');
-    return !(cls && hasSubclasses(cls));
-  });
+  const lastAutoAvatarRef = useRef<string>('');
 
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
   const [displayLevel, setDisplayLevel] = useState(1);
   const [displayHitDice, setDisplayHitDice] = useState('d8');
   const [displayDeathSaveSuccesses, setDisplayDeathSaveSuccesses] = useState(0);
   const [displayDeathSaveFailures, setDisplayDeathSaveFailures] = useState(0);
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
+  const [isSubclassModalOpen, setIsSubclassModalOpen] = useState(false);
 
-  // ↓ Состояние модального окна смерти
+  // Состояние модального окна смерти
   const [deathModalOpen, setDeathModalOpen] = useState(false);
   const [deathModalConfig] = useState<ConfirmDialogConfig>({
     title: 'Персонаж мёртв',
@@ -127,46 +128,32 @@ export function FormStep1Basic({
 
   const updateRaceImages = useCallback(
     (race: string) => {
+      const currentAvatar = getValues('avatar');
+      const isAutoAvatar = !currentAvatar || currentAvatar === lastAutoAvatarRef.current;
+
       if (race && race.trim() !== '') {
         const englishRaceName = RACE_NAME_MAPPING[race];
         if (englishRaceName) {
           const raceInfo = raceData.find((r) => r.name === englishRaceName && r.side === 'allies');
           if (raceInfo) {
             setRaceImages({ figure: raceInfo.img, logo: raceInfo.logo });
-            if (!localAvatar) avatarRef.current = raceInfo.logo;
+            if (isAutoAvatar) {
+              setValue('avatar', raceInfo.logo, { shouldDirty: false });
+              lastAutoAvatarRef.current = raceInfo.logo;
+            }
             return;
           }
         }
       }
+
       setRaceImages(null);
-      if (!localAvatar) avatarRef.current = '';
+      if (isAutoAvatar) {
+        setValue('avatar', '', { shouldDirty: false });
+        lastAutoAvatarRef.current = '';
+      }
     },
-    [localAvatar, avatarRef]
+    [getValues, setValue]
   );
-
-  useEffect(() => {
-    if (selectedClass && selectedClass.trim() !== '' && hasSubclasses(selectedClass)) {
-      const subclasses = getSubclassesForClass(selectedClass);
-      setAvailableSubclasses(subclasses);
-      setIsSubclassDisabled(false);
-    } else {
-      setAvailableSubclasses([]);
-      setIsSubclassDisabled(true);
-    }
-  }, [selectedClass]);
-
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true;
-      return;
-    }
-    if (selectedClass && CLASS_HIT_DICE[selectedClass]) {
-      const hitDieType = CLASS_HIT_DICE[selectedClass];
-      setValue('hitDice.type', hitDieType, { shouldDirty: true });
-      setValue('hitDice.total', level, { shouldDirty: true });
-      setDisplayHitDice(hitDieType);
-    }
-  }, [selectedClass, level, setValue]);
 
   useEffect(() => {
     if (displayDeathSaveSuccesses >= 3) {
@@ -191,24 +178,40 @@ export function FormStep1Basic({
     updateRaceImages(newRace);
   };
 
-  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newClass = e.target.value;
-    setValue('class', newClass, { shouldValidate: true, shouldDirty: true });
-    setValue('subclass', '', { shouldDirty: true });
-    if (newClass && newClass.trim() !== '' && hasSubclasses(newClass)) {
-      const subclasses = getSubclassesForClass(newClass);
-      setAvailableSubclasses(subclasses);
-      setIsSubclassDisabled(false);
+  const handleToggleClass = (className: string) => {
+    const exists = classesWatch.some((c) => c.className === className);
+    const currentSum = classesWatch.reduce((sum, c) => sum + (c.level || 0), 0);
+
+    if (!exists) {
+      const remaining = Math.max(0, level - currentSum);
+      const startingLevel = remaining > 0 ? 1 : 0;
+      const updated = [...classesWatch, { className, subclass: '', level: startingLevel }];
+      setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
     } else {
-      setAvailableSubclasses([]);
-      setIsSubclassDisabled(true);
+      const updated = classesWatch.filter((c) => c.className !== className);
+      setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
     }
-    if (newClass && CLASS_HIT_DICE[newClass]) {
-      const hitDieType = CLASS_HIT_DICE[newClass];
-      setValue('hitDice.type', hitDieType, { shouldDirty: true });
-      setValue('hitDice.total', level, { shouldDirty: true });
-      setDisplayHitDice(hitDieType);
+  };
+
+  const handleClassLevelChange = (className: string, newLevel: number): boolean => {
+    const otherClassesSum = classesWatch
+      .filter((c) => c.className !== className)
+      .reduce((sum, c) => sum + (c.level || 0), 0);
+
+    if (otherClassesSum + newLevel > level) {
+      return false;
     }
+
+    const updated = classesWatch.map((c) =>
+      c.className === className ? { ...c, level: Math.max(0, newLevel) } : c
+    );
+    setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
+    return true;
+  };
+
+  const handleClassSubclassChange = (className: string, subclass: string) => {
+    const updated = classesWatch.map((c) => (c.className === className ? { ...c, subclass } : c));
+    setValue('classes', updated, { shouldDirty: true, shouldValidate: true });
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,21 +220,21 @@ export function FormStep1Basic({
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result as string;
-        avatarRef.current = base64;
-        setLocalAvatar(base64);
+        setValue('avatar', base64, { shouldDirty: true });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveCustomAvatar = () => {
-    avatarRef.current = raceImages?.logo || '';
-    setLocalAvatar('');
+    const fallback = raceImages?.logo || '';
+    setValue('avatar', fallback, { shouldDirty: true });
+    lastAutoAvatarRef.current = fallback;
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const displayAvatar = localAvatar || raceImages?.logo;
-  const hasCustomAvatar = !!localAvatar;
+  const hasCustomAvatar = !!localAvatar && localAvatar !== raceImages?.logo;
 
   const handleDeathSaveSuccess = (index: number) => {
     const newSuccesses = displayDeathSaveSuccesses === index + 1 ? index : index + 1;
@@ -251,7 +254,6 @@ export function FormStep1Basic({
     setValue('deathSaves.failures', newFailures, { shouldDirty: true });
     setDisplayDeathSaveFailures(newFailures);
     if (newFailures >= 3) {
-      // ↓ Открываем модальное окно вместо alert
       setDeathModalOpen(true);
     }
   };
@@ -281,7 +283,7 @@ export function FormStep1Basic({
       ? Math.min(100, Math.max(0, Math.floor((expIntoLevel / expNeededForNext) * 100)))
       : 100;
   const expRemaining = nextLevelExp !== null ? Math.max(0, nextLevelExp - experience) : 0;
-
+console.log('FormStep1Basic render, conditions:', conditions);
   return (
     <div className="relative left-[0.5vw] top-[1vh] flex flex-col gap-[2vh] uppercase">
       <h2 className="text-left text-[2.5vh] font-bold text-amber-100">Основная информация</h2>
@@ -465,14 +467,18 @@ export function FormStep1Basic({
                 onChange={handleRaceChange}
                 error={errors.race?.message}
               />
-              <Select
-                label="Класс"
-                options={DND_CLASSES}
-                placeholder="Выберите класс..."
-                {...register('class')}
-                onChange={handleClassChange}
-                error={errors.class?.message}
-              />
+              <div className="flex flex-col gap-[0.5vh]">
+                <label className="text-[1.1vh] font-medium text-amber-100">Классы</label>
+                <button
+                  type="button"
+                  onClick={() => setIsClassModalOpen(true)}
+                  className="w-full bg-neutral-900/80 rounded-lg text-amber-100 text-[1.6vh] border-2 border-amber-600/50 hover:border-amber-500 px-[0.5vw] py-[0.5vh] text-left transition-all"
+                >
+                  {classesWatch.length > 0
+                    ? classesWatch.map((c) => c.className).join(', ')
+                    : 'Выбрать классы...'}
+                </button>
+              </div>
               <SelectOrInput
                 label="Предыстория"
                 options={DND_BACKGROUNDS}
@@ -487,18 +493,25 @@ export function FormStep1Basic({
                 {...register('size')}
                 error={errors.size?.message}
               />
-              <div>
-                <SelectOrInput
-                  label="Подкласс"
-                  placeholder="Выберите подкласс..."
-                  options={availableSubclasses}
-                  {...register('subclass')}
-                  error={errors.subclass?.message}
-                  disabled={isSubclassDisabled}
-                />
-                {isSubclassDisabled && (
-                  <p className="text-[1.2vh] text-amber-100/60">Сначала выберите класс</p>
-                )}
+              <div className="flex flex-col gap-[0.5vh]">
+                <label className="text-[1.1vh] font-medium text-amber-100">
+                  Подклассы и уровни
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsSubclassModalOpen(true)}
+                  disabled={classesWatch.length === 0}
+                  className="w-full bg-neutral-900/80 rounded-lg text-amber-100 text-[1.6vh] border-2 border-amber-600/50 hover:border-amber-500 disabled:opacity-50 disabled:cursor-not-allowed px-[0.5vw] py-[0.5vh] text-left transition-all"
+                >
+                  {classesWatch.length > 0
+                    ? classesWatch
+                        .map(
+                          (c) =>
+                            `${c.className} (ур. ${c.level}${c.subclass ? `, ${c.subclass}` : ''})`
+                        )
+                        .join(' · ')
+                    : 'Сначала выберите классы'}
+                </button>
               </div>
               <Select
                 label="Мировоззрение"
@@ -514,13 +527,7 @@ export function FormStep1Basic({
 
       <div className="flex flex-row gap-[1vw]">
         <div className="flex flex-row items-start">
-          <ArmorClassShield
-            register={register}
-            fieldName="armorClass"
-            errors={errors}
-            armorClass={armorClass}
-            inspiration={inspiration}
-          />
+          <ArmorClassShield control={control} fieldName="armorClass" errors={errors} />
           <StatsPanel
             register={register}
             watch={watch}
@@ -651,6 +658,21 @@ export function FormStep1Basic({
           onConfirm: resetDeathSaves,
         }}
         onClose={() => setDeathModalOpen(false)}
+      />
+      <ClassModal
+        isOpen={isClassModalOpen}
+        onClose={() => setIsClassModalOpen(false)}
+        classes={classesWatch}
+        onToggleClass={handleToggleClass}
+      />
+
+      <SubClassModal
+        isOpen={isSubclassModalOpen}
+        onClose={() => setIsSubclassModalOpen(false)}
+        classes={classesWatch}
+        totalLevel={level}
+        onChangeLevel={handleClassLevelChange}
+        onChangeSubclass={handleClassSubclassChange}
       />
     </div>
   );

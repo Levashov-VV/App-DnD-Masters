@@ -1,34 +1,27 @@
 import type { UseFormRegister, FieldErrors } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../../features/heroes/schemas/heroSchema';
+import type { Control } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 interface ArmorClassShieldProps {
-  register: UseFormRegister<HeroFormData>;
+  control: Control<HeroFormData>;
   fieldName: keyof Pick<HeroFormData, 'armorClass'>;
   errors: FieldErrors<HeroFormData>;
-  armorClass: number;
-  inspiration: boolean;
   label?: string;
   sublabel?: string;
   className?: string;
 }
 
 export const ArmorClassShield = ({
-  register,
+  control,
   fieldName,
   errors,
-  armorClass,
-  inspiration,
   label = 'КЛАСС ЗАЩИТЫ',
   sublabel = 'ЩИТ',
   className = '',
 }: ArmorClassShieldProps) => {
   const error = errors[fieldName]?.message as string | undefined;
 
-  const numberField = register(fieldName, {
-    valueAsNumber: true,
-    min: { value: 0, message: 'Минимум 0' },
-    max: { value: 30, message: 'Максимум 30' },
-  });
 
   return (
     <div className={`relative inline-flex flex-col items-center justify-center ${className}`}>
@@ -70,18 +63,27 @@ export const ArmorClassShield = ({
       </div>
 
       <div className="absolute top-[3vh] left-0 right-0 flex justify-center">
-        <input
-          type="number"
-          min={0}
-          max={30}
-          {...numberField}
-          value={armorClass}
-          onChange={(e) => {
-            numberField.onChange(e);
+        <Controller
+          name={fieldName}
+          control={control}
+          rules={{
+            min: { value: 0, message: 'Минимум 0' },
+            max: { value: 30, message: 'Максимум 30' },
           }}
-          className={`relative bottom-[1vh] w-[5vh] text-center text-[4.5vh] font-bold ${
-            error ? 'text-red-400' : 'text-amber-100'
-          } bg-transparent border-none outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+          render={({ field }) => (
+            <input
+              type="number"
+              min={0}
+              max={30}
+              value={field.value ?? ''}
+              onChange={(e) => field.onChange(e.target.value === '' ? '' : Number(e.target.value))}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              className={`relative bottom-[1vh] w-[5vh] text-center text-[4.5vh] font-bold ${
+                error ? 'text-red-400' : 'text-amber-100'
+              } bg-transparent border-none outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+            />
+          )}
         />
       </div>
 
@@ -91,14 +93,19 @@ export const ArmorClassShield = ({
         >
           {sublabel}
         </span>
-        <input
-          type="checkbox"
-          {...register('inspiration')}
-          checked={inspiration}
-          onChange={(e) => {
-            register('inspiration').onChange(e);
-          }}
-          className="w-[1.5vh] h-[1.5vh] rotate-45 appearance-none bg-transparent border-2 border-amber-600 checked:bg-black cursor-pointer hover:border-amber-500 transition-colors"
+        <Controller
+          name="inspiration"
+          control={control}
+          render={({ field }) => (
+            <input
+              type="checkbox"
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              className="w-[1.5vh] h-[1.5vh] rotate-45 appearance-none bg-transparent border-2 border-amber-600 checked:bg-black cursor-pointer hover:border-amber-500 transition-colors"
+            />
+          )}
         />
       </div>
 

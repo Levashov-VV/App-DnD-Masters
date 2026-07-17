@@ -119,6 +119,74 @@
     "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Grung.png"
   },
   {
+    "id": 18,
+    "side": "allies",
+    "name": "Aarakocra",
+    "img": "/img/masters/Battlefield/Figures/Allies/Aarakocra.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Aarakocra.png"
+  },
+  {
+    "id": 19,
+    "side": "allies",
+    "name": "Firbolg",
+    "img": "/img/masters/Battlefield/Figures/Allies/Firbolg.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Firbolg.png"
+  },
+  {
+    "id": 20,
+    "side": "allies",
+    "name": "Gnome",
+    "img": "/img/masters/Battlefield/Figures/Allies/Gnome.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Gnome.png"
+  },
+  {
+    "id": 21,
+    "side": "allies",
+    "name": "Goblin",
+    "img": "/img/masters/Battlefield/Figures/Allies/Goblin.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Goblin.png"
+  },
+  {
+    "id": 22,
+    "side": "allies",
+    "name": "Kenku",
+    "img": "/img/masters/Battlefield/Figures/Allies/Kenku.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Kenku.png"
+  },
+  {
+    "id": 23,
+    "side": "allies",
+    "name": "Kobold",
+    "img": "/img/masters/Battlefield/Figures/Allies/Kobold.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Kobold.png"
+  },
+  {
+    "id": 24,
+    "side": "allies",
+    "name": "Lizard-man",
+    "img": "/img/masters/Battlefield/Figures/Allies/Lizard-man.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Lizard-man.png"
+  },
+  {
+    "id": 25,
+    "side": "allies",
+    "name": "Triton",
+    "img": "/img/masters/Battlefield/Figures/Allies/Triton.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Triton.png"
+  },
+  {
+    "id": 26,
+    "side": "allies",
+    "name": "Yuan-ti",
+    "img": "/img/masters/Battlefield/Figures/Allies/Yuan-ti.png",
+    "logo": "/img/masters/Battlefield/Figures/Allies/Logo/Yuan-ti.png"
+  },
+
+
+
+
+
+  {
     "id": 101,
     "side": "enemies",
     "name": "Goblin",
@@ -215,5 +283,75 @@
     "name": "Beholder",
     "img": "/img/masters/Battlefield/Figures/Enemies/Beholder.png",
     "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Beholder.png"
+  },
+  {
+    "id": 115,
+    "side": "enemies",
+    "name": "Wolf",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Wolf.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Wolf.png"
+  },
+  {
+    "id": 116,
+    "side": "enemies",
+    "name": "Bat",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Bat.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Bat.png"
+  },
+  {
+    "id": 117,
+    "side": "enemies",
+    "name": "Cultist",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Cultist.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Cultist.png"
+  },
+  {
+    "id": 118,
+    "side": "enemies",
+    "name": "Ghoul",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Ghoul.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Ghoul.png"
+  },
+  {
+    "id": 119,
+    "side": "enemies",
+    "name": "Gargoyle",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Gargoyle.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Gargoyle.png"
+  },
+  {
+    "id": 120,
+    "side": "enemies",
+    "name": "Harpy",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Harpy.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Harpy.png"
+  },
+  {
+    "id": 121,
+    "side": "enemies",
+    "name": "Lich",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Lich.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Lich.png"
+  },
+  {
+    "id": 122,
+    "side": "enemies",
+    "name": "Owlbear",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Owlbear.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Owlbear.png"
+  },
+  {
+    "id": 123,
+    "side": "enemies",
+    "name": "Orc",
+    "img": "/img/masters/Battlefield/Figures/Enemies/Orc.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/Orc.png"
+  },
+  {
+    "id": 124,
+    "side": "enemies",
+    "name": "Red Wizard",
+    "img": "/img/masters/Battlefield/Figures/Enemies/RedWizard.png",
+    "logo": "/img/masters/Battlefield/Figures/Enemies/Logo/RedWizard.png"
   }
 ]

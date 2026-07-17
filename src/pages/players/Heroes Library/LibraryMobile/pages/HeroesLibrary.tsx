@@ -2,13 +2,21 @@ import { useNavigate } from 'react-router-dom';
 import { useHeroes } from '../../Context/HeroesContext';
 import { HeroCard } from '../../components/Mobile/HeroCard';
 import { HeroEmptyState } from '../../components/Mobile/HeroEmptyState';
+import { useState } from 'react';
+import { exportHeroesToFile } from '../../../Heroes Library/lib/ExportImport';
+import { ImportModal } from '../../components/Mobile/ImportModal';
 
 export function HeroesLibrary() {
   const navigate = useNavigate();
   const { heroes } = useHeroes();
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const handleCreateHero = () => {
     navigate('/player/heroes/create');
+  };
+
+  const handleExport = () => {
+    exportHeroesToFile(heroes);
   };
 
   return (
@@ -29,7 +37,7 @@ export function HeroesLibrary() {
             <button
               onClick={handleCreateHero}
               style={{ padding: '0.4vh 3vw' }}
-              className="absolute right-[30vw] top-[10vh] flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-amber-100 rounded-lg transition-colors text-[2vh] font-medium"
+              className="absolute right-[30vw] top-[17vh] flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-amber-100 rounded-lg transition-colors text-[2vh] font-medium"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -37,12 +45,29 @@ export function HeroesLibrary() {
                   strokeLinejoin="round"
                   strokeWidth={2}
                   d="M12 4v16m8-8H4"
-                />
+                  />
               </svg>
               Создать героя
             </button>
           )}
         </div>
+          <div className="flex gap-[2vw]">
+            <button
+              onClick={handleExport}
+              className="flex-1 bg-stone-700 active:bg-stone-600 text-amber-100 rounded-lg text-[1.6vh] font-medium transition-colors"
+              style={{ padding: '1.5vh 0' }}
+            >
+              Экспорт
+            </button>
+            <button
+              onClick={() => setIsImportModalOpen(true)}
+              className="flex-1 bg-stone-700 active:bg-stone-600 text-amber-100 rounded-lg text-[1.6vh] font-medium transition-colors"
+              style={{ padding: '1.5vh 0' }}
+            >
+              Импорт
+            </button>
+          </div>
+          <ImportModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)} />
 
         {/* Контент */}
         {heroes.length === 0 ? (

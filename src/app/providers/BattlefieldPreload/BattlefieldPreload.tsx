@@ -27,7 +27,7 @@ export function BattleFieldPreload() {
     <section className="flex flex-col items-center w-[100vw] h-full bg-neutral-900">
       <div ref={loaderElementRef}>
         <div>
-          <img className="w-[50vw] object-cover" src={WhiteBlot} alt="white blot" />
+          <img className="w-[50vw] object-cover" src={WhiteBlot} alt="white blot"  loading="eager" fetchPriority="high"/>
           <div className="relative bottom-[60vh] text-[5vh] text-center text-neutral-900">
             Добро пожаловать
             <br /> на поле для боя

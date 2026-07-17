@@ -19,7 +19,7 @@ interface PhysicsWorldProps {
 
 export const PhysicsWorld = ({
   children,
-  trayCenter = [0, 0, 0],
+  trayCenter = [0, 0, 15],
   traySize = { width: 10, depth: 10 },
   wallHeight = 3.0,
   wallThickness = 1.2,
@@ -78,7 +78,7 @@ export const PhysicsWorld = ({
           shadow-mapSize-height={2048}
         />
 
-        <Physics gravity={[0, -15, 0]} timeStep={1 / 120} debug={debug}>
+        <Physics debug={debug} gravity={[0, -15, 0]} timeStep={1 / 120}>
           {/* Пол */}
           <RigidBody type="fixed" position={[cx, actualFloorY, cz]} colliders={false}>
             <CuboidCollider args={[halfW, wallThickness / 2, halfD]} />

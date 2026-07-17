@@ -63,12 +63,16 @@ export function FormStep2AbilitiesAndSkills({
   const proficiencyBonus = getProficiencyBonus(level);
 
   const formSkills = watch('skills') || [];
+  const formSkillOverrides = watch('skillOverrides') || {};
   const formLanguages = watch('languages') || [];
   const formSavingThrows = watch('savingThrows') || [];
   const formInspiration = watch('inspiration') || false;
   const formAbilities = watch('abilityScores');
 
   const [displaySkills, setDisplaySkills] = useState<string[]>(formSkills);
+  const [displaySkillOverrides, setDisplaySkillOverrides] =
+    useState<Record<string, number>>(formSkillOverrides);
+  const [skillInputText, setSkillInputText] = useState<Record<string, string>>({});
   const [displayLanguages, setDisplayLanguages] = useState<string[]>(formLanguages);
   const [displaySavingThrows, setDisplaySavingThrows] = useState<string[]>(formSavingThrows);
   const [displayInspiration, setDisplayInspiration] = useState<boolean>(formInspiration);
@@ -107,6 +111,9 @@ export function FormStep2AbilitiesAndSkills({
   useEffect(() => {
     setDisplaySkills(formSkills);
   }, [JSON.stringify(formSkills)]);
+  useEffect(() => {
+    setDisplaySkillOverrides(formSkillOverrides);
+  }, [JSON.stringify(formSkillOverrides)]);
 
   useEffect(() => {
     setDisplayLanguages(formLanguages);
@@ -156,6 +163,43 @@ export function FormStep2AbilitiesAndSkills({
 
     setDisplaySkills(newSkills);
     setValue('skills', newSkills, { shouldDirty: true, shouldValidate: true });
+  };
+  const handleSkillOverrideChange = (skill: string, value: number) => {
+    const newOverrides = { ...displaySkillOverrides, [skill]: value };
+    setDisplaySkillOverrides(newOverrides);
+    setValue('skillOverrides', newOverrides, { shouldDirty: true, shouldValidate: true });
+  };
+
+  const handleSkillInputChange = (skill: string, rawValue: string) => {
+    // Разрешаем пустую строку и одиночный минус — промежуточные состояния при вводе
+    setSkillInputText((prev) => ({ ...prev, [skill]: rawValue }));
+
+    if (rawValue === '' || rawValue === '-') {
+      return; // ждём, пока пользователь допишет число
+    }
+
+    const parsed = parseInt(rawValue, 10);
+    if (!isNaN(parsed)) {
+      handleSkillOverrideChange(skill, parsed);
+    }
+  };
+
+  const handleSkillInputBlur = (skill: string) => {
+    const rawValue = skillInputText[skill];
+    if (rawValue === '' || rawValue === '-' || isNaN(parseInt(rawValue, 10))) {
+      setSkillInputText((prev) => {
+        const next = { ...prev };
+        delete next[skill];
+        return next;
+      });
+    }
+  };
+
+  const resetSkillOverride = (skill: string) => {
+    const newOverrides = { ...displaySkillOverrides };
+    delete newOverrides[skill];
+    setDisplaySkillOverrides(newOverrides);
+    setValue('skillOverrides', newOverrides, { shouldDirty: true, shouldValidate: true });
   };
 
   const toggleLanguage = (language: string) => {
@@ -230,17 +274,23 @@ export function FormStep2AbilitiesAndSkills({
             type="button"
             onClick={() => setIsGuideModalOpen(true)}
             style={{ padding: '0.5vh 0.5vw' }}
-            className="w-[25vw] h-[9.5vh] flex items-center gap-[0.5vw] bg-amber-600 hover:bg-amber-500 border-2 border-amber-600 hover:border-amber-500 rounded-lg transition-colors shadow-lg group"
+            className="relative left-[0.5vw] w-[25vw] h-[9.5vh] flex items-center  gap-[0.5vw] bg-amber-600 hover:bg-amber-500 border-2 border-amber-600 hover:border-amber-500 rounded-lg transition-colors shadow-lg group"
             title="Открыть памятку"
           >
-            <svg className="w-[2vh] h-[2vh] text-stone-900" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-[1.6vh] font-bold text-stone-900">Памятка</span>
+            <div className="relative left-[2vw] flex justify-center items-center gap-[0.5vw]">
+              <svg
+                className="w-[2vh] h-[2vh] text-stone-900"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="text-[1.6vh] font-bold text-stone-900">Памятка</span>
+            </div>
           </button>
         </div>
       </div>
@@ -329,44 +379,65 @@ export function FormStep2AbilitiesAndSkills({
               <div className="flex flex-col gap-[0.5vh]">
                 {skills.map((skill) => {
                   const isSelected = displaySkills.includes(skill);
-                  const totalBonus = isSelected ? modifier + proficiencyBonus : modifier;
+                  const computedBonus = isSelected ? modifier + proficiencyBonus : modifier;
+                  const hasOverride = skill in displaySkillOverrides;
+                  const totalBonus = hasOverride ? displaySkillOverrides[skill] : computedBonus;
 
                   return (
-                    <button
+                    <div
                       key={skill}
-                      type="button"
-                      onClick={() => toggleSkill(skill)}
-                      className="relative left-[0.5vw] bottom-[0.5vh] flex items-center gap-[0.5vw] text-left transition-colors hover:text-amber-100"
+                      className="relative left-[0.5vw] bottom-[0.5vh] flex items-center gap-[0.5vw]"
                     >
-                      <div
-                        className={`w-[2vh] h-[2vh] rounded-full border-2 flex items-center justify-center transition-all ${
-                          isSelected
-                            ? 'border-amber-500 bg-amber-500'
-                            : 'border-amber-600 bg-stone-900'
+                      <button
+                        type="button"
+                        onClick={() => toggleSkill(skill)}
+                        className="flex items-center gap-[0.5vw] text-left transition-colors hover:text-amber-100"
+                      >
+                        <div
+                          className={`w-[2vh] h-[2vh] rounded-full border-2 flex items-center justify-center transition-all ${
+                            isSelected
+                              ? 'border-amber-500 bg-amber-500'
+                              : 'border-amber-600 bg-stone-900'
+                          }`}
+                        >
+                          {isSelected && (
+                            <svg
+                              className="w-[1.5vh] h-[1.5vh] text-stone-900"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={3}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>{' '}
+                      </button>
+                      <input
+                        type="number"
+                        value={
+                          skillInputText[skill] !== undefined ? skillInputText[skill] : totalBonus
+                        }
+                        onChange={(e) => handleSkillInputChange(skill, e.target.value)}
+                        onBlur={() => handleSkillInputBlur(skill)}
+                        title={
+                          hasOverride
+                            ? 'Значение изменено вручную'
+                            : 'Автоматический расчёт (нажмите, чтобы изменить)'
+                        }
+                        className={`w-[2vh] h-[2vh] bg-stone-900 rounded text-center text-[1.2vh] font-semibold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                          hasOverride
+                            ? 'border-amber-400 text-amber-300 focus:border-amber-300'
+                            : 'border-amber-600/50 text-amber-100/80 focus:border-amber-400'
                         }`}
-                      >
-                        {isSelected && (
-                          <svg
-                            className="w-[1.5vh] h-[1.5vh] text-stone-900"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={3}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                      <span
-                        className={`text-[1.2vh] ${isSelected ? 'text-amber-100 font-semibold' : 'text-amber-100/80'}`}
-                      >
-                        {formatModifier(totalBonus)} {skill}
-                      </span>
-                    </button>
+                      />
+                      <span className="text-[0.9vh] text-amber-100/80">{skill}</span>
+                      
+                    </div>
                   );
                 })}
               </div>

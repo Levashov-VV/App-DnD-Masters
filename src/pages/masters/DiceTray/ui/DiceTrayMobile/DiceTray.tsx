@@ -300,6 +300,8 @@ export function DiceTrayMobile() {
           className="w-screen h-[50vh] pointer-events-none object-cover"
           src={assetUrl('/img/masters/home/DiceTray/DiceTray.png')}
           alt="dice tray"
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
       {/* Временный оверлей */}

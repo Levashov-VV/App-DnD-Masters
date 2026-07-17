@@ -92,7 +92,7 @@ export const SoundPadsDesktop = () => {
           </div>
 
           <div ref={imageRef} className="relative right-[5vw] w-[25vw] drop-shadow-2xl">
-            <img src={SoundPad} alt="SoundPad" className="w-full h-auto object-contain" />
+            <img src={SoundPad} alt="SoundPad" className="w-full h-auto object-contain" loading="eager" fetchPriority="high"/>
           </div>
         </div>
       </article>

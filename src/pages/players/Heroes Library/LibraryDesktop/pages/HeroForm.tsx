@@ -32,7 +32,6 @@ export default function HeroForm({ mode }: HeroFormProps) {
   const heroToEdit = mode === 'edit' && id ? getHero(id) : undefined;
   const {
     generateFilled,
-    previewFilled,
     isGenerating,
     error: pdfError,
   } = useGenerateCharacterPdf();

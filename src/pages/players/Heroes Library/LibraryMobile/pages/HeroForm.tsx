@@ -40,7 +40,6 @@ export default function HeroForm({ mode }: HeroFormProps) {
     setValue,
     getValues,
     control,
-    reset,
   } = useForm<HeroFormData>({
     resolver: zodResolver(heroSchema) as Resolver<HeroFormData>,
     mode: 'onChange',

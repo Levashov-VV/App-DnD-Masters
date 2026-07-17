@@ -7,9 +7,8 @@ import { DashboardMaster } from '../../../pages/masters/home/ui/Dashboard';
 import { DashboardPlayer } from '../../../pages/players/home/ui/Dashboard';
 import { CloneVoice } from '@/pages/masters/home/ui/CloneVoice/CloneVoice';
 import { HeroLibrary } from '../../../pages/players/Heroes Library/Library';
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { PreloaderProvider } from '../Preloader/PreloaderProvider';
 const HeroFormMobile = lazy(
   () =>
     import('../../../pages/players/Heroes Library/LibraryMobile/pages/HeroForm') as Promise<{
@@ -53,7 +52,6 @@ const SoundPadScenePage = lazy(() =>
   }))
 );
 
-const PageLoader = () => <PreloaderProvider />;
 
 export function Routing() {
   return (

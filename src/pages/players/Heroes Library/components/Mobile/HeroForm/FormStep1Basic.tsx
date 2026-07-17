@@ -16,7 +16,7 @@ import { SquareInput } from '../HeroForm/ui/SquareInput';
 import { StatsPanel } from './ui/StatsPanel';
 import { ArmorClassShield } from '../HeroForm/ui/Shield';
 import { ExperienceInfoModal } from '../../../components/Mobile/HeroForm/ui/FormStep1/ExperienceInfoModal';
-import { ClassModal, type ClassEntry } from './ui/FormStep1/ClassModal';
+import { ClassModal } from './ui/FormStep1/ClassModal';
 import { SubClassModal } from './ui/FormStep1/SubClassModal';
 import { ConfirmDialog } from '../../../components/Mobile/HeroForm/ui/FormStep5/ConfirmDialog';
 import type { ConfirmDialogConfig } from '../../../components/Mobile/HeroForm/ui/FormStep5/ConfirmDialog';

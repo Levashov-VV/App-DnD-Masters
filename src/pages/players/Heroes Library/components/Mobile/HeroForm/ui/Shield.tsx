@@ -1,4 +1,4 @@
-import type { UseFormRegister, FieldErrors } from 'react-hook-form';
+import type { FieldErrors } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../../features/heroes/schemas/heroSchema';
 import type { Control } from 'react-hook-form';
 import { Controller } from 'react-hook-form';

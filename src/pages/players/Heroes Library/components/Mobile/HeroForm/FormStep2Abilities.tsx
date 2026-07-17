@@ -195,13 +195,6 @@ export function FormStep2AbilitiesAndSkills({
     }
   };
 
-  const resetSkillOverride = (skill: string) => {
-    const newOverrides = { ...displaySkillOverrides };
-    delete newOverrides[skill];
-    setDisplaySkillOverrides(newOverrides);
-    setValue('skillOverrides', newOverrides, { shouldDirty: true, shouldValidate: true });
-  };
-
   const toggleLanguage = (language: string) => {
     const newLanguages = displayLanguages.includes(language)
       ? displayLanguages.filter((l) => l !== language)

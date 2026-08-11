@@ -22,7 +22,6 @@ interface StatsPanelProps {
 
 export function StatsPanel({
   register,
-  watch,
   setValue,
   control,
   exhaustionLevel: formExhaustionLevel,

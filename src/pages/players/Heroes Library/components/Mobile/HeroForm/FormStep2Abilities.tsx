@@ -63,6 +63,7 @@ export function FormStep2AbilitiesAndSkills({
   const proficiencyBonus = getProficiencyBonus(level);
 
   const formSkills = watch('skills') || [];
+  const formSkillExpertise = watch('skillExpertise') || [];
   const formSkillOverrides = watch('skillOverrides') || {};
   const formLanguages = watch('languages') || [];
   const formSavingThrows = watch('savingThrows') || [];
@@ -70,6 +71,7 @@ export function FormStep2AbilitiesAndSkills({
   const formAbilities = watch('abilityScores');
 
   const [displaySkills, setDisplaySkills] = useState<string[]>(formSkills);
+  const [displaySkillExpertise, setDisplaySkillExpertise] = useState<string[]>(formSkillExpertise);
   const [displaySkillOverrides, setDisplaySkillOverrides] =
     useState<Record<string, number>>(formSkillOverrides);
   const [skillInputText, setSkillInputText] = useState<Record<string, string>>({});
@@ -114,6 +116,9 @@ export function FormStep2AbilitiesAndSkills({
   useEffect(() => {
     setDisplaySkillOverrides(formSkillOverrides);
   }, [JSON.stringify(formSkillOverrides)]);
+  useEffect(() => {
+    setDisplaySkillExpertise(formSkillExpertise);
+  }, [JSON.stringify(formSkillExpertise)]);
 
   useEffect(() => {
     setDisplayLanguages(formLanguages);
@@ -156,13 +161,33 @@ export function FormStep2AbilitiesAndSkills({
     });
   };
 
-  const toggleSkill = (skill: string) => {
-    const newSkills = displaySkills.includes(skill)
-      ? displaySkills.filter((s) => s !== skill)
-      : [...displaySkills, skill];
+  const cycleSkillState = (skill: string) => {
+    const isProficient = displaySkills.includes(skill);
+    const isExpert = displaySkillExpertise.includes(skill);
 
+    if (!isProficient) {
+      // Пусто
+      const newSkills = [...displaySkills, skill];
+      setDisplaySkills(newSkills);
+      setValue('skills', newSkills, { shouldDirty: true, shouldValidate: true });
+      return;
+    }
+
+    if (isProficient && !isExpert) {
+      // Владение
+      const newExpertise = [...displaySkillExpertise, skill];
+      setDisplaySkillExpertise(newExpertise);
+      setValue('skillExpertise', newExpertise, { shouldDirty: true, shouldValidate: true });
+      return;
+    }
+
+    // Экспертность
+    const newSkills = displaySkills.filter((s) => s !== skill);
+    const newExpertise = displaySkillExpertise.filter((s) => s !== skill);
     setDisplaySkills(newSkills);
+    setDisplaySkillExpertise(newExpertise);
     setValue('skills', newSkills, { shouldDirty: true, shouldValidate: true });
+    setValue('skillExpertise', newExpertise, { shouldDirty: true, shouldValidate: true });
   };
   const handleSkillOverrideChange = (skill: string, value: number) => {
     const newOverrides = { ...displaySkillOverrides, [skill]: value };
@@ -193,6 +218,12 @@ export function FormStep2AbilitiesAndSkills({
         return next;
       });
     }
+  };
+    const resetSkillOverride = (skill: string) => {
+    const newOverrides = { ...displaySkillOverrides };
+    delete newOverrides[skill];
+    setDisplaySkillOverrides(newOverrides);
+    setValue('skillOverrides', newOverrides, { shouldDirty: true, shouldValidate: true });
   };
 
   const toggleLanguage = (language: string) => {
@@ -372,7 +403,9 @@ export function FormStep2AbilitiesAndSkills({
               <div className="flex flex-col gap-[0.5vh]">
                 {skills.map((skill) => {
                   const isSelected = displaySkills.includes(skill);
-                  const computedBonus = isSelected ? modifier + proficiencyBonus : modifier;
+                  const isExpert = displaySkillExpertise.includes(skill);
+                  const proficiencyMultiplier = isExpert ? 2 : isSelected ? 1 : 0;
+                  const computedBonus = modifier + proficiencyBonus * proficiencyMultiplier;
                   const hasOverride = skill in displaySkillOverrides;
                   const totalBonus = hasOverride ? displaySkillOverrides[skill] : computedBonus;
 
@@ -383,17 +416,26 @@ export function FormStep2AbilitiesAndSkills({
                     >
                       <button
                         type="button"
-                        onClick={() => toggleSkill(skill)}
+                        onClick={() => cycleSkillState(skill)}
                         className="flex items-center gap-[0.5vw] text-left transition-colors hover:text-amber-100"
+                        title={
+                          isExpert
+                            ? 'Экспертность (двойной бонус мастерства) — нажмите, чтобы сбросить'
+                            : isSelected
+                              ? 'Владение — нажмите для экспертности'
+                              : 'Нажмите для владения навыком'
+                        }
                       >
                         <div
                           className={`w-[2vh] h-[2vh] rounded-full border-2 flex items-center justify-center transition-all ${
-                            isSelected
-                              ? 'border-amber-500 bg-amber-500'
-                              : 'border-amber-600 bg-stone-900'
+                            isExpert
+                              ? 'border-amber-400 bg-amber-500 ring-2 ring-amber-300 ring-offset-1 ring-offset-stone-800'
+                              : isSelected
+                                ? 'border-amber-500 bg-amber-500'
+                                : 'border-amber-600 bg-stone-900'
                           }`}
                         >
-                          {isSelected && (
+                          {(isSelected || isExpert) && (
                             <svg
                               className="w-[1.5vh] h-[1.5vh] text-stone-900"
                               fill="none"
@@ -408,7 +450,7 @@ export function FormStep2AbilitiesAndSkills({
                               />
                             </svg>
                           )}
-                        </div>{' '}
+                        </div>
                       </button>
                       <input
                         type="number"
@@ -422,14 +464,39 @@ export function FormStep2AbilitiesAndSkills({
                             ? 'Значение изменено вручную'
                             : 'Автоматический расчёт (нажмите, чтобы изменить)'
                         }
-                        className={`w-[2vh] h-[2vh] bg-stone-900 rounded text-center text-[1.2vh] font-semibold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                        className={`w-[3.5vh] h-[2vh] bg-stone-900 rounded text-center text-[1.2vh] font-semibold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                           hasOverride
                             ? 'border-amber-400 text-amber-300 focus:border-amber-300'
                             : 'border-amber-600/50 text-amber-100/80 focus:border-amber-400'
                         }`}
                       />
-                      <span className="text-[0.9vh] text-amber-100/80">{skill}</span>
-                      
+                      {hasOverride && (
+                        <button
+                          type="button"
+                          onClick={() => resetSkillOverride(skill)}
+                          title="Сбросить к автоматическому расчёту"
+                          className="text-amber-500 hover:text-amber-300 transition-colors"
+                        >
+                          <svg
+                            className="w-[1.3vh] h-[1.3vh]"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                      <span
+                        className={`text-[1.2vh]`}
+                      >
+                        {skill}
+                      </span>
                     </div>
                   );
                 })}

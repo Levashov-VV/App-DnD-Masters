@@ -190,6 +190,8 @@ export const heroSchema = z
       .min(0, 'КЗ не может быть меньше 0')
       .max(30, 'КЗ не может быть больше 30'),
     initiative: z.number(),
+    initiativeOverride: z.number().nullable().optional().default(null),
+    passivePerceptionOverride: z.number().nullable().optional().default(null),
     speed: z.number().min(0, 'Скорость не может быть отрицательной'),
     proficiencyBonus: z.number().min(2, 'Минимум 2').max(6, 'Максимум 6'),
     inspiration: z.boolean().optional().default(false),
@@ -200,6 +202,7 @@ export const heroSchema = z
 
     // Навыки и языки
     skills: z.array(z.string()).default([]),
+    skillExpertise: z.array(z.string()).default([]),
     skillOverrides: z.record(z.string(), z.number()).default({}),
     savingThrows: z.array(z.string()).default([]),
     languages: z.array(z.string()).default([]),

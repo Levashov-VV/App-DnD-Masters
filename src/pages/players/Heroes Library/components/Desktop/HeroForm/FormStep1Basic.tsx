@@ -7,7 +7,7 @@ import type {
   UseFormGetValues,
   Control,
 } from 'react-hook-form';
-import {useWatch} from 'react-hook-form'
+import { useWatch } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../features/heroes/schemas/heroSchema';
 import { Input } from '../HeroForm/ui/Input';
 import { CircularInput } from '../HeroForm/ui/CircularInputProps';
@@ -283,7 +283,7 @@ export function FormStep1Basic({
       ? Math.min(100, Math.max(0, Math.floor((expIntoLevel / expNeededForNext) * 100)))
       : 100;
   const expRemaining = nextLevelExp !== null ? Math.max(0, nextLevelExp - experience) : 0;
-console.log('FormStep1Basic render, conditions:', conditions);
+  console.log('FormStep1Basic render, conditions:', conditions);
   return (
     <div className="relative left-[0.5vw] top-[1vh] flex flex-col gap-[2vh] uppercase">
       <h2 className="text-left text-[2.5vh] font-bold text-amber-100">Основная информация</h2>
@@ -532,6 +532,7 @@ console.log('FormStep1Basic render, conditions:', conditions);
             register={register}
             watch={watch}
             setValue={setValue}
+            control={control}
             exhaustionLevel={exhaustionLevel}
             conditions={conditions}
           />

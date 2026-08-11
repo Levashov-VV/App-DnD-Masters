@@ -638,6 +638,7 @@ export function FormStep1Basic({
             register={register}
             watch={watch}
             setValue={setValue}
+            control={control}
             exhaustionLevel={exhaustionLevel}
             conditions={conditions}
           />

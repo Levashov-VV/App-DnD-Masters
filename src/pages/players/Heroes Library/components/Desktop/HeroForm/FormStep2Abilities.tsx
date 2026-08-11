@@ -68,8 +68,10 @@ export function FormStep2AbilitiesAndSkills({
   const formSavingThrows = watch('savingThrows') || [];
   const formInspiration = watch('inspiration') || false;
   const formAbilities = watch('abilityScores');
+  const formSkillExpertise = watch('skillExpertise') || [];
 
   const [displaySkills, setDisplaySkills] = useState<string[]>(formSkills);
+  const [displaySkillExpertise, setDisplaySkillExpertise] = useState<string[]>(formSkillExpertise);
   const [skillInputText, setSkillInputText] = useState<Record<string, string>>({});
   const [displaySkillOverrides, setDisplaySkillOverrides] =
     useState<Record<string, number>>(formSkillOverrides);
@@ -114,6 +116,9 @@ export function FormStep2AbilitiesAndSkills({
   useEffect(() => {
     setDisplaySkillOverrides(formSkillOverrides);
   }, [JSON.stringify(formSkillOverrides)]);
+  useEffect(() => {
+    setDisplaySkillExpertise(formSkillExpertise);
+  }, [JSON.stringify(formSkillExpertise)]);
 
   useEffect(() => {
     setDisplayLanguages(formLanguages);
@@ -156,13 +161,33 @@ export function FormStep2AbilitiesAndSkills({
     });
   };
 
-  const toggleSkill = (skill: string) => {
-    const newSkills = displaySkills.includes(skill)
-      ? displaySkills.filter((s) => s !== skill)
-      : [...displaySkills, skill];
+  const cycleSkillState = (skill: string) => {
+    const isProficient = displaySkills.includes(skill);
+    const isExpert = displaySkillExpertise.includes(skill);
 
+    if (!isProficient) {
+      // Пусто
+      const newSkills = [...displaySkills, skill];
+      setDisplaySkills(newSkills);
+      setValue('skills', newSkills, { shouldDirty: true, shouldValidate: true });
+      return;
+    }
+
+    if (isProficient && !isExpert) {
+      // Владение
+      const newExpertise = [...displaySkillExpertise, skill];
+      setDisplaySkillExpertise(newExpertise);
+      setValue('skillExpertise', newExpertise, { shouldDirty: true, shouldValidate: true });
+      return;
+    }
+
+    // Экспертность
+    const newSkills = displaySkills.filter((s) => s !== skill);
+    const newExpertise = displaySkillExpertise.filter((s) => s !== skill);
     setDisplaySkills(newSkills);
+    setDisplaySkillExpertise(newExpertise);
     setValue('skills', newSkills, { shouldDirty: true, shouldValidate: true });
+    setValue('skillExpertise', newExpertise, { shouldDirty: true, shouldValidate: true });
   };
   const handleSkillOverrideChange = (skill: string, value: number) => {
     const newOverrides = { ...displaySkillOverrides, [skill]: value };
@@ -367,7 +392,9 @@ export function FormStep2AbilitiesAndSkills({
               <div className="flex flex-col gap-[0.5vh]">
                 {skills.map((skill) => {
                   const isSelected = displaySkills.includes(skill);
-                  const computedBonus = isSelected ? modifier + proficiencyBonus : modifier;
+                  const isExpert = displaySkillExpertise.includes(skill);
+                  const proficiencyMultiplier = isExpert ? 2 : isSelected ? 1 : 0;
+                  const computedBonus = modifier + proficiencyBonus * proficiencyMultiplier;
                   const hasOverride = skill in displaySkillOverrides;
                   const totalBonus = hasOverride ? displaySkillOverrides[skill] : computedBonus;
 
@@ -378,17 +405,26 @@ export function FormStep2AbilitiesAndSkills({
                     >
                       <button
                         type="button"
-                        onClick={() => toggleSkill(skill)}
+                        onClick={() => cycleSkillState(skill)}
                         className="flex items-center gap-[0.5vw] text-left transition-colors hover:text-amber-100"
+                        title={
+                          isExpert
+                            ? 'Экспертность (двойной бонус мастерства) — нажмите, чтобы сбросить'
+                            : isSelected
+                              ? 'Владение — нажмите для экспертности'
+                              : 'Нажмите для владения навыком'
+                        }
                       >
                         <div
                           className={`w-[2vh] h-[2vh] rounded-full border-2 flex items-center justify-center transition-all ${
-                            isSelected
-                              ? 'border-amber-500 bg-amber-500'
-                              : 'border-amber-600 bg-stone-900'
+                            isExpert
+                              ? 'border-amber-400 bg-amber-500 ring-2 ring-amber-300 ring-offset-1 ring-offset-stone-800'
+                              : isSelected
+                                ? 'border-amber-500 bg-amber-500'
+                                : 'border-amber-600 bg-stone-900'
                           }`}
                         >
-                          {isSelected && (
+                          {(isSelected || isExpert) && (
                             <svg
                               className="w-[1.5vh] h-[1.5vh] text-stone-900"
                               fill="none"
@@ -403,7 +439,7 @@ export function FormStep2AbilitiesAndSkills({
                               />
                             </svg>
                           )}
-                        </div>{' '}
+                        </div>
                       </button>
                       <input
                         type="number"
@@ -445,7 +481,12 @@ export function FormStep2AbilitiesAndSkills({
                           </svg>
                         </button>
                       )}
-                      <span className="text-[1.2vh] text-amber-100/80">{skill}</span>
+                      <span
+                        className={`text-[1.2vh] ${isExpert ? 'text-amber-300 font-bold' : 'text-amber-100/80'}`}
+                      >
+                        {skill}
+                        {isExpert && <span className="text-amber-400"> (эксп.)</span>}
+                      </span>
                     </div>
                   );
                 })}

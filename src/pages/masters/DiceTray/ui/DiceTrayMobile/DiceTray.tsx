@@ -348,18 +348,18 @@ export function DiceTrayMobile() {
 
       {/* История бросков */}
       {rollMode === 'single' && (
-        <div className="absolute bottom-[-34vh] left-[5vw] w-[90vw] h-[30vh] flex flex-col-reverse items-center justify-start z-100">
+        <div className="absolute bottom-[-40vh] left-[5vw] w-[90vw] h-[30vh] flex flex-col-reverse items-center justify-start z-100">
           <History />
         </div>
       )}
       {rollMode === 'sum' ? (
-        <div className="absolute bottom-[1vh] w-screen text-[3vh] text-center uppercase text-slate-400">
+        <div className="absolute bottom-[-10vh] w-screen text-[3vh] text-center uppercase text-slate-400">
           Результат множественного броска
         </div>
       ) : null}
       {rollMode === 'sum' && resultsSorted.length > 0 && (
         <div
-          className="absolute bottom-[-35vh] left-[5vw] w-[90vw] max-h-[35vh] overflow-auto bg-black/90 text-white rounded-xl z-100 shadow-2xl pointer-events-auto"
+          className="absolute bottom-[-35vh] left-[5vw] w-[90vw] max-h-[25vh] overflow-auto bg-black/90 text-white rounded-xl z-100 shadow-2xl pointer-events-auto"
           style={{
             WebkitOverflowScrolling: 'touch',
             overscrollBehavior: 'contain',

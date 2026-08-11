@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { UseFormRegister, UseFormWatch, UseFormSetValue } from 'react-hook-form';
+import type { UseFormRegister, UseFormWatch, UseFormSetValue, Control } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 import type { HeroFormData } from '../../../../../../../features/heroes/schemas/heroSchema';
 import {
   getAbilityModifier,
@@ -14,6 +15,7 @@ interface StatsPanelProps {
   register: UseFormRegister<HeroFormData>;
   watch: UseFormWatch<HeroFormData>;
   setValue: UseFormSetValue<HeroFormData>;
+  control: Control<HeroFormData>;
   exhaustionLevel: number;
   conditions: string[];
 }
@@ -22,6 +24,7 @@ export function StatsPanel({
   register,
   watch,
   setValue,
+  control,
   exhaustionLevel: formExhaustionLevel,
   conditions,
 }: StatsPanelProps) {
@@ -29,17 +32,24 @@ export function StatsPanel({
   const [selectedCondition, setSelectedCondition] = useState<Condition | null>(null);
   const activeConditions = new Set(conditions);
 
-  const dexterity = watch('abilityScores.dexterity') || 10;
-  const wisdom = watch('abilityScores.wisdom') || 10;
-  const level = watch('level') || 1;
-  const skills = watch('skills') || [];
+  const dexterity = useWatch({ control, name: 'abilityScores.dexterity' }) || 10;
+  const wisdom = useWatch({ control, name: 'abilityScores.wisdom' }) || 10;
+  const level = useWatch({ control, name: 'level' }) || 1;
+  const skills = useWatch({ control, name: 'skills' }) || [];
+  const initiativeOverride = useWatch({ control, name: 'initiativeOverride' });
+  const passivePerceptionOverride = useWatch({ control, name: 'passivePerceptionOverride' });
 
   const dexModifier = getAbilityModifier(dexterity);
   const wisModifier = getAbilityModifier(wisdom);
   const proficiencyBonus = getProficiencyBonus(level);
   const hasPerceptionProficiency = skills.includes('Внимательность');
-  const initiative = dexModifier;
-  const passivePerception = 10 + wisModifier + (hasPerceptionProficiency ? proficiencyBonus : 0);
+
+  const computedInitiative = dexModifier;
+  const displayedInitiative = initiativeOverride ?? computedInitiative;
+
+  const computedPassivePerception =
+    10 + wisModifier + (hasPerceptionProficiency ? proficiencyBonus : 0);
+  const displayedPassivePerception = passivePerceptionOverride ?? computedPassivePerception;
 
   const toggleCondition = (conditionName: string) => {
     console.log('toggleCondition called with:', conditionName, 'current conditions:', conditions);
@@ -97,7 +107,25 @@ export function StatsPanel({
           {/* Инициатива */}
           <div className="w-[10vw] flex flex-col items-center bg-stone-800 border-2 border-amber-600 rounded-lg">
             <label className="text-[1.4vh] text-amber-100 uppercase">Инициатива</label>
-            <div className="text-[3vh] font-bold text-amber-100">{formatModifier(initiative)}</div>
+            <input
+              type="number"
+              value={displayedInitiative}
+              onChange={(e) => {
+                const val = e.target.value === '' ? null : Number(e.target.value);
+                setValue('initiativeOverride', val, { shouldDirty: true });
+              }}
+              className="w-[6vw] text-[3vh] font-bold text-center bg-transparent border-none text-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 rounded"
+            />
+            {initiativeOverride !== null && initiativeOverride !== undefined && (
+              <button
+                type="button"
+                onClick={() => setValue('initiativeOverride', null, { shouldDirty: true })}
+                className="text-[1vh] text-amber-400 hover:text-amber-300 underline normal-case"
+                title="Вернуться к автоматическому расчёту"
+              >
+                Авто: {formatModifier(computedInitiative)}
+              </button>
+            )}
           </div>
 
           {/* Скорость */}
@@ -116,7 +144,25 @@ export function StatsPanel({
             <label className="text-[1.4vh] text-amber-100 uppercase text-center">
               П. Восприятие
             </label>
-            <div className="text-[3vh] font-bold text-amber-100">{passivePerception}</div>
+            <input
+              type="number"
+              value={displayedPassivePerception}
+              onChange={(e) => {
+                const val = e.target.value === '' ? null : Number(e.target.value);
+                setValue('passivePerceptionOverride', val, { shouldDirty: true });
+              }}
+              className="w-[6vw] text-[3vh] font-bold text-center bg-transparent border-none text-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 rounded"
+            />
+            {passivePerceptionOverride !== null && passivePerceptionOverride !== undefined && (
+              <button
+                type="button"
+                onClick={() => setValue('passivePerceptionOverride', null, { shouldDirty: true })}
+                className="text-[1vh] text-amber-400 hover:text-amber-300 underline normal-case"
+                title="Вернуться к автоматическому расчёту"
+              >
+                Авто: {computedPassivePerception}
+              </button>
+            )}
           </div>
 
           {/* Истощение */}

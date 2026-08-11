@@ -163,10 +163,10 @@ export const CharacterSheetMobile = () => {
         ))}
       </div>
 
-      <div className="text-center flex flex-col gap-[5vh] text-[4vw] z-200 text-amber-100">
+      <div className="text-center flex flex-col gap-[5vh] text-[4vw] z-100 text-amber-100">
         <div
           ref={shieldsRef}
-          className="relative bottom-[5vh] flex justify-center flex-row flex-wrap gap-x-[20vw] gap-y-[5vh]"
+          className="relative bottom-[0vh] flex justify-center flex-row flex-wrap gap-x-[20vw] gap-y-[5vh]"
         >
           {textCharacteristics.map((item, index) => (
             <CharacterSection

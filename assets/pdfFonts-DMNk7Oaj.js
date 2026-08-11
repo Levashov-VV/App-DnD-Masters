@@ -1,1 +1,0 @@
-import"./react-pdf.browser-BKa5Ph8L.js";import{n as e,t}from"./pdfFonts-BMWejNHX.js";export{t as PDF_FONT_FAMILY,e as registerPdfFonts};
